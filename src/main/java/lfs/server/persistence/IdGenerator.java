@@ -50,7 +50,7 @@ public class IdGenerator extends SequenceStyleGenerator {
     }
  
     private CurrentBranch cb;
-	private CurrentBranch currentBranch() {
+	public CurrentBranch currentBranch() {
 		if(cb == null) {
 			cb = BeanUtil.getBean(CurrentBranch.class);
 		}

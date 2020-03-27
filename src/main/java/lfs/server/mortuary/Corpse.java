@@ -19,6 +19,9 @@ import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lfs.server.branch.District;
 import lfs.server.persistence.IdGenerator;
@@ -94,6 +97,7 @@ public class Corpse {
 	
 	@ManyToOne(cascade=CascadeType.ALL,
 			fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name="transport_id")
 	private Transport transport;
 	
@@ -105,10 +109,15 @@ public class Corpse {
 	private boolean released;
 	
 	@OneToMany(mappedBy="corpse", 
-			cascade=CascadeType.ALL, 
+			cascade=CascadeType.ALL,
+			fetch = FetchType.LAZY,
 			orphanRemoval=true)
 	private List<ProductSales> productSales;
 	
-	@Column(length = 50)
-	private String transferredFrom;
+	@ManyToOne(fetch = FetchType.LAZY,
+			cascade = CascadeType.PERSIST)
+	@JoinColumn(name="transferred_from_other_mortuary_id")
+	@JsonIgnore
+	@RestResource(path = "transferred-from", rel="transferredFrom")
+	private OtherMortuary transferredFrom;
 }
