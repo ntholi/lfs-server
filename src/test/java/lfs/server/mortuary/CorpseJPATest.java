@@ -15,8 +15,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -58,13 +56,38 @@ class CorpseJPATest {
 	@Test
 	public void testFindByCorpse_returnsExpectedResults() {
 		
-		Corpse corpse = new Corpse();
 		String name = "MKMs";
+		
+		Corpse corpse = new Corpse();
 		corpse.setTransferredFrom(new OtherMortuary(name));
 		Corpse savedCorpse = corpseRepo.save(corpse);
 		List<OtherMortuary> result = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
 		
 		assertThat(result).size().isEqualTo(1);
 		assertThat(result.get(0).getName()).isEqualTo(name);
+	}
+	
+	@Test
+	public void testFindByCorpse_returnsExpectedResults2() {
+		String name1 = "MKM";
+		String name2 = "Sentebale";
+		String corpseFirstName = "Molise";
+		
+		Corpse corpse1 = new Corpse();
+		corpse1.setTransferredFrom(new OtherMortuary(name1));
+		corpseRepo.save(corpse1);
+		
+		Corpse corpse2 = new Corpse();
+		corpse2.setNames(corpseFirstName);
+		corpse2.setTransferredFrom(new OtherMortuary(name2));
+		Corpse savedCorpse2 = corpseRepo.save(corpse2);
+		
+		List<OtherMortuary> result = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse2));
+		List<Corpse> corpseList = Lists.newArrayList(corpseRepo.findAll());
+		
+		assertThat(corpseList.size()).isEqualTo(2);
+		assertThat(savedCorpse2.getNames()).isEqualTo(corpseFirstName);
+		assertThat(result).size().isEqualTo(1);
+		assertThat(result.get(0).getName()).isEqualTo(name2);
 	}
 }
