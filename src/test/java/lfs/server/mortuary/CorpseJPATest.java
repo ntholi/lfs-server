@@ -30,7 +30,6 @@ import lfs.server.util.BeanUtil;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringRunner.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace=Replace.NONE)
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*"})
 @PrepareForTest(BeanUtil.class)
 class CorpseJPATest {
@@ -49,16 +48,15 @@ class CorpseJPATest {
 	@Before
 	public void init() {
 		Branch branch = new Branch();
-		branch.setId(1);
 		branch.setSyncNumber((short)256);
 		when(currentBranch.get()).thenReturn(branch);
+		
+		PowerMockito.mockStatic(BeanUtil.class);
+        BDDMockito.given(BeanUtil.getBean(CurrentBranch.class)).willReturn(currentBranch);
 	}
 	
 	@Test
 	public void testFindByCorpse_returnsExpectedResults() {
-		
-		PowerMockito.mockStatic(BeanUtil.class);
-        BDDMockito.given(BeanUtil.getBean(CurrentBranch.class)).willReturn(currentBranch);
 		
 		Corpse corpse = new Corpse();
 		String name = "MKMs";
@@ -69,5 +67,4 @@ class CorpseJPATest {
 		assertThat(result).size().isEqualTo(1);
 		assertThat(result.get(0).getName()).isEqualTo(name);
 	}
-
 }
