@@ -25,4 +25,5 @@ public class Transport {
 	@Id
 	@GeneratedValue(generator = "transport_id")
 	private Long id;
+	private String placeHolder;
 }

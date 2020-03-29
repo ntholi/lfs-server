@@ -19,9 +19,9 @@ import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lfs.server.branch.District;
 import lfs.server.persistence.IdGenerator;
@@ -97,7 +97,6 @@ public class Corpse {
 	
 	@ManyToOne(cascade=CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JsonIgnore
 	@JoinColumn(name="transport_id")
 	private Transport transport;
 	
@@ -116,8 +115,7 @@ public class Corpse {
 	
 	@ManyToOne(fetch = FetchType.LAZY,
 			cascade = CascadeType.PERSIST)
-	@JoinColumn(name="transferred_from_other_mortuary_id")
-	@JsonIgnore
-	@RestResource(path = "transferred-from", rel="transferredFrom")
+	@JoinColumn(name="from_other_mortuary_id")
+	@JsonProperty("transferredFrom")
 	private OtherMortuary transferredFrom;
 }

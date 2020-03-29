@@ -49,10 +49,10 @@ class CorpseIntegrationTest {
 	
 	@Test @Order(2) 
 	void testGetTransferredFrom() {
-//		var tagNo = currentBranch.get().getSyncNumber()+"000001";
-//		ResponseEntity<OtherMortuary> response = rest.getForEntity("/corpses/"+tagNo+"/transferred-from", 
-//				OtherMortuary.class);
-//		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		var tagNo = currentBranch.get().getSyncNumber()+"000001";
+		ResponseEntity<OtherMortuary> response = rest.getForEntity("/corpses/"+tagNo+"/transferred-from", 
+				OtherMortuary.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
 	
 	public static Corpse transferredFrom(String name) {

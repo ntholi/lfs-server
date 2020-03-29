@@ -59,40 +59,40 @@ class CorpseJPATest {
 	}
 	
 	@Test
-	public void testFindByCorpse_returnsExpectedResults() {
-		
-		String name = "MKMs";
+	public void testOtherMortuaryRepository_findByCorpse_when_saving_corpseWithMortuary() {
+		//Arrange 
+		String mortuary = "MKM";
+		String corpseName = "Thabo Lebese";
 		
 		Corpse corpse = new Corpse();
-		corpse.setTransferredFrom(new OtherMortuary(name));
-		Corpse savedCorpse = corpseRepo.save(corpse);
-		List<OtherMortuary> result = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
+		corpse.setNames(corpseName);
+		corpse.setTransferredFrom(new OtherMortuary(mortuary));
 		
-		assertThat(result).size().isEqualTo(1);
-		assertThat(result.get(0).getName()).isEqualTo(name);
+		//Act 
+		Corpse savedCorpse = corpseRepo.save(corpse);
+		corpseRepo.save(corpse);
+		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
+		
+		//Assert
+		assertThat(savedCorpse.getNames()).isEqualTo(corpseName);
+		assertThat(list).size().isEqualTo(1);
+		assertThat(list.get(0).getName()).isEqualTo(mortuary);
 	}
 	
 	@Test
-	public void testFindByCorpse_returnsExpectedResults2() {
-		String name1 = "MKM";
-		String name2 = "Sentebale";
-		String corpseFirstName = "Molise";
+	public void testOtherMortuaryRepository_findByCorpse_when_saving_corpseWithoutMortuary() {
+		//Arrange 
+		String corpseName = "Thabo Lebese";
+		Corpse corpse = new Corpse();
+		corpse.setNames(corpseName);
 		
-		Corpse corpse1 = new Corpse();
-		corpse1.setTransferredFrom(new OtherMortuary(name1));
-		corpseRepo.save(corpse1);
+		//Act 
+		Corpse savedCorpse = corpseRepo.save(corpse);
+		corpseRepo.save(corpse);
+		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
 		
-		Corpse corpse2 = new Corpse();
-		corpse2.setNames(corpseFirstName);
-		corpse2.setTransferredFrom(new OtherMortuary(name2));
-		Corpse savedCorpse2 = corpseRepo.save(corpse2);
-		
-		List<OtherMortuary> result = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse2));
-		List<Corpse> corpseList = Lists.newArrayList(corpseRepo.findAll());
-		
-		assertThat(corpseList.size()).isEqualTo(2);
-		assertThat(savedCorpse2.getNames()).isEqualTo(corpseFirstName);
-		assertThat(result).size().isEqualTo(1);
-		assertThat(result.get(0).getName()).isEqualTo(name2);
+		//Assert
+		assertThat(savedCorpse.getNames()).isEqualTo(corpseName);
+		assertThat(list).size().isEqualTo(0);
 	}
 }
