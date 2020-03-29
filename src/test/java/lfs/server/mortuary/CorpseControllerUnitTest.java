@@ -38,7 +38,7 @@ class CorpseControllerUnitTest {
 	}
 
 	@Test
-	void getOtherMortuaries_returnsCorrectResults() throws Exception {
+	void getOtherMortuaries_returnsTheRightListOfMortuaries() throws Exception {
 		List<OtherMortuary> list = List.of(new OtherMortuary("MKM"), 
 				new OtherMortuary("Maputsoe"), 
 				new OtherMortuary("Sentebale"));
@@ -52,8 +52,8 @@ class CorpseControllerUnitTest {
 		verify(service).getOtherMortuaries();
 	}
 	
-	@Test
-	void getTransferedFrom_returnsCorrectResults() throws Exception {
+	@Test()
+	void getTransferedFrom_returnsMortuaryCorpseWasTransferedTo() throws Exception {
 		String tagNo = "256000001";
 		OtherMortuary mkm = new OtherMortuary("MKM");
 		when(service.getOtherMortuaries(anyString())).thenReturn(List.of(mkm));
