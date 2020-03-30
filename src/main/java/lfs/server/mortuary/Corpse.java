@@ -20,7 +20,6 @@ import javax.validation.constraints.PastOrPresent;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lfs.server.branch.District;

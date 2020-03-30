@@ -1,21 +1,11 @@
 package lfs.server;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import lfs.server.branch.District;
-import lfs.server.mortuary.Corpse;
-import lfs.server.mortuary.Corpse.Gender;
 import lfs.server.mortuary.CorpseRepository;
-import lfs.server.mortuary.NextOfKin;
-import lfs.server.mortuary.OtherMortuary;
-import lfs.server.transport.Transport;
 
 @SpringBootApplication
 public class MainApplication implements CommandLineRunner{
