@@ -5,13 +5,23 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +48,7 @@ class CorpseControllerUnitTest {
 	}
 
 	@Test
-	void getOtherMortuaries_returnsTheRightListOfMortuaries() throws Exception {
+	void getOtherMortuaries_returns_the_correct_list_of_OtherMortuaries() throws Exception {
 		List<OtherMortuary> list = List.of(new OtherMortuary("MKM"), 
 				new OtherMortuary("Maputsoe"), 
 				new OtherMortuary("Sentebale"));
@@ -48,12 +58,12 @@ class CorpseControllerUnitTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("[0].name").value("MKM"))
 			.andExpect(jsonPath("[2].name").value("Sentebale"));
-		
+
 		verify(service).getOtherMortuaries();
 	}
-	
-	@Test()
-	void getTransferedFrom_returnsMortuaryCorpseWasTransferedTo() throws Exception {
+
+	@Test
+	void getTransferedFrom_returns_OtherMorthurys_name_where_corpse_is_transferedFrom() throws Exception {
 		String tagNo = "256000001";
 		OtherMortuary mkm = new OtherMortuary("MKM");
 		when(service.getOtherMortuaries(anyString())).thenReturn(List.of(mkm));
@@ -61,7 +71,7 @@ class CorpseControllerUnitTest {
 		mockMvc.perform(get("/corpses/"+tagNo+"/transferred-from"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("name").value("MKM"));
-		
+
 		verify(service).getOtherMortuaries(tagNo);
 	}
 }

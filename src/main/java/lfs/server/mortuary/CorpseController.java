@@ -1,6 +1,9 @@
 package lfs.server.mortuary;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +25,7 @@ public class CorpseController {
 	}
 
 	@PostMapping
-	public Corpse save(@RequestBody Corpse corpse) {
+	public Corpse save(@Valid @RequestBody Corpse corpse) {
 		return service.save(corpse);
 	}
 	

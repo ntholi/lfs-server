@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -47,9 +49,13 @@ public class Corpse {
 	private String tagNo;
 	
 	@Column(length = 60)
+	@Size(min = 2, message = "Corpse's name is too short")
+	@Nullable
 	private String names;
 	
 	@Column(length = 50)
+	@Size(min = 2, message = "Corpse's surname is too short")
+	@Nullable
 	private String surname;
 	
 	@Enumerated(EnumType.STRING)
