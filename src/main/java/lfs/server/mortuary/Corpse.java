@@ -24,15 +24,18 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lfs.server.audit.AuditableEntity;
 import lfs.server.branch.District;
 import lfs.server.persistence.IdGenerator;
 import lfs.server.transport.Transport;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
         name = "corpse_id",          
@@ -40,7 +43,7 @@ import lombok.NoArgsConstructor;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
 })
-public class Corpse {
+public class Corpse extends AuditableEntity {
 	public enum Gender {MALE, FEMALE}
 	
 	@Id

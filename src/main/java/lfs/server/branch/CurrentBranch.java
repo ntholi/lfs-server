@@ -9,6 +9,8 @@ import lfs.server.exceptions.ConfigFileException;
 @Component
 public class CurrentBranch {
 
+	private CurrentBranch() {}
+	
 	@Autowired
 	private BranchRepository repo;
 	private Branch branch;
