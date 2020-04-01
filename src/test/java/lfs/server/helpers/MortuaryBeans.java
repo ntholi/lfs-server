@@ -22,7 +22,7 @@ public class MortuaryBeans {
 				District.Mafeteng, "Ntate Rasehloho", nextOfKins, 
 				LocalDate.now(), LocalDateTime.now(), "Natural Causes", 
 				"At Home", "F3", "BNG-26", "Molise", transport, 
-				"There are no special requirements", "No other notes", false, null, 
+				"There are no special requirements", "No other notes", false, 
 				new OtherMortuary("MKM"));
 		return Arrays.asList(c1);
 	}

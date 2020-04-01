@@ -43,8 +43,8 @@ class CorpseServiceUnitTest {
 	@Test
 	void getCorpse() {
 		when(corpseRepo.findById(tagNo)).thenReturn(Optional.of(savedCorpse()));
-		Optional<Corpse> corpse = service.get(tagNo);
-		assertThat(corpse).contains(savedCorpse());
+		Corpse corpse = service.get(tagNo);
+		assertThat(corpse).isEqualTo(savedCorpse());
 	}
 	
 	@Test
@@ -96,6 +96,22 @@ class CorpseServiceUnitTest {
 		});
 		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
 		assertThat(thrown).hasMessageContaining("OtherMortuary object with id");
+	}
+	
+	@Test
+	void veryfy_that_when_saving_corpse_it_uses_existing_OtherMortuary_if_any() {
+		final String mortuaryName = "MKM";
+		OtherMortuary other = new OtherMortuary(mortuaryName);
+		
+		when(corpseRepo.existsById(tagNo)).thenReturn(true);
+		when(corpseRepo.save(any(Corpse.class))).thenReturn(savedCorpse());
+		
+		Corpse savedCorpse = service.save(new Corpse());
+		savedCorpse.setTransferredFrom(new OtherMortuary(mortuaryName));
+		
+		Corpse c3 = service.update(savedCorpse.getTagNo(), savedCorpse);
+		
+		assertThat(c3.getTransferredFrom()).isEqualTo(other);
 	}
 	
 	public Corpse savedCorpse() {

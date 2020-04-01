@@ -9,7 +9,6 @@ import javax.validation.constraints.Digits;
 import lombok.Data;
 
 @Entity
-@Data
 public class Branch {
 
 	@Id @GeneratedValue
@@ -29,4 +28,35 @@ public class Branch {
 	@Digits(integer = 3, fraction = 0)
 	private short syncNumber;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
+	}
+
+	public short getSyncNumber() {
+		return syncNumber;
+	}
+
+	public void setSyncNumber(short syncNumber) {
+		this.syncNumber = syncNumber;
+	}
 }

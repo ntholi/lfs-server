@@ -115,15 +115,22 @@ public class Corpse extends AuditableEntity {
 	
 	private boolean released;
 	
-	@OneToMany(mappedBy="corpse", 
-			cascade=CascadeType.ALL,
-			fetch = FetchType.LAZY,
-			orphanRemoval=true)
-	private List<ProductSales> productSales;
+//	@OneToMany(mappedBy="corpse", 
+//			cascade=CascadeType.ALL,
+//			fetch = FetchType.LAZY,
+//			orphanRemoval=true)
+//	private List<ProductSales> productSales;
 	
 	@ManyToOne(fetch = FetchType.LAZY,
-			cascade = CascadeType.PERSIST)
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name="from_other_mortuary_id")
 	@JsonProperty("transferredFrom")
 	private OtherMortuary transferredFrom;
+	
+	public List<NextOfKin> getNextOfKins() {
+		return nextOfKins;
+	}
+	public void setNextOfKins(List<NextOfKin> nextOfKins) {
+		this.nextOfKins = nextOfKins;
+	}
 }
