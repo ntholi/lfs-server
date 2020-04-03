@@ -1,5 +1,6 @@
 package lfs.server.mortuary;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lfs.server.audit.AuditableEntity;
@@ -78,7 +80,8 @@ public class Corpse extends AuditableEntity {
 	private String chief;
 	
 	@OneToMany(mappedBy="corpse", 
-			cascade=CascadeType.ALL, 
+			cascade=CascadeType.ALL,
+			fetch = FetchType.LAZY,
 			orphanRemoval=true)
 	private List<NextOfKin> nextOfKins;
 	
@@ -115,16 +118,11 @@ public class Corpse extends AuditableEntity {
 	
 	private boolean released;
 	
-//	@OneToMany(mappedBy="corpse", 
-//			cascade=CascadeType.ALL,
-//			fetch = FetchType.LAZY,
-//			orphanRemoval=true)
-//	private List<ProductSales> productSales;
-	
 	@ManyToOne(fetch = FetchType.LAZY,
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name="from_other_mortuary_id")
 	@JsonProperty("transferredFrom")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private OtherMortuary transferredFrom;
 	
 	public List<NextOfKin> getNextOfKins() {

@@ -80,8 +80,6 @@ public class CorpseService {
 	}
 
 	public List<OtherMortuary> getOtherMortuaries(String tagNo) {
-		Corpse corpse = corpseRepo.findById(tagNo)
-				.orElseThrow(ExceptionSupplier.corpseNotFound(tagNo));
-		return otherMortuaryRepo.findByCorpse(corpse);
+		return otherMortuaryRepo.findByCorpse(tagNo);
 	}
 }

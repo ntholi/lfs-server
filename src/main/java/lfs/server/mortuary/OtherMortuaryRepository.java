@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OtherMortuaryRepository extends CrudRepository<OtherMortuary, Integer>{
 
-	@Query("SELECT t FROM Corpse c JOIN c.transferredFrom t where c = :corpse")
-	List<OtherMortuary> findByCorpse(@Param("corpse") Corpse corpse);
+	@Query("SELECT t FROM Corpse c JOIN c.transferredFrom t where c.tagNo = :tagNo")
+	List<OtherMortuary> findByCorpse(@Param("tagNo") String tagNo);
 	
 	Optional<OtherMortuary> findFirstByName(String name);
 

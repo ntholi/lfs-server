@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.google.common.collect.Lists;
 
 import lfs.server.branch.Branch;
+import lfs.server.branch.BranchRepository;
 import lfs.server.branch.CurrentBranch;
 import lfs.server.util.BeanUtil;
 
@@ -46,12 +47,17 @@ class CorpseJPATest {
 	@MockBean
 	CurrentBranch currentBranch;
 	
+	@Autowired
+	private BranchRepository branchRepo;
+	
 	public CorpseJPATest() {}
 	
 	@Before
 	public void init() {
-		Branch branch = new Branch();
-		branch.setSyncNumber((short)256);
+		Branch branch = branchRepo.findByName("Maseru");
+		if(branch == null) {
+			throw new RuntimeException("Maseru branch not found in db, cannot continue");
+		}
 		when(currentBranch.get()).thenReturn(branch);
 		
 		PowerMockito.mockStatic(BeanUtil.class);
@@ -71,7 +77,7 @@ class CorpseJPATest {
 		//Act 
 		Corpse savedCorpse = corpseRepo.save(corpse);
 		corpseRepo.save(corpse);
-		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
+		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse.getTagNo()));
 		
 		//Assert
 		assertThat(savedCorpse.getNames()).isEqualTo(corpseName);
@@ -87,12 +93,11 @@ class CorpseJPATest {
 		corpse.setNames(corpseName);
 		
 		//Act 
-		Corpse savedCorpse = corpseRepo.save(corpse);
-		corpseRepo.save(corpse);
-		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse));
+		Corpse savedCorpse = corpseRepo.saveAndFlush(corpse);
+		List<OtherMortuary> list = Lists.newArrayList(otherRepository.findByCorpse(savedCorpse.getTagNo()));
 		
 		//Assert
+		assertThat(list).isEmpty();
 		assertThat(savedCorpse.getNames()).isEqualTo(corpseName);
-		assertThat(list).size().isEqualTo(0);
 	}
 }
