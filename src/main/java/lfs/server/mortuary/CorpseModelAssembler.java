@@ -7,7 +7,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import lfs.server.branch.BranchController;
+import lfs.server.core.CommonLinks;
 
 @Component
 public class CorpseModelAssembler implements RepresentationModelAssembler<Corpse, EntityModel<CorpseResponseDTO>> {
@@ -19,9 +19,9 @@ public class CorpseModelAssembler implements RepresentationModelAssembler<Corpse
 		OtherMortuary otherMortuaryId = corpse.getTransferredFrom();
 		var model = new EntityModel<>(dto,
 				linkTo(methodOn(CorpseController.class).get(tagNo)).withSelfRel(),
-				linkTo(CorpseController.class).withRel("corpses"));
-		model.add(linkTo(BranchController.class).slash(corpse.getBranch().getId()).withRel("branch"));
-		model.add(linkTo(methodOn(CorpseController.class).getNextOfKins(tagNo)).withRel("nextOfKins"));
+				linkTo(CorpseController.class).withRel("all"),
+				CommonLinks.branch(corpse.getBranch()),
+				linkTo(methodOn(CorpseController.class).getNextOfKins(tagNo)).withRel("nextOfKins"));
 		if(otherMortuaryId != null) {
 			model.add(linkTo(methodOn(CorpseController.class).getTransforedFrom(otherMortuaryId.getId()))
 					.withRel("transferredFrom"));

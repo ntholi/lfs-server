@@ -3,11 +3,14 @@ package lfs.server.mortuary;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.hateoas.server.core.Relation;
+
 import lfs.server.branch.District;
 import lfs.server.mortuary.Corpse.Gender;
 import lombok.Data;
 
 @Data
+@Relation(collectionRelation = "corpseList")
 public class CorpseResponseDTO {
 	private String tagNo;
 	private String names;

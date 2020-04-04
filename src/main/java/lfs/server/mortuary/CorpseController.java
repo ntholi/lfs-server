@@ -2,8 +2,7 @@ package lfs.server.mortuary;
 
 import javax.validation.Valid;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -16,10 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lfs.server.branch.Branch;
+import lfs.server.exceptions.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -31,26 +29,16 @@ public class CorpseController  {
 	private CorpseModelAssembler assembler;
 	private PagedResourcesAssembler<Corpse> pagedAssembler;
 
-	@GetMapping("/{tagNo}")
-	public ResponseEntity<EntityModel<CorpseResponseDTO>> get(@PathVariable String tagNo) {
-		var corpse = service.get(tagNo);
-		if(corpse.isPresent()) {
-			var model = assembler.toModel(corpse.get());
-			return new ResponseEntity<>(model, HttpStatus.OK);	
-		}
-		else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@GetMapping("/{id}")
+	public ResponseEntity<EntityModel<CorpseResponseDTO>> get(@PathVariable String id) {
+		return service.get(id)
+				.map(o -> ResponseEntity.ok(assembler.toModel(o)))
+				.orElseThrow(ExceptionSupplier.corpseNotFound(id));
 	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<CorpseResponseDTO>>> all(
-			@RequestParam(defaultValue = "0") Integer pageNo, 
-			@RequestParam(defaultValue = "20") Integer pageSize,
-			@RequestParam(defaultValue = "createdAt") String sortBy) {
-
-		var pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-		var pageModel = pagedAssembler.toModel(service.all(pageable), assembler);
-
-		return new ResponseEntity<>(pageModel, HttpStatus.OK);
+	public PagedModel<EntityModel<CorpseResponseDTO>> all(Pageable pageable) {
+		return pagedAssembler.toModel(service.all(pageable), assembler);
 	}
 
 	@PostMapping
@@ -69,18 +57,11 @@ public class CorpseController  {
 		service.delete(tagNo);
 	}
 
-	@GetMapping("/{tagNo}/branch")
-	public Branch getBranch(String tagNo) {
-		return null;
-	}
-
 	@GetMapping("other-mortuaries/{id}")
 	public ResponseEntity<OtherMortuary> getTransforedFrom(@PathVariable Integer id) {
-		var item = service.getTransforedFrom(id);
-		if(item.isPresent()) {
-			return new ResponseEntity<>(item.get(), HttpStatus.OK);	
-		}
-		else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return service.getTransforedFrom(id)
+				.map(ResponseEntity::ok)
+				.orElseThrow(ExceptionSupplier.notFound("OtherMortuary", id));
 	}
 
 	@GetMapping("/other-mortuaries")
