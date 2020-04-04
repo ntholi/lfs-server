@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lfs.server.persistence.IdGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,5 +50,6 @@ public class NextOfKin {
     
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name="corpse_id")
+    @JsonIgnore
     private Corpse corpse;
 }

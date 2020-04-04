@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -52,16 +51,16 @@ class CorpseControllerUnitTest {
 		verify(service).getOtherMortuaries();
 	}
 
-	@Test
-	void getTransferedFrom_returns_OtherMorthurys_name_where_corpse_is_transferedFrom() throws Exception {
-		String tagNo = "256000001";
-		OtherMortuary mkm = new OtherMortuary("MKM");
-		when(service.getOtherMortuaries(anyString())).thenReturn(List.of(mkm));
-
-		mockMvc.perform(get("/corpses/"+tagNo+"/transferred-from"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("name").value("MKM"));
-
-		verify(service).getOtherMortuaries(tagNo);
-	}
+//	@Test
+//	void getTransferedFrom_returns_OtherMorthurys_name_where_corpse_is_transferedFrom() throws Exception {
+//		String tagNo = "256000001";
+//		OtherMortuary mkm = new OtherMortuary("MKM");
+//		when(service.getTransforedFrom(anyString())).thenReturn(mkm);
+//
+//		mockMvc.perform(get("/corpses/"+tagNo+"/transferred-from"))
+//			.andExpect(status().isOk())
+//			.andExpect(jsonPath("name").value("MKM"));
+//
+//		verify(service).getTransforedFrom(tagNo);
+//	}
 }

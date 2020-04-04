@@ -1,7 +1,7 @@
 package lfs.server.mortuary;
 
-import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -9,9 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OtherMortuaryRepository extends CrudRepository<OtherMortuary, Integer>{
-
-	@Query("SELECT t FROM Corpse c JOIN c.transferredFrom t where c.tagNo = :tagNo")
-	List<OtherMortuary> findByCorpse(@Param("tagNo") String tagNo);
 	
 	Optional<OtherMortuary> findFirstByName(String name);
 

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.PersistentObjectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +49,7 @@ class CorpseServiceIntegrationTest {
 	void getCorpse() {
 		Corpse corpse = new Corpse();
 		service.save(corpse); 
-		Corpse savedCorpse = service.get(corpse.getTagNo());
+		Corpse savedCorpse = service.get(corpse.getTagNo()).orElse(null);
 		
 		assertThat(corpse).isEqualTo(savedCorpse);
 	}

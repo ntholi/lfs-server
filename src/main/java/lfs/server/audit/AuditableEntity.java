@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -29,9 +30,8 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity {
 	
-	@ManyToOne 
-	@JoinColumn(name="branch_id", 
-		nullable=true, updatable=false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable=true, updatable=false)
 	private Branch branch;
 	
 	@CreatedDate

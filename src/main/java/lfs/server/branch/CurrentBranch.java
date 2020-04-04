@@ -20,7 +20,7 @@ public class CurrentBranch {
 		if(branch == null) {
 			name = ConfigFile.getBranchName();
 			if(name != null) {
-				branch = repo.findByName(name);
+				branch = repo.findByName(name).orElse(null);
 			}
 		}
 		if(branch == null) {

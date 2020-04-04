@@ -31,6 +31,8 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
         body.put(TIMESTAMP, LocalDateTime.now());
         body.put(STATUS, HttpStatus.NOT_FOUND.value());
         body.put(ERROR, ex.getMessage());
+        
+        ex.printStackTrace();
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }

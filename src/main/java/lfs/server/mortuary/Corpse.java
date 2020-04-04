@@ -1,6 +1,5 @@
 package lfs.server.mortuary;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -124,11 +123,4 @@ public class Corpse extends AuditableEntity {
 	@JsonProperty("transferredFrom")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private OtherMortuary transferredFrom;
-	
-	public List<NextOfKin> getNextOfKins() {
-		return nextOfKins;
-	}
-	public void setNextOfKins(List<NextOfKin> nextOfKins) {
-		this.nextOfKins = nextOfKins;
-	}
 }

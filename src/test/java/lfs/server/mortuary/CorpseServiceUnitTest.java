@@ -43,7 +43,7 @@ class CorpseServiceUnitTest {
 	@Test
 	void getCorpse() {
 		when(corpseRepo.findById(tagNo)).thenReturn(Optional.of(savedCorpse()));
-		Corpse corpse = service.get(tagNo);
+		Corpse corpse = service.get(tagNo).orElse(null);
 		assertThat(corpse).isEqualTo(savedCorpse());
 	}
 	

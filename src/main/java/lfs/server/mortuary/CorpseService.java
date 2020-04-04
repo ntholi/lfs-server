@@ -1,6 +1,5 @@
 package lfs.server.mortuary;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +24,8 @@ public class CorpseService {
 		this.otherMortuaryRepo = otherMortuaryRepository;
 	}
 
-	public Corpse get(String tagNo) {
-		return corpseRepo.findById(tagNo).orElse(null);
+	public Optional<Corpse> get(String tagNo) {
+		return corpseRepo.findById(tagNo);
 	}
 
 	public Page<Corpse> all(PageRequest pageable) {
@@ -75,11 +74,16 @@ public class CorpseService {
 				.orElseThrow(ExceptionSupplier.corpseNotFound(tagNo));
 		corpseRepo.delete(corpse);
 	}
+	
+	public Iterable<NextOfKin> getNextOfKins(String tagNo) {
+		return corpseRepo.findNextOfKins(tagNo);
+	}
+	
 	public Iterable<OtherMortuary> getOtherMortuaries(){
 		return otherMortuaryRepo.findAll();
 	}
 
-	public List<OtherMortuary> getOtherMortuaries(String tagNo) {
-		return otherMortuaryRepo.findByCorpse(tagNo);
+	public Optional<OtherMortuary> getTransforedFrom(int id) {
+		return otherMortuaryRepo.findById(id);
 	}
 }
