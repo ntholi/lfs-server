@@ -30,4 +30,6 @@ public class CorpseResponseDTO {
 	private String specialRequirements;
 	private String otherNotes;
 	private boolean released;
+	private LocalDateTime createdAt;
+	
 }

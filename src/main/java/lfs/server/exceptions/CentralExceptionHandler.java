@@ -17,8 +17,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import lfs.server.util.WordUtils;
+import lombok.extern.log4j.Log4j2;
 
 @ControllerAdvice
+@Log4j2
 public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final String TIMESTAMP = "timestamp";
@@ -32,7 +34,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
         body.put(STATUS, HttpStatus.NOT_FOUND.value());
         body.put(ERROR, ex.getMessage());
         
-        ex.printStackTrace();
+        log.error(ex.getMessage(), ex);
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
