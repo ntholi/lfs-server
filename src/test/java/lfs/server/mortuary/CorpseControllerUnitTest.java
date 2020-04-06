@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,7 +50,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	@BeforeEach
 	public void setup() {
 		createCorpse();
-		expect = new Expectations(URL, getBranch(), corpse.getTagNo());
+		expect = new Expectations(URL, getBranch());
 	}
 
 	@Test
@@ -57,6 +58,9 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		when(repo.findById(TAG_NO)).thenReturn(Optional.of(corpse));
 	    ResultActions result = mockMvc.perform(get(URL+TAG_NO));
 	    result.andExpect(jsonPath("_links.nextOfKins.href", endsWith("/next-of-kins/"+corpse.getTagNo())));
+	    result.andExpect(jsonPath("_links.transferredFrom.href", endsWith("/other-mortuaries/"
+	    		+corpse.getTransferredFrom().getId())));
+	    result.andDo(print());
 	    expect.forEntity(result, corpse);
 	}
 	
@@ -82,7 +86,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
-	    expect.forPage(result, corpseList, url);
+	    expect.forPage(result, corpseList, "corpseList", url);
 	}
 	
 	@Test
@@ -133,7 +137,9 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		corpse.setTagNo("101");
 		corpse.setNames("Thabo");
 		corpse.setSurname("Lebese");
-		corpse.setTransferredFrom(new OtherMortuary("MKM"));
+		OtherMortuary om = new OtherMortuary("MKM");
+		om.setId(101);
+		corpse.setTransferredFrom(om);
 		corpse.setBranch(getBranch());
 		
 		Corpse corpse2 = new Corpse();
