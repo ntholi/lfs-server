@@ -1,5 +1,6 @@
 package lfs.server.exceptions;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,18 +27,32 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final String TIMESTAMP = "timestamp";
 	private static final String STATUS = "status";
 	private static final String ERROR = "error";
+	private static final String STACK_TRACE = "stack_trace";
 
 	@ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<Object> handleCityNotFoundException(ObjectNotFoundException ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put(TIMESTAMP, LocalDateTime.now());
+    public ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFoundException ex, WebRequest request) {
+        Map<String, Object> body = generatBody(ex);
         body.put(STATUS, HttpStatus.NOT_FOUND.value());
-        body.put(ERROR, ex.getMessage());
-        
-        log.error(ex.getMessage(), ex);
-
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+	
+	@ExceptionHandler(Throwable.class)
+    public ResponseEntity<Object> handleException(Throwable ex, WebRequest request) {
+        Map<String, Object> body = generatBody(ex);
+        body.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR);
+        body.put(STACK_TRACE, Arrays.stream(ex.getStackTrace())
+        		.map(StackTraceElement::toString)
+        		.collect(Collectors.joining("\n")));
+        log.error("Error: "+ ex.getMessage(), ex);
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+	private Map<String, Object> generatBody(Throwable ex) {
+		Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(ERROR, ex.getMessage());
+		return body;
+	}
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
