@@ -52,4 +52,9 @@ public class NextOfKin {
     @JoinColumn(name="corpse_id")
     @JsonIgnore
     private Corpse corpse;
+
+	public NextOfKin(String names, String surname) {
+		this.names = names;
+		this.surname = surname;
+	}
 }

@@ -1,5 +1,6 @@
 package lfs.server.mortuary;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +51,7 @@ public class CorpseService {
 		if(corpse == null) {
 			throw new NullPointerException("Corpse object provided is null");
 		}
-		if(corpseRepo.exists(tagNo) == 0) {
+		if(!corpseRepo.existsById(tagNo)) {
 			throw ExceptionSupplier.corpseNotFound(tagNo).get();
 		}
 		if(corpse.getTransferredFrom() != null) {
@@ -61,7 +62,7 @@ public class CorpseService {
 					corpse.setTransferredFrom(obj.get());
 				}
 			}
-			else if(otherMortuaryRepo.exists(om.getId()) == 0) {
+			else if(otherMortuaryRepo.existsById(om.getId())) {
 				throw new ObjectNotFoundException("OtherMortuary object with id '"+
 						om.getId()+"' not found");
 			}
@@ -75,11 +76,11 @@ public class CorpseService {
 		corpseRepo.delete(corpse);
 	}
 	
-	public Iterable<NextOfKin> getNextOfKins(String tagNo) {
+	public List<NextOfKin> getNextOfKins(String tagNo) {
 		return corpseRepo.findNextOfKins(tagNo);
 	}
 	
-	public Iterable<OtherMortuary> getOtherMortuaries(){
+	public List<OtherMortuary> getOtherMortuaries(){
 		return otherMortuaryRepo.findAll();
 	}
 

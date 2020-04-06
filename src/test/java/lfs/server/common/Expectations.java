@@ -2,8 +2,6 @@ package lfs.server.common;
 
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -42,7 +40,6 @@ public class Expectations {
 	}
 	
 	public <T> ResultActions forEntity(final ResultActions result, final T object, String path) throws Exception {
-		result.andExpect(status().isOk());
 		var values = getValues(object);
 		System.out.println("Validating the following fields: ");
 	    for (var item : values.entrySet()) {

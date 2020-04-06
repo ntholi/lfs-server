@@ -1,7 +1,10 @@
 package lfs.server.mortuary;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -37,8 +40,12 @@ public class CorpseController  {
 	}
 
 	@GetMapping
-	public PagedModel<EntityModel<CorpseResponseDTO>> all(Pageable pageable) {
-		return pagedAssembler.toModel(service.all(pageable), assembler);
+	public ResponseEntity<PagedModel<EntityModel<CorpseResponseDTO>>> all(Pageable pageable) {
+		Page<Corpse> page = service.all(pageable);
+		if(!page.isEmpty()) {
+			return ResponseEntity.ok(pagedAssembler.toModel(page, assembler));
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping
@@ -48,8 +55,9 @@ public class CorpseController  {
 	}
 
 	@PutMapping("/{tagNo}")
-	public Corpse update(@PathVariable String tagNo, @RequestBody Corpse corpse) {
-		return service.update(tagNo, corpse);
+	public ResponseEntity<EntityModel<CorpseResponseDTO>> update(@PathVariable String tagNo, @RequestBody Corpse corpse) {
+		var update = service.update(tagNo, corpse);
+		return ResponseEntity.ok(assembler.toModel(update));
 	}
 
 	@DeleteMapping("/{tagNo}")
@@ -65,12 +73,18 @@ public class CorpseController  {
 	}
 
 	@GetMapping("/other-mortuaries")
-	public Iterable<OtherMortuary> getOtherMortuaries() {
-		return service.getOtherMortuaries();
+	public ResponseEntity<Iterable<OtherMortuary>> getOtherMortuaries() {
+		var list = service.getOtherMortuaries();
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
 	}
 
 	@GetMapping("/next-of-kins/{tagNo}")
-	public Iterable<NextOfKin> getNextOfKins(@PathVariable String tagNo) {
-		return service.getNextOfKins(tagNo);
+	public ResponseEntity<List<NextOfKin>> getNextOfKins(@PathVariable String tagNo) {
+		var list =  service.getNextOfKins(tagNo);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
 	}
 }
