@@ -1,7 +1,9 @@
 package lfs.server.mortuary;
 
 import static org.hamcrest.CoreMatchers.endsWith;
-import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,7 +19,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
 import lfs.server.branch.BranchRepository;
 import lfs.server.common.ControllerUnitTest;
 import lfs.server.common.Expectations;
@@ -58,7 +60,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	}
 
 	@Test
-	void verify_successful_getCorpse() throws Exception {
+	void get_corpse() throws Exception {
 		when(repo.findById(TAG_NO)).thenReturn(Optional.of(corpse));
 	    ResultActions result = mockMvc.perform(get(URL+TAG_NO));
 	    result.andExpect(status().isOk());
@@ -70,19 +72,18 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	@Test
-	void failed_getCorpse() throws Exception {
+	void get_for_non_existing_corpse() throws Exception {
 		String exMsg = ExceptionSupplier.corpseNotFound(TAG_NO).get().getMessage();
 		
 		when(repo.findById(anyString())).thenReturn(Optional.ofNullable(null));
 		
-	    mockMvc.perform(get(URL+TAG_NO))
-	    		.andExpect(status().isNotFound())
-	    		.andExpect(jsonPath("status").value(404))
-	    		.andExpect(jsonPath("error", is(exMsg)));
+	    var result = mockMvc.perform(get(URL+TAG_NO))
+	    		.andExpect(status().isNotFound());
+	    Expectations.forObjectNotFound(result, exMsg);
 	}
 	
 	@Test
-	void successful_getAllCorpse() throws Exception {
+	void get_all_corpse() throws Exception {
 
 		var url = URL+"?page=0&size=20&sort=createdAt,desc";
 		
@@ -95,7 +96,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	@Test
-	void getAllCorpse_with_no_content() throws Exception {
+	void get_all_corpse_with_no_content() throws Exception {
 
 		var url = URL+"?page=0&size=20&sort=createdAt,desc";
 		
@@ -121,22 +122,21 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	@Test
-	void save_fails_because_of_invalid_validation() throws Exception {
+	void save_fails_because_of_invalid_field() throws Exception {
 		String exMsg = "Invalid input for Names";
 		
 		Corpse corpse = new Corpse();
 		corpse.setNames("N");
 		
-	    mockMvc.perform(post(URL).content(asJsonString(corpse))
+	    var result = mockMvc.perform(post(URL).content(asJsonString(corpse))
 				  .contentType(MediaType.APPLICATION_JSON)
 				  .accept(MediaType.APPLICATION_JSON))
-	    		.andExpect(status().isBadRequest())
-	    		.andExpect(jsonPath("status").value(400))
-	    		.andExpect(jsonPath("error", is(exMsg)));
+	    		.andExpect(status().isBadRequest());
+	   Expectations.forInvalidFields(result, exMsg);
 	}
 	
 	@Test
-	void succesfull_corpse_update() throws Exception {
+	void update_corpse() throws Exception {
 		when(repo.existsById(TAG_NO)).thenReturn(true);
 		when(repo.save(any(Corpse.class))).thenReturn(corpse);
 		when(otherMortuaryRepo.existsById(anyInt())).thenReturn(false);

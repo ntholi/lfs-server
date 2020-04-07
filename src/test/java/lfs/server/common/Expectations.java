@@ -1,7 +1,10 @@
 package lfs.server.common;
 
 import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -72,6 +75,18 @@ public class Expectations {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static ResultActions forObjectNotFound(ResultActions result, String message) throws Exception {
+		return result.andExpect(status().isNotFound())
+				.andExpect(jsonPath("status").value(404))
+				.andExpect(jsonPath("error", is(message)));
+	}
+	
+	public static ResultActions forInvalidFields(ResultActions result, String message) throws Exception {
+		return result.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("status").value(400))
+				.andExpect(jsonPath("error", is(message)));
 	}
 
 	private static <T> Map<String, Object> getValues(T object){
