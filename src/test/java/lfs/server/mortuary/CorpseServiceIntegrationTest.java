@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,11 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import lfs.server.exceptions.ObjectNotFoundException;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 class CorpseServiceIntegrationTest {
 
+	@Autowired CorpseRepository repo;
+	
 	@Autowired
 	private CorpseService service;
 	@Autowired
@@ -77,10 +78,16 @@ class CorpseServiceIntegrationTest {
 		assertThat(thrown).hasMessageContaining("Corpse with tagNo");
 	}
 	
-//	@Test
-//	void verify_that_corpse_is_updated_successfully() {
-//		//It's better of with integration Test
-//	}
+	@Test
+	void verify_that_corpse_is_updated_successfully() {
+		Corpse c1 = new Corpse();
+		c1.setNames("Names 1");
+		repo.saveAndFlush(c1);
+		
+		c1.setNames("Names 2");
+		Corpse savedCorpse = service.update(c1.getTagNo(), c1);
+		assertThat(savedCorpse.getNames()).isEqualTo("Names 2");
+	}
 	
 	@Test
 	void should_only_delete_existing_corpse() {

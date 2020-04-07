@@ -62,7 +62,7 @@ public class CorpseService {
 					corpse.setTransferredFrom(obj.get());
 				}
 			}
-			else if(otherMortuaryRepo.existsById(om.getId())) {
+			else if(!otherMortuaryRepo.existsById(om.getId())) {
 				throw new ObjectNotFoundException("OtherMortuary object with id '"+
 						om.getId()+"' not found");
 			}

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import lfs.server.branch.BranchRepository;
 import lfs.server.common.ControllerUnitTest;
 import lfs.server.common.Expectations;
 import lfs.server.exceptions.ExceptionSupplier;
@@ -40,8 +40,6 @@ class CorpseControllerIntegrationTest implements ControllerUnitTest {
 	private MockMvc mockMvc;
 	@Autowired
 	private CorpseRepository repo;
-	@Autowired 
-	private BranchRepository branchRepo;
 	@Autowired 
 	private OtherMortuaryRepository otherMortuaryRepo;
 
