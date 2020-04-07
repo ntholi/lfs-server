@@ -69,6 +69,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	    		+corpse.getTransferredFrom().getId())));
 	    result.andDo(print());
 	    expect.forEntity(result, corpse);
+	    verify(service).get(TAG_NO);
 	}
 	
 	@Test
@@ -80,6 +81,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	    var result = mockMvc.perform(get(URL+TAG_NO))
 	    		.andExpect(status().isNotFound());
 	    Expectations.forObjectNotFound(result, exMsg);
+	    verify(service).get(TAG_NO);
 	}
 	
 	@Test
@@ -93,6 +95,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
 	    expect.forPage(result, corpseList, "corpseList", url);
+	    verify(service).all(pageRequest);
 	}
 	
 	@Test
@@ -105,6 +108,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		
 		mockMvc.perform(get(url))
 	    		.andExpect(status().isNoContent());
+		verify(service).all(pageRequest);
 	}
 	
 	@Test
@@ -119,6 +123,8 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		result.andExpect(status().isCreated());
 		result.andDo(print());
 		expect.forEntity(result, corpse);
+		
+		verify(service).save(any(Corpse.class));
 	}
 	
 	@Test
@@ -133,6 +139,8 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 				  .accept(MediaType.APPLICATION_JSON))
 	    		.andExpect(status().isBadRequest());
 	   Expectations.forInvalidFields(result, exMsg);
+	   
+	   verify(service).save(any(Corpse.class));
 	}
 	
 	@Test
@@ -150,8 +158,9 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		System.out.println();
 		
 		result.andExpect(status().isOk());
-		
 		expect.forEntity(result, corpse);
+		
+		verify(service).update(TAG_NO, any(Corpse.class));
 	}
 	
 	@Test
