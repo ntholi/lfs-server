@@ -4,16 +4,16 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +24,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -62,7 +61,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	@Test
 	void get_corpse() throws Exception {
 		when(repo.findById(TAG_NO)).thenReturn(Optional.of(corpse));
-	    ResultActions result = mockMvc.perform(get(URL+TAG_NO));
+	    ResultActions result = mockMvc.perform(get(URL+corpse.getTagNo()));
 	    result.andExpect(status().isOk());
 	    result.andExpect(jsonPath("_links.nextOfKins.href", endsWith("/next-of-kins/"+corpse.getTagNo())));
 	    result.andExpect(jsonPath("_links.transferredFrom.href", endsWith("/other-mortuaries/"
@@ -114,19 +113,16 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	@Test
 	void succesfull_corpse_save() throws Exception {
 		when(repo.save(any(Corpse.class))).thenReturn(corpse);
-
-		var result = mockMvc.perform(post(URL)
-				  .content(asJsonString(corpse))
-				  .characterEncoding("utf8")
-				  .contentType(MediaType.APPLICATION_JSON)
-				  .accept(MediaType.APPLICATION_JSON));
+		
+		var result = post(mockMvc, URL, corpse);
 		result.andExpect(status().isCreated());
 		result.andDo(print());
 		expect.forEntity(result, corpse);
 		
 		verify(service).save(any(Corpse.class));
 	}
-	
+
+
 	@Test
 	void save_fails_because_of_invalid_field() throws Exception {
 		String exMsg = "Invalid input for Names";
@@ -134,13 +130,11 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		Corpse corpse = new Corpse();
 		corpse.setNames("N");
 		
-	    var result = mockMvc.perform(post(URL).content(asJsonString(corpse))
-				  .contentType(MediaType.APPLICATION_JSON)
-				  .accept(MediaType.APPLICATION_JSON))
-	    		.andExpect(status().isBadRequest());
+		var result = post(mockMvc, URL, corpse);
+		
 	   Expectations.forInvalidFields(result, exMsg);
 	   
-	   verify(service).save(any(Corpse.class));
+	   verify(service, times(0)).save(any(Corpse.class));
 	}
 	
 	@Test
@@ -149,18 +143,13 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		when(repo.save(any(Corpse.class))).thenReturn(corpse);
 		when(otherMortuaryRepo.existsById(anyInt())).thenReturn(false);
 
-		String url = URL+TAG_NO;
-		var result = mockMvc.perform(put(url)
-				  .content(asJsonString(corpse))
-				  .characterEncoding("utf8")
-				  .contentType(MediaType.APPLICATION_JSON)
-				  .accept(MediaType.APPLICATION_JSON));
+		var result = put(mockMvc, URL+TAG_NO, corpse);
 		System.out.println();
 		
 		result.andExpect(status().isOk());
 		expect.forEntity(result, corpse);
 		
-		verify(service).update(TAG_NO, any(Corpse.class));
+		verify(service).update(anyString(), any(Corpse.class));
 	}
 	
 	@Test
@@ -228,20 +217,22 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	
 	private void createCorpse() {
 		corpse = new Corpse();
-		corpse.setTagNo("101");
 		corpse.setNames("Thabo");
 		corpse.setSurname("Lebese");
 		OtherMortuary om = new OtherMortuary("MKM");
-		om.setId(101);
 		corpse.setTransferredFrom(om);
 		corpse.setBranch(getBranch());
 		
 		Corpse corpse2 = new Corpse();
-		corpse2.setTagNo("102");
 		corpse2.setNames("Nthabiseng");
 		corpse2.setSurname("Lebese");
 		corpse2.setBranch(getBranch());
 		
-		corpseList = List.of(corpse, corpse2);
+		//set IDs
+		corpse.setTagNo(TAG_NO);
+		corpse2.setTagNo("102");
+		om.setId(101);
+		
+		corpseList = Arrays.asList(corpse, corpse2);
 	}
 }
