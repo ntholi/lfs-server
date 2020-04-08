@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import lfs.server.exceptions.ExceptionSupplier;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
  * @param <I> the entity's id
  */
 @Log4j2
-public abstract class BaseService<T, I, R extends JpaRepository<T, I>> {
+public abstract class BaseService<T, I, R extends AuditableRepository<T, I>> {
 
 	protected R repo;
 	private final String className;
