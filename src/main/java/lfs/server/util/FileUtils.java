@@ -13,7 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Properties;
 
-import lfs.server.common.Constants;
+import lfs.server.core.Constants;
 
 /**
  * @author Ntholi Nkhatho

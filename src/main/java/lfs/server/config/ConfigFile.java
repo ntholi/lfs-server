@@ -3,7 +3,7 @@ package lfs.server.config;
 import java.io.IOException;
 import java.util.Properties;
 
-import lfs.server.common.Constants;
+import lfs.server.core.Constants;
 import lfs.server.util.FileUtils;
 import lombok.extern.log4j.Log4j2;
 

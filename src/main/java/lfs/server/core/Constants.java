@@ -1,4 +1,4 @@
-package lfs.server.common;
+package lfs.server.core;
 
 import java.io.File;
 import java.util.prefs.Preferences;

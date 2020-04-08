@@ -89,15 +89,20 @@ class CorpseServiceIntegrationTest {
 		assertThat(savedCorpse.getNames()).isEqualTo("Names 2");
 	}
 	
+
 	@Test
-	void should_only_delete_existing_corpse() {
-	    var unknownId = "unknown_id";
-	    
-		Throwable thrown = catchThrowable(() -> {
-			service.delete(unknownId);
-		});
-		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
-		assertThat(thrown).hasMessageContaining("Corpse with tagNo");
+	void successful_delete() {
+		Corpse corpse = new Corpse();
+		corpse.setNames("Thabo");
+		repo.saveAndFlush(corpse);
+		
+		var list = repo.findById(corpse.getTagNo());
+		assertThat(list).isNotEmpty();
+		
+		service.delete(corpse.getTagNo());
+		
+		var list2 = repo.findAll();
+		assertThat(list2).isEmpty();
 	}
 	
 	@Test

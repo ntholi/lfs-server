@@ -1,6 +1,5 @@
 package lfs.server.exceptions;
 
-import java.io.Serializable;
 import java.util.function.Supplier;
 
 public final class ExceptionSupplier {
@@ -12,7 +11,7 @@ public final class ExceptionSupplier {
 			new ObjectNotFoundException(message);
 	}
 	
-	public static Supplier<RuntimeException> notFound(String objectName, Serializable id){
+	public static Supplier<RuntimeException> notFound(String objectName, Object id){
 		return () ->
 			new ObjectNotFoundException(objectName+ " with id '"+ id +"' not found");
 	}

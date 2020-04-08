@@ -4,36 +4,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lfs.server.common.BaseService;
+import lfs.server.core.BaseService;
 import lfs.server.exceptions.ExceptionSupplier;
 import lfs.server.exceptions.ObjectNotFoundException;
 
 @Service
-public class CorpseService implements BaseService<Corpse, String> {
+public class CorpseService extends BaseService<Corpse, String, CorpseRepository> {
 
-	private CorpseRepository corpseRepo;
+
 	private OtherMortuaryRepository otherMortuaryRepo;
 
-	@Autowired
-	public CorpseService(CorpseRepository repository, OtherMortuaryRepository otherMortuaryRepository) {
-		this.corpseRepo = repository;
-		this.otherMortuaryRepo = otherMortuaryRepository;
-	}
-
-	@Override
-	public Optional<Corpse> get(String tagNo) {
-		return corpseRepo.findById(tagNo);
-	}
-
-	@Override
-	public Page<Corpse> all(Pageable pageable) {
-		return corpseRepo.findAll(pageable);
+	public CorpseService(OtherMortuaryRepository otherMortuaryRepo, CorpseRepository repo) {
+		super(repo);
+		this.otherMortuaryRepo = otherMortuaryRepo;
 	}
 	
 	@Transactional
@@ -47,7 +33,7 @@ public class CorpseService implements BaseService<Corpse, String> {
 				corpse.setTransferredFrom(obj.get());
 			}
 		}
-		return corpseRepo.save(corpse);
+		return repo.save(corpse);
 	}
 
 	@Transactional
@@ -56,7 +42,7 @@ public class CorpseService implements BaseService<Corpse, String> {
 		if(corpse == null) {
 			throw new NullPointerException("Corpse object provided is null");
 		}
-		if(!corpseRepo.existsById(tagNo)) {
+		if(!repo.existsById(tagNo)) {
 			throw ExceptionSupplier.corpseNotFound(tagNo).get();
 		}
 		if(corpse.getTransferredFrom() != null) {
@@ -72,18 +58,11 @@ public class CorpseService implements BaseService<Corpse, String> {
 						om.getId()+"' not found");
 			}
 		}
-		return corpseRepo.save(corpse);
-	}
-
-	@Override
-	public void delete(String tagNo) {
-		Corpse corpse = corpseRepo.findById(tagNo)
-				.orElseThrow(ExceptionSupplier.corpseNotFound(tagNo));
-		corpseRepo.delete(corpse);
+		return repo.save(corpse);
 	}
 	
 	public List<NextOfKin> getNextOfKins(String tagNo) {
-		return corpseRepo.findNextOfKins(tagNo);
+		return repo.findNextOfKins(tagNo);
 	}
 	
 	public List<OtherMortuary> getOtherMortuaries(){

@@ -141,7 +141,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	void update_corpse() throws Exception {
 		when(repo.existsById(TAG_NO)).thenReturn(true);
 		when(repo.save(any(Corpse.class))).thenReturn(corpse);
-		when(otherMortuaryRepo.existsById(anyInt())).thenReturn(false);
+		when(otherMortuaryRepo.existsById(anyInt())).thenReturn(true);
 
 		var result = put(mockMvc, URL+TAG_NO, corpse);
 		System.out.println();

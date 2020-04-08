@@ -71,17 +71,6 @@ class CorpseServiceUnitTest {
 	}
 	
 	@Test
-	void should_only_delete_existing_corpse() {
-	    var unknownId = "unknown_id";
-	    
-		Throwable thrown = catchThrowable(() -> {
-			service.delete(unknownId);
-		});
-		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
-		assertThat(thrown).hasMessageContaining("Corpse with tagNo");
-	}
-	
-	@Test
 	void should_fail_to_update_otherMortuary_that_does_not_exist() {
 		Corpse corpse = new Corpse();
 		OtherMortuary other = new OtherMortuary("MKM");
