@@ -38,7 +38,7 @@ class IdGeneratorTest {
 			String idTable = getIdTable(type);
 			assertThat(getDefinedIdTypeParam(type)).isEqualTo(getIdType(type));
 			assertThat(getClassDeclaredGeneratedValue(type)).isEqualTo(idTable);
-			assertThat(getIDFieldGeneratedValue(type)).isEqualTo(idTable);
+			assertThat(getIDGeneratorValue(type)).isEqualTo(idTable);
 		}
 	}
 
@@ -59,11 +59,12 @@ class IdGeneratorTest {
 		return null;
 	}
 
-	public String getIDFieldGeneratedValue(Class<?> type) throws ClassNotFoundException {
-		Field field = getFields(type).get(0);
-		if(field.isAnnotationPresent(GeneratedValue.class)) {
-			final GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
-			return annotation.generator();
+	public String getIDGeneratorValue(Class<?> type) throws ClassNotFoundException {
+		for(Field field: getFields(type)) {
+			if(field.isAnnotationPresent(GeneratedValue.class)) {
+				final GeneratedValue annotation = field.getAnnotation(GeneratedValue.class);
+				return annotation.generator();
+			}
 		}
 
 		return null;
