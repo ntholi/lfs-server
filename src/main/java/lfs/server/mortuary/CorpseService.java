@@ -10,11 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lfs.server.common.BaseService;
 import lfs.server.exceptions.ExceptionSupplier;
 import lfs.server.exceptions.ObjectNotFoundException;
 
 @Service
-public class CorpseService {
+public class CorpseService implements BaseService<Corpse, String> {
 
 	private CorpseRepository corpseRepo;
 	private OtherMortuaryRepository otherMortuaryRepo;
@@ -25,15 +26,18 @@ public class CorpseService {
 		this.otherMortuaryRepo = otherMortuaryRepository;
 	}
 
+	@Override
 	public Optional<Corpse> get(String tagNo) {
 		return corpseRepo.findById(tagNo);
 	}
 
+	@Override
 	public Page<Corpse> all(Pageable pageable) {
 		return corpseRepo.findAll(pageable);
 	}
 	
 	@Transactional
+	@Override
 	public Corpse save(final Corpse corpse) {
 		OtherMortuary om = corpse.getTransferredFrom();
 		if(om != null
@@ -47,6 +51,7 @@ public class CorpseService {
 	}
 
 	@Transactional
+	@Override
 	public Corpse update(String tagNo, Corpse corpse) {
 		if(corpse == null) {
 			throw new NullPointerException("Corpse object provided is null");
@@ -70,6 +75,7 @@ public class CorpseService {
 		return corpseRepo.save(corpse);
 	}
 
+	@Override
 	public void delete(String tagNo) {
 		Corpse corpse = corpseRepo.findById(tagNo)
 				.orElseThrow(ExceptionSupplier.corpseNotFound(tagNo));
