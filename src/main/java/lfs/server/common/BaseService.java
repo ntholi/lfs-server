@@ -16,7 +16,7 @@ public interface BaseService<T, I> {
 
 	public Optional<T> get(I id);
 	public Page<T> all(Pageable pageable);
-	public T save(final T corpse);
-	public T update(I tagNo, T corpse);
+	public T save(final T entity);
+	public T update(I id, T entity);
 	public void delete(I id);
 }

@@ -38,6 +38,8 @@ public abstract class AuditableEntity {
 	@Column(nullable=true, updatable=false)
 	private LocalDateTime createdAt;
 	
+	private boolean deleted;
+	
 	@PrePersist
 	void prePersist() {
 		if(branch == null) {
