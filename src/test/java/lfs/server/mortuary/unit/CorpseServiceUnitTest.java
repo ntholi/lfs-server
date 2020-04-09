@@ -1,4 +1,4 @@
-package lfs.server.mortuary;
+package lfs.server.mortuary.unit;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -17,6 +17,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import lfs.server.exceptions.ObjectNotFoundException;
+import lfs.server.mortuary.Corpse;
+import lfs.server.mortuary.CorpseRepository;
+import lfs.server.mortuary.CorpseService;
+import lfs.server.mortuary.OtherMortuary;
+import lfs.server.mortuary.OtherMortuaryRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CorpseServiceUnitTest {

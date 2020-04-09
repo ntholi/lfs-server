@@ -1,4 +1,4 @@
-package lfs.server.mortuary;
+package lfs.server.mortuary.unit;
 
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +32,13 @@ import lfs.server.common.ControllerUnitTest;
 import lfs.server.common.Expectations;
 import lfs.server.common.PageRequestHelper;
 import lfs.server.exceptions.ExceptionSupplier;
+import lfs.server.mortuary.Corpse;
+import lfs.server.mortuary.CorpseModelAssembler;
+import lfs.server.mortuary.CorpseRepository;
+import lfs.server.mortuary.CorpseService;
+import lfs.server.mortuary.NextOfKin;
+import lfs.server.mortuary.OtherMortuary;
+import lfs.server.mortuary.OtherMortuaryRepository;
 
 @WebMvcTest
 class CorpseControllerUnitTest implements ControllerUnitTest {

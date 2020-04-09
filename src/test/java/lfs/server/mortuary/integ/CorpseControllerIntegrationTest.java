@@ -1,4 +1,4 @@
-package lfs.server.mortuary;
+package lfs.server.mortuary.integ;
 
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
@@ -27,6 +27,11 @@ import com.google.common.collect.Lists;
 import lfs.server.common.ControllerUnitTest;
 import lfs.server.common.Expectations;
 import lfs.server.exceptions.ExceptionSupplier;
+import lfs.server.mortuary.Corpse;
+import lfs.server.mortuary.CorpseRepository;
+import lfs.server.mortuary.NextOfKin;
+import lfs.server.mortuary.OtherMortuary;
+import lfs.server.mortuary.OtherMortuaryRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

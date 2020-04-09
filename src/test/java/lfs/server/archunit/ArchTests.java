@@ -18,18 +18,20 @@ import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 
 class ArchTests {
-
-	private JavaClasses classes;
-
-	@BeforeEach
-	public void setup() {
-	    classes = new ClassFileImporter()
-	        .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-	        .importPackages("lfs.server");
+	
+	@Test
+	void make_sure_that_interation_tests_use_test_profile() {
+		JavaClasses classes = new ClassFileImporter()
+		        .importPackages("..mortuary");
+		classes.forEach(System.out::println);
 	}
 
 	@Test
 	void validate_steriotype_annotations() {
+		JavaClasses classes = new ClassFileImporter()
+		        .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+		        .importPackages("lfs.server");
+		
 		stereotypeThat().haveSimpleNameEndingWith("Controller")
 			.should().beAnnotatedWith(RestController.class)
 			.orShould().beAnnotatedWith(Controller.class)

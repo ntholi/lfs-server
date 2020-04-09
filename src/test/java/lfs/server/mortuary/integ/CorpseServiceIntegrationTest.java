@@ -1,4 +1,4 @@
-package lfs.server.mortuary;
+package lfs.server.mortuary.integ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -17,6 +17,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import lfs.server.exceptions.ObjectNotFoundException;
+import lfs.server.mortuary.Corpse;
+import lfs.server.mortuary.CorpseRepository;
+import lfs.server.mortuary.CorpseService;
+import lfs.server.mortuary.OtherMortuary;
+import lfs.server.mortuary.OtherMortuaryRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
