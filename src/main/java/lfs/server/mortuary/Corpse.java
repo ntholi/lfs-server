@@ -44,7 +44,7 @@ import lombok.NoArgsConstructor;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
 })
-public class Corpse extends AuditableEntity {
+public class Corpse extends AuditableEntity<String> {
 	public enum Gender {MALE, FEMALE}
 	
 	@Id
@@ -123,4 +123,9 @@ public class Corpse extends AuditableEntity {
 	@JsonProperty("transferredFrom")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private OtherMortuary transferredFrom;
+
+	@Override
+	public String getId() {
+		return tagNo;
+	}
 }

@@ -3,15 +3,18 @@ package lfs.server.mortuary;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import lfs.server.branch.District;
 import lfs.server.mortuary.Corpse.Gender;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Relation(collectionRelation = "corpseList")
-public class CorpseResponseDTO {
+public class CorpseResponseDTO extends RepresentationModel<CorpseResponseDTO>{
 	private String tagNo;
 	private String names;
 	private String surname;

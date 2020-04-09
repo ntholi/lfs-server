@@ -23,12 +23,13 @@ import lombok.Data;
 
 /**
  * @author Ntholi Nkhatho
+ * @param <T> Entity's ID type
  *
  */
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AuditableEntity {
+public abstract class AuditableEntity<T> {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true, updatable=false)
@@ -39,6 +40,8 @@ public abstract class AuditableEntity {
 	private LocalDateTime createdAt;
 	
 	private boolean deleted;
+	
+	public abstract T getId();
 	
 	@PrePersist
 	void prePersist() {

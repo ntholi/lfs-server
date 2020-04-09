@@ -1,5 +1,8 @@
 package lfs.server.mortuary;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,44 +23,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lfs.server.core.BaseController;
 import lfs.server.exceptions.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/corpses")
 @AllArgsConstructor
-public class CorpseController  {
+public class CorpseController extends BaseController<Corpse, CorpseResponseDTO, String>  {
 
 	private CorpseService service;
-	private CorpseModelAssembler assembler;
-	private PagedResourcesAssembler<Corpse> pagedAssembler;
+	private PagedResourcesAssembler<CorpseResponseDTO> pagedAssembler;
 
+	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<EntityModel<CorpseResponseDTO>> get(@PathVariable String id) {
-		return service.get(id)
-				.map(o -> ResponseEntity.ok(assembler.toModel(o)))
-				.orElseThrow(ExceptionSupplier.corpseNotFound(id));
+	public ResponseEntity<CorpseResponseDTO> get(@PathVariable String id) {
+		return getResponse(service.get(id), ExceptionSupplier.corpseNotFound(id));
 	}
 
 	@GetMapping
 	public ResponseEntity<PagedModel<EntityModel<CorpseResponseDTO>>> all(Pageable pageable) {
-		Page<Corpse> page = service.all(pageable);
-		if(!page.isEmpty()) {
-			return ResponseEntity.ok(pagedAssembler.toModel(page, assembler));
-		}
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		Page<CorpseResponseDTO> page = service.all(pageable)
+				.map(o -> addLinks(o));
+		return page.isEmpty()? new ResponseEntity<>(HttpStatus.NO_CONTENT) 
+				: new ResponseEntity<>(pagedAssembler.toModel(page),HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<EntityModel<CorpseResponseDTO>> save(@Valid @RequestBody Corpse corpse) {
-		var model = assembler.toModel(service.save(corpse));
+	public ResponseEntity<CorpseResponseDTO> save(@Valid @RequestBody Corpse corpse) {
+		var model = addLinks(service.save(corpse));
 		return new ResponseEntity<>(model, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{tagNo}")
-	public ResponseEntity<EntityModel<CorpseResponseDTO>> update(@PathVariable String tagNo, @RequestBody Corpse corpse) {
+	public ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @RequestBody Corpse corpse) {
 		var update = service.update(tagNo, corpse);
-		return ResponseEntity.ok(assembler.toModel(update));
+		return ResponseEntity.ok(addLinks(update));
 	}
 
 	@DeleteMapping("/{tagNo}")
@@ -86,5 +87,22 @@ public class CorpseController  {
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(list);
+	}
+
+	@Override
+	protected CorpseResponseDTO generateDTO(Corpse entity) {
+		return CorpseMapper.INSTANCE.toDto(entity);
+	}
+
+	@Override
+	protected CorpseResponseDTO addLinks(Corpse entity) {
+		CorpseResponseDTO dto = super.addLinks(entity);
+		dto.add(linkTo(methodOn(CorpseController.class).getNextOfKins(entity.getId())).withRel("nextOfKins"));
+		OtherMortuary otherMortuaryId = entity.getTransferredFrom();
+		if(otherMortuaryId != null) {
+			dto.add(linkTo(methodOn(CorpseController.class).getTransforedFrom(otherMortuaryId.getId()))
+					.withRel("transferredFrom"));
+		}
+		return dto;
 	}
 }
