@@ -1,7 +1,6 @@
 package lfs.server.archunit;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static org.assertj.core.api.Assertions.not;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tngtech.archunit.base.DescribedPredicate;
-import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
-import com.tngtech.archunit.lang.syntax.elements.GivenClasses;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
-
-import lfs.server.MainApplication;
 
 class ArchTests {
 
