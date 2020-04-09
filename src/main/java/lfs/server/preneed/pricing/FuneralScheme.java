@@ -29,21 +29,6 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@Column(nullable=false, unique=true)
 	private String name;
 	
-	@OneToMany(mappedBy="funeral_scheme_id", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true) 
-	private List<Premium> premiums;
-	
-	@OneToMany(mappedBy="funeral_scheme_id", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
-	private List<DependentBenefit> dependentBenefits;
-	
-	@OneToMany(mappedBy="funeral_scheme_id", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
-	private List<FuneralSchemeBenefit> benefits;
-	
 	private double registrationFee;
 	
 	private int monthsBeforeActive;
@@ -57,8 +42,22 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL, 
+			orphanRemoval=true) 
+	private List<Premium> premiums;
+	
+	@OneToMany(mappedBy="funeralScheme", 
+			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
-
+	private List<DependentBenefit> dependentBenefits;
+	
+	@OneToMany(mappedBy="funeralScheme", 
+			cascade=CascadeType.ALL, 
+			orphanRemoval=true)
+	private List<FuneralSchemeBenefit> benefits;
+	
+	@OneToMany(mappedBy="funeralScheme", 
+			cascade=CascadeType.ALL, 
+			orphanRemoval=true)
 	private List<PenaltyDeductable> penaltyDeductables;
 	
 

@@ -1,4 +1,4 @@
-package lfs.server.preneed.pricing;
+package lfs.server.preneed.pricing.unit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

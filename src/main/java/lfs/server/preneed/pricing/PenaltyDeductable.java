@@ -25,7 +25,7 @@ public class PenaltyDeductable extends AuditableEntity<Integer> {
 	private Integer id;
 	private int months;
 	private double amount;
-	@ManyToOne 	@JoinColumn(name="funeralScheme")
+	@ManyToOne 	@JoinColumn(name="funeral_scheme_id")
 	private FuneralScheme funeralScheme;
 	
 	public PenaltyDeductable(int months, Double amount) {
