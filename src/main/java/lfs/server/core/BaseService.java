@@ -60,8 +60,6 @@ public abstract class BaseService<T, I, R extends AuditableRepository<T, I>> {
 	}
 
 	public void delete(I id) {
-//		T entity = repo.findById(id)
-//				.orElseThrow(ExceptionSupplier.notFound(className, id));
 		repo.deleteById(id);
 	}
 }

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class FuneralScheme extends AuditableEntity {
+public class FuneralScheme extends AuditableEntity<Integer> {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
@@ -32,17 +32,16 @@ public class FuneralScheme extends AuditableEntity {
 	@OneToMany(mappedBy="funeral_scheme_id", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true) 
-	
 	private List<Premium> premiums;
+	
 	@OneToMany(mappedBy="funeral_scheme_id", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
-	
 	private List<DependentBenefit> dependentBenefits;
+	
 	@OneToMany(mappedBy="funeral_scheme_id", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
-	
 	private List<FuneralSchemeBenefit> benefits;
 	
 	private double registrationFee;

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class Premium extends AuditableEntity {
+public class Premium extends AuditableEntity<Integer> {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
@@ -31,7 +31,7 @@ public class Premium extends AuditableEntity {
 	private int maximumAge;
 	
 	@Column(nullable=false)
-	private double premium;
+	private double premiumAmount;
 	
 	@Column(nullable=false)
 	private double coverAmount;

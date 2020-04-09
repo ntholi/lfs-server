@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class PenaltyDeductable extends AuditableEntity {
+public class PenaltyDeductable extends AuditableEntity<Integer> {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")

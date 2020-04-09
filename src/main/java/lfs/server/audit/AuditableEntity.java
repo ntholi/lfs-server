@@ -23,13 +23,13 @@ import lombok.Data;
 
 /**
  * @author Ntholi Nkhatho
- * @param <T> Entity's ID type
+ * @param <ID> Entity's ID type
  *
  */
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AuditableEntity<T> {
+public abstract class AuditableEntity<ID> {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true, updatable=false)
@@ -41,7 +41,7 @@ public abstract class AuditableEntity<T> {
 	
 	private boolean deleted;
 	
-	public abstract T getId();
+	public abstract ID getId();
 	
 	@PrePersist
 	void prePersist() {
