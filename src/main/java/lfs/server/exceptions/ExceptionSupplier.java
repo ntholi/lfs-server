@@ -2,7 +2,11 @@ package lfs.server.exceptions;
 
 import java.util.function.Supplier;
 
+import lfs.server.util.WordUtils;
+
 public final class ExceptionSupplier {
+
+	private static final String NOT_FOUND = "' not found";
 
 	private ExceptionSupplier() {}
 	
@@ -13,11 +17,17 @@ public final class ExceptionSupplier {
 	
 	public static Supplier<RuntimeException> notFound(String objectName, Object id){
 		return () ->
-			new ObjectNotFoundException(objectName+ " with id '"+ id +"' not found");
+			new ObjectNotFoundException(objectName+ " with id '"+ id +NOT_FOUND);
+	}
+	
+	public static Supplier<RuntimeException> notFound(Class<?> entityClass, Object id){
+		String objectName = WordUtils.humenize(entityClass.getSimpleName());
+		return () ->
+			new ObjectNotFoundException(objectName+ " with id '"+ id +NOT_FOUND);
 	}
 	
 	public static Supplier<RuntimeException> corpseNotFound(String tagNo){
 		return () ->
-			new ObjectNotFoundException("Corpse with tagNo '"+ tagNo +"' not found");
+			new ObjectNotFoundException("Corpse with tagNo '"+ tagNo +NOT_FOUND);
 	}
 }

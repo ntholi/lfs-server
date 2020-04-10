@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final String TIMESTAMP = "timestamp";
 	private static final String STATUS = "status";
 	private static final String ERROR = "error";
+	private static final String MESSAGE = "message";
 	private static final String STACK_TRACE = "stack_trace";
 
 	@ExceptionHandler(ObjectNotFoundException.class)
@@ -39,10 +41,11 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(Throwable.class)
     public ResponseEntity<Object> handleException(Throwable ex, WebRequest request) {
         Map<String, Object> body = generatBody(ex);
-        body.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR);
+        body.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put(STACK_TRACE, Arrays.stream(ex.getStackTrace())
         		.map(StackTraceElement::toString)
         		.collect(Collectors.joining("\n")));
+        
         log.error("Error: "+ ex.getMessage(), ex);
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -50,11 +53,24 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	private Map<String, Object> generatBody(Throwable ex) {
 		Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
-        body.put(ERROR, ex.getMessage());
+        Throwable rootCause = ExceptionUtils.getRootCause(ex);
+        body.put(ERROR, getErrorName(rootCause));
+        body.put(MESSAGE, rootCause.getMessage());
 		return body;
 	}
 
-    @Override
+    private String getErrorName(Throwable ex) {
+    	String name = ex.getClass().getSimpleName();
+    	if(name.endsWith("Exception")) {
+    		name = name.replace("Exception", "");
+    	}
+    	if(!name.endsWith("Error")) {
+    		name += "Error";
+    	}
+    	return WordUtils.humenize(name);
+	}
+
+	@Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
     		HttpHeaders headers, 
     		HttpStatus status, 
@@ -64,8 +80,9 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
         body.put(TIMESTAMP, LocalDateTime.now());
         body.put(STATUS, status.value());
         String[] fields = getFieldsWithErrors(ex.getBindingResult());
-        String error = "Invalid input for "+ concat(fields);
-        body.put(ERROR, error);
+        String message = "Invalid input for "+ concat(fields);
+        body.put(MESSAGE, message);
+        body.put(ERROR, "Invalid Input Error");
         
         List<Error> errors = ex.getBindingResult()
                 .getFieldErrors()
@@ -94,7 +111,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
     	int size = fields.length;
     	for (int i = 0; i < size; i++) {
 			String field = fields[i];
-			sb.append(field);
+			sb.append("'").append(field).append("'");
 			if(size > 1 && i == size -2) {
 				sb.append(" and ");
 			}
