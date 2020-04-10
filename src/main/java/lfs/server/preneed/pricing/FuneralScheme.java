@@ -10,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Index;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lfs.server.audit.AuditableEntity;
@@ -23,6 +26,9 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
+@Table(indexes = {
+        @Index(columnList = "name", name = "unique_funeral_scheme_name", unique=true)
+})
 public class FuneralScheme extends AuditableEntity<Integer> {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +36,27 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private Integer id;
 	
 	@NotNull
-	@Column(nullable=false, unique=true)
+	@Column(nullable=false, length = 25)
 	private String name;
 	
-	
+	@Column(precision=8, scale=2)
+	@Digits(integer=6, fraction=2)
+	@Min(value = 0L, message = "{number.positive}")
 	private BigDecimal registrationFee;
 	
+	@Min(value = 0L, message = "{number.positive}")
 	private int monthsBeforeActive;
 	
 	//Whether or not registration fee includes first premium
 	private boolean includesFirstPremium;
 	
+	@Column(precision=8, scale=2)
+	@Digits(integer=6, fraction=2)
+	@Min(value = 0L, message = "{number.positive}")
 	private BigDecimal penaltyFee;
 	
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	@Min(value = 0L, message = "{number.positive}")
 	private int monthsBeforePenalty;
 	
 	@OneToMany(mappedBy="funeralScheme", 

@@ -1,6 +1,9 @@
 package lfs.server.archunit;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,24 +17,30 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
+import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 
 class ArchTests {
 	
-	@Test
-	void make_sure_that_interation_tests_use_test_profile() {
-		JavaClasses classes = new ClassFileImporter()
-		        .importPackages("..mortuary");
-		classes.forEach(System.out::println);
-	}
-
-	@Test
-	void validate_steriotype_annotations() {
-		JavaClasses classes = new ClassFileImporter()
+	JavaClasses classes;
+	
+	
+	@BeforeEach
+	void init() {
+		classes = new ClassFileImporter()
 		        .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
 		        .importPackages("lfs.server");
-		
+	}
+	
+	@Test
+	void unique_fields_should_be_declared_at_class_level() {
+		classes().that().areAnnotatedWith(Entity.class).should();
+		fields().that().areAnnotatedWith(Column.class).should();
+	}
+	
+	@Test
+	void validate_steriotype_annotations() {
 		stereotypeThat().haveSimpleNameEndingWith("Controller")
 			.should().beAnnotatedWith(RestController.class)
 			.orShould().beAnnotatedWith(Controller.class)
@@ -45,6 +54,13 @@ class ArchTests {
 	        .check(classes);
 	}
 
+//	@Test
+//	void make_sure_that_interation_tests_use_test_profile() {
+//		JavaClasses classes = new ClassFileImporter()
+//		        .importPackages("..mortuary");
+//		classes.forEach(System.out::println);
+//	}
+	
 	private ClassesThat<GivenClassesConjunction> stereotypeThat() {
 		return classes().that().doNotHaveModifier(JavaModifier.ABSTRACT).and();
 	}

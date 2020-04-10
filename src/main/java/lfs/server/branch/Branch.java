@@ -6,17 +6,21 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 
 @Entity
+@Table(indexes = {
+        @Index(columnList = "name", name = "unique_branch_name", unique=true)
+})
 public class Branch {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@Column(nullable = false, unique = true, 
-			length = 50)
+	@Column(nullable = false, length = 50)
 	private String name;
 	
 	@Enumerated

@@ -14,7 +14,7 @@ import lfs.server.branch.Branch;
 
 public abstract class BaseController<T extends AuditableEntity<ID>, D extends RepresentationModel<? extends D>, ID> {
 
-	protected abstract ResponseEntity<D> get(ID id);
+	public abstract ResponseEntity<D> get(ID id);
 	
 	protected abstract D generateDTO(T entity);
 

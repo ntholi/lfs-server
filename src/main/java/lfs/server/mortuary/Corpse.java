@@ -13,9 +13,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
@@ -43,6 +45,10 @@ import lombok.NoArgsConstructor;
         strategy = "lfs.server.persistence.IdGenerator",
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
+})
+@Table(indexes = {
+        @Index(columnList = "names", name = "index_corpse_names"),
+        @Index(columnList = "surname", name = "index_corpse_surname")
 })
 public class Corpse extends AuditableEntity<String> {
 	public enum Gender {MALE, FEMALE}

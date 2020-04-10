@@ -7,8 +7,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lfs.server.branch.Branch;
-
 public interface ControllerUnitTest extends UnitTest {
 	
 	public default ResultActions post(MockMvc mockMvc, String url, Object obj) throws Exception {
