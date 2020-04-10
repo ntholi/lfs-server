@@ -1,5 +1,6 @@
 package lfs.server.preneed.pricing;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 import lfs.server.audit.AuditableEntity;
 import lombok.AllArgsConstructor;
@@ -26,17 +29,19 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
+	@NotNull
 	@Column(nullable=false, unique=true)
 	private String name;
 	
-	private double registrationFee;
+	
+	private BigDecimal registrationFee;
 	
 	private int monthsBeforeActive;
 	
 	//Whether or not registration fee includes first premium
-	private boolean firstPremium;
+	private boolean includesFirstPremium;
 	
-	private double penaltyFee;
+	private BigDecimal penaltyFee;
 	
 	private int monthsBeforePenalty;
 	

@@ -1,0 +1,110 @@
+[
+	{
+		"id" : 1,
+		"amount" : 2000.0,
+		"months" : 1,
+		"funeralScheme" : 5
+	},
+	{
+		"id" : 2,
+		"amount" : 3000.0,
+		"months" : 2,
+		"funeralScheme" : 5
+	},
+	{
+		"id" : 3,
+		"amount" : 4000.0,
+		"months" : 3,
+		"funeralScheme" : 5
+	},
+	{
+		"id" : 4,
+		"amount" : 500.0,
+		"months" : 1,
+		"funeralScheme" : 9
+	},
+	{
+		"id" : 5,
+		"amount" : 1000.0,
+		"months" : 2,
+		"funeralScheme" : 9
+	},
+	{
+		"id" : 6,
+		"amount" : 1500.0,
+		"months" : 3,
+		"funeralScheme" : 9
+	},
+	{
+		"id" : 7,
+		"amount" : 3000.0,
+		"months" : 1,
+		"funeralScheme" : 10
+	},
+	{
+		"id" : 8,
+		"amount" : 4000.0,
+		"months" : 2,
+		"funeralScheme" : 10
+	},
+	{
+		"id" : 9,
+		"amount" : 5000.0,
+		"months" : 3,
+		"funeralScheme" : 10
+	},
+	{
+		"id" : 10,
+		"amount" : 750.0,
+		"months" : 1,
+		"funeralScheme" : 8
+	},
+	{
+		"id" : 11,
+		"amount" : 1000.0,
+		"months" : 2,
+		"funeralScheme" : 8
+	},
+	{
+		"id" : 12,
+		"amount" : 1500.0,
+		"months" : 3,
+		"funeralScheme" : 8
+	},
+	{
+		"id" : 13,
+		"amount" : 1000.0,
+		"months" : 1,
+		"funeralScheme" : 7
+	},
+	{
+		"id" : 14,
+		"amount" : 2000.0,
+		"months" : 2,
+		"funeralScheme" : 7
+	},
+	{
+		"id" : 15,
+		"amount" : 3000.0,
+		"months" : 3,
+		"funeralScheme" : 7
+	},
+	{
+		"id" : 16,
+		"amount" : 1500.0,
+		"months" : 1,
+		"funeralScheme" : 6
+	},
+	{
+		"id" : 17,
+		"amount" : 2500.0,
+		"months" : 2,
+		"funeralScheme" : 6
+	},
+	{
+		"id" : 18,
+		"amount" : 3500.0,
+		"months" : 3,
+		"funeralScheme" : 6
+	}
+]

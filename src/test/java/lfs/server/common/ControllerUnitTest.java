@@ -9,15 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lfs.server.branch.Branch;
 
-public interface ControllerUnitTest {
-
-	public default Branch getBranch() {
-		Branch branch = new Branch();
-		branch.setId(1);
-		branch.setName("Maseru");
-		branch.setSyncNumber((short)256);
-		return branch;
-	}
+public interface ControllerUnitTest extends UnitTest {
 	
 	public default ResultActions post(MockMvc mockMvc, String url, Object obj) throws Exception {
 		return mockMvc.perform(MockMvcRequestBuilders.post(url)
