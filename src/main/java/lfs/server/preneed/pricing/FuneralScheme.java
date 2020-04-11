@@ -1,6 +1,7 @@
 package lfs.server.preneed.pricing;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,12 +10,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Index;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.PastOrPresent;
 
 import lfs.server.audit.AuditableEntity;
 import lombok.AllArgsConstructor;
@@ -35,16 +38,16 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@NotNull
+	@NotBlank
 	@Column(nullable=false, length = 25)
 	private String name;
 	
 	@Column(precision=8, scale=2)
 	@Digits(integer=6, fraction=2)
-	@Min(value = 0L, message = "{number.positive}")
+	@Min(value = 0L, message = "{validation.number.positive}")
 	private BigDecimal registrationFee;
 	
-	@Min(value = 0L, message = "{number.positive}")
+	@Min(value = 0L, message = "{validation.number.positive}")
 	private int monthsBeforeActive;
 	
 	//Whether or not registration fee includes first premium
@@ -52,11 +55,11 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	
 	@Column(precision=8, scale=2)
 	@Digits(integer=6, fraction=2)
-	@Min(value = 0L, message = "{number.positive}")
+	@Min(value = 0L, message = "{validation.number.positive}")
 	private BigDecimal penaltyFee;
 	
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
-	@Min(value = 0L, message = "{number.positive}")
+	@Min(value = 0L, message = "{validation.number.positive}")
 	private int monthsBeforePenalty;
 	
 	@OneToMany(mappedBy="funeralScheme", 
@@ -80,6 +83,9 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private List<PenaltyDeductable> penaltyDeductables;
 	
 
+	@PastOrPresent
+	private LocalDate date;
+	
 //	public FuneralSchemeBenefit getBenefit(ItemType itemType) {
 //		
 //		for(FuneralSchemeBenefit f : PolicyDAO.getFuneralSchemeBenefit(this)) {
