@@ -127,12 +127,13 @@ public abstract class FieldValidationTest<T> {
 		Field field = FieldUtils.getField(obj.getClass(), fieldName);
 		field.setAccessible(true);
 		
-		String val = "-1";
-		field.set(obj, new BigDecimal(val));
+		Object val = convertNumber("-1", field.getType());
+		field.set(obj, val);
 		assertThat(value(validate(obj), fieldName, Digits.class, val))
 			.isEqualTo(positiveNumber);
 		
-		field.set(obj, new BigDecimal(1));
+		val = convertNumber("1", field.getType());
+		field.set(obj, val);
 		assertThat(validate(obj).get(fieldName)).isNull();
 	}
 
@@ -188,6 +189,21 @@ public abstract class FieldValidationTest<T> {
 		assertThat(validate(obj).get(fieldName)).isNull();
 	}
 	
+	private Object convertNumber(String str, Class<?> type) {
+		Object val = null;
+		if(BigDecimal.class.isAssignableFrom(type)) {
+			return new BigDecimal(str);
+		}
+		else if(Long.class.isAssignableFrom(type) || Long.TYPE.isAssignableFrom(type)) {
+			return Long.valueOf(str);
+		}
+		else if(Integer.class.isAssignableFrom(type) || Integer.TYPE.isAssignableFrom(type)) {
+			return Integer.valueOf(str);
+		}
+		
+		return val;
+	}
+
 	private String generateInt(int length) {
 		StringBuilder sb = new StringBuilder();
 		for(int i = length; i > 0; i--){

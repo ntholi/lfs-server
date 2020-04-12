@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 
 import lfs.server.audit.AuditableEntity;
