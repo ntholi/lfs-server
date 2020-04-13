@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
@@ -49,10 +50,12 @@ public class Policy extends AuditableEntity<String> {
 	@Column(columnDefinition = "CHAR(10)")
 	private String policyNumber;
 	
+	@NotBlank
 	@Size(min = 2, max = 60)
 	@Column(length = 60)
 	private String names;
 	
+	@NotBlank
 	@Size(min = 2, max = 50)
 	@Column(length = 50)
 	private String surname;
