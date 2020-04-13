@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import lfs.server.branch.District;
-import lfs.server.mortuary.Corpse.Gender;
+import lfs.server.core.entity.District;
+import lfs.server.core.entity.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

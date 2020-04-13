@@ -10,6 +10,8 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 
+import lfs.server.core.entity.District;
+
 @Entity
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_branch_name", unique=true)

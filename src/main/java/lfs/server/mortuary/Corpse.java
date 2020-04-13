@@ -28,7 +28,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lfs.server.audit.AuditableEntity;
-import lfs.server.branch.District;
+import lfs.server.core.entity.District;
+import lfs.server.core.entity.Gender;
 import lfs.server.persistence.IdGenerator;
 import lfs.server.transport.Transport;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,6 @@ import lombok.NoArgsConstructor;
         @Index(columnList = "surname", name = "index_corpse_surname")
 })
 public class Corpse extends AuditableEntity<String> {
-	public enum Gender {MALE, FEMALE}
 	
 	@Id
 	@GeneratedValue(generator = "corpse_id")
@@ -59,12 +59,12 @@ public class Corpse extends AuditableEntity<String> {
 	private String tagNo;
 	
 	@Column(length = 60)
-	@Size(min = 2, message = "Corpse's name is too short")
+	@Size(min = 2, max = 60)
 	@Nullable
 	private String names;
 	
 	@Column(length = 50)
-	@Size(min = 2, message = "Corpse's surname is too short")
+	@Size(min = 2, max = 50)
 	@Nullable
 	private String surname;
 	

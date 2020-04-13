@@ -61,6 +61,9 @@ class ArchTests {
 //	}
 	
 	private ClassesThat<GivenClassesConjunction> stereotypeThat() {
-		return classes().that().doNotHaveModifier(JavaModifier.ABSTRACT).and();
+		return classes().that()
+				.doNotHaveModifier(JavaModifier.ABSTRACT)
+				.and().resideOutsideOfPackage("lfs.server.core")
+				.and();
 	}
 }

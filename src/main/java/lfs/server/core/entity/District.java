@@ -1,4 +1,4 @@
-package lfs.server.branch;
+package lfs.server.core.entity;
 
 public enum District {
 	Berea("Berea"),
