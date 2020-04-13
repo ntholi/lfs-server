@@ -41,24 +41,25 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@Column(nullable=false, length = 25)
 	private String name;
 	
-	@Column(precision=8, scale=2)
-	@Digits(integer=6, fraction=2)
 	@Min(value = 0L, message = "{validation.number.positive}")
+	@Digits(integer=6, fraction=2)
+	@Column(precision=8, scale=2)
 	private BigDecimal registrationFee;
 	
 	@Min(value = 0L, message = "{validation.number.positive}")
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private int monthsBeforeActive;
 	
 	//Whether or not registration fee includes first premium
 	private boolean includesFirstPremium;
 	
-	@Column(precision=8, scale=2)
-	@Digits(integer=6, fraction=2)
 	@Min(value = 0L, message = "{validation.number.positive}")
+	@Digits(integer=6, fraction=2)
+	@Column(precision=8, scale=2)
 	private BigDecimal penaltyFee;
 	
-	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	@Min(value = 0L, message = "{validation.number.positive}")
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private int monthsBeforePenalty;
 	
 	@OneToMany(mappedBy="funeralScheme", 

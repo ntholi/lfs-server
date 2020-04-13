@@ -1,6 +1,8 @@
 package lfs.server.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -11,9 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 
@@ -30,7 +34,7 @@ public abstract class FieldValidationTest<T> {
 	private String blank = "must not be blank";
 	private String digit = "numeric value out of bounds (<%d digits>.<%d digits> expected)";
 	
-	private String log = "Validating that %s constrained is available for %s";
+	private String log = "Validating that %s constrained is available for %s in "+getType();
 	private String pastDate = "must be a past date";
 	private String pastOrPresent = "must be a date in the past or in the present";
 
@@ -127,12 +131,12 @@ public abstract class FieldValidationTest<T> {
 		Field field = FieldUtils.getField(obj.getClass(), fieldName);
 		field.setAccessible(true);
 		
-		Object val = convertNumber("-1", field.getType());
+		Object val = toMatchingType("-1", field.getType());
 		field.set(obj, val);
-		assertThat(value(validate(obj), fieldName, Digits.class, val))
+		assertThat(value(validate(obj), fieldName, Min.class, val))
 			.isEqualTo(positiveNumber);
 		
-		val = convertNumber("1", field.getType());
+		val = toMatchingType("1", field.getType());
 		field.set(obj, val);
 		assertThat(validate(obj).get(fieldName)).isNull();
 	}
@@ -142,8 +146,11 @@ public abstract class FieldValidationTest<T> {
 				+" integer>.<"+validFraction+" decimal>", fieldName));
 		T obj = newObject();
 		Field field = FieldUtils.getField(obj.getClass(), fieldName);
+		assertNotNull(field, "Did not find field with name '"+fieldName+"' in "+ getType());
 		field.setAccessible(true);
 
+		validatePrecisionAndScale(field, validInteger, validFraction);
+		
 		String validInt = generateInt(validInteger);
 		String invalidInt = generateInt(validInteger+1);
 		String validFrac = "0."+generateInt(validFraction);
@@ -167,6 +174,15 @@ public abstract class FieldValidationTest<T> {
 
 	}
 
+	private void validatePrecisionAndScale(Field field, Integer integer, Integer fraction) {
+		assertThat(field.getType()).isEqualTo(BigDecimal.class);
+		Column column = field.getAnnotation(Column.class);
+		assertNotNull(column, "Fields annotated with @Digits should also be annotated with "
+				+ "@Column and provide values for precision and scale");
+		assertTrue(column.precision() == (integer + fraction), "precision should be "+ (integer + fraction));
+		assertThat(column.scale()).isEqualTo(fraction);
+	}
+
 	protected void validateNotBlank(String fieldName) throws Exception {
 		System.out.println(String.format(log, "Not Blank", fieldName));
 		
@@ -174,7 +190,7 @@ public abstract class FieldValidationTest<T> {
 		Field field = FieldUtils.getField(obj.getClass(), fieldName);
 		field.setAccessible(true);
 
-		String value = "";
+		Object value = toMatchingType("", field.getType());
 		field.set(obj, value);
 		assertThat(value(validate(obj), fieldName, NotBlank.class, value))
 		.isEqualTo(blank);
@@ -184,13 +200,14 @@ public abstract class FieldValidationTest<T> {
 		assertThat(value(validate(obj), fieldName, NotBlank.class, value))
 		.isEqualTo(blank);
 
-		value = "Hello";
+		value = toMatchingType("250", field.getType());
 		field.set(obj, value);
 		assertThat(validate(obj).get(fieldName)).isNull();
 	}
 	
-	private Object convertNumber(String str, Class<?> type) {
-		Object val = null;
+	private Object toMatchingType(String str, Class<?> type) {
+		if(str == null) return null;
+
 		if(BigDecimal.class.isAssignableFrom(type)) {
 			return new BigDecimal(str);
 		}
@@ -201,30 +218,41 @@ public abstract class FieldValidationTest<T> {
 			return Integer.valueOf(str);
 		}
 		
-		return val;
+		return str;
 	}
 
 	private String generateInt(int length) {
 		StringBuilder sb = new StringBuilder();
+		int preVal;
 		for(int i = length; i > 0; i--){
-			sb.append(i);
+			if(i >= 10) {
+				preVal = i - 10;
+				preVal = preVal > 0? preVal : 1;
+			}
+			else preVal = i;
+			sb.append(preVal);
 		}
-		return sb.toString();
+		String val = sb.toString();
+		return val.isBlank()? "0" : val;
+	}
+
+	private T newObject() throws Exception {
+		return getType().getDeclaredConstructor().newInstance();
 	}
 
 	@SuppressWarnings("unchecked")
-	private T newObject() throws Exception {
+	protected Class<T> getType() {
 		ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
 		Class<T> type = (Class<T>) superClass.getActualTypeArguments()[0];
-		return type.getDeclaredConstructor().newInstance();
+		return type;
 	}
 
 	private String value(Map<Object, String> map, String fieldName, 
 			Class<?> validationType, Object providedValue) {
 		String value = map.get(fieldName);
 		if(value == null) {
-			throw new RuntimeException("No "+validationType.getSimpleName()+" Constraint Violations for field: "+ 
-					fieldName+", with field value provided as '"+ providedValue+"'");
+			throw new RuntimeException("Did not find "+validationType.getSimpleName()+" Constraint Violation set for field "+ 
+					fieldName+" of "+ getType() +", when testing with value '"+ providedValue+"'");
 		}
 		if(value.contains("{") && value.contains("}"))
 			return env.getProperty(value.replace("{", "").replace("}", ""));

@@ -1,4 +1,4 @@
-package lfs.server.preneed.pricing.json;
+package lfs.server.preneed.pricing.valid;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,11 +12,11 @@ import lfs.server.preneed.pricing.FuneralScheme;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-class ValidateFuneralScheme extends FieldValidationTest<FuneralScheme>{
+public class FuneralSchemeValidations extends FieldValidationTest<FuneralScheme>{
 
 	@Test
 	void field_validations() throws Exception {
-		assertTrue(true, "FuneralScheme field validations");
+		assertTrue(true);
 		
 		validateNotBlank("name");
 		validateBigDecimal("registrationFee", 6,2);

@@ -69,7 +69,7 @@ public class Corpse extends AuditableEntity<String> {
 	private String surname;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name="gender", columnDefinition="ENUM('MALE','FEMALE')")
+	@Column(columnDefinition="ENUM('MALE','FEMALE')")
 	private Gender gender;
 	
 	@PastOrPresent
