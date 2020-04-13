@@ -33,8 +33,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CorpseController extends BaseController<Corpse, CorpseResponseDTO, String>  {
 
-	private CorpseService service;
-	private PagedResourcesAssembler<CorpseResponseDTO> pagedAssembler;
+	private final CorpseService service;
+	private final PagedResourcesAssembler<CorpseResponseDTO> pagedAssembler;
 
 	@Override
 	@GetMapping("/{id}")

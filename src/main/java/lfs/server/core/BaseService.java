@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class BaseService<T, ID, R extends AuditableRepository<T, ID>> {
 
-	protected R repo;
+	protected final R repo;
 	
 	@Autowired
 	public BaseService(R repo) {
