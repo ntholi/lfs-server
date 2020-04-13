@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lfs.server.core.BaseController;
+import lfs.server.core.DtoMapper;
 import lfs.server.exceptions.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 
@@ -44,11 +45,8 @@ public class FuneralSchemeController extends BaseController<FuneralScheme, Funer
 				: new ResponseEntity<>(pagedAssembler.toModel(page),HttpStatus.OK);
 	}
 
-	@Override
 	protected FuneralSchemeDTO generateDTO(FuneralScheme entity) {
-		FuneralSchemeDTO dao = new FuneralSchemeDTO();
-		dao.setName(entity.getName());
-		return dao;
+		return DtoMapper.INSTANCE.map(entity);
 	}
 	
 	@PostMapping
