@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface AuditableRepository<T, I> extends JpaRepository<T, I> {
+public interface AuditableRepository<T, ID> extends JpaRepository<T, ID> {
 
 	@Override
 	@Query("SELECT e from #{#entityName} e where e.id = ?1 and e.deleted=false")
-	Optional<T> findById(I id);
+	Optional<T> findById(ID id);
 
 	@Override
 	@Query("SELECT e FROM #{#entityName} e WHERE e.deleted=false")
@@ -29,7 +29,7 @@ public interface AuditableRepository<T, I> extends JpaRepository<T, I> {
 	@Override
 	@Query("UPDATE #{#entityName} e SET e.deleted=true WHERE e.id=?1")
 	@Modifying
-	abstract void deleteById(I id);
+	abstract void deleteById(ID id);
 
 	@Override
 	default void delete(T entity) {

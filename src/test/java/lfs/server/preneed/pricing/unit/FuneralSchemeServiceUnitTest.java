@@ -1,12 +1,17 @@
 package lfs.server.preneed.pricing.unit;
 
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import lfs.server.common.ServiceUnitTest;
 import lfs.server.common.UnitTest;
 import lfs.server.preneed.pricing.FuneralScheme;
 import lfs.server.preneed.pricing.FuneralSchemeRepository;
@@ -14,30 +19,29 @@ import lfs.server.preneed.pricing.FuneralSchemeService;
 import lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 
 @ExtendWith(MockitoExtension.class)
-class FuneralSchemeControllerUnitTest implements UnitTest {
+class FuneralSchemeServiceUnitTest implements UnitTest {
 
 	@Mock
 	private FuneralSchemeRepository repo;
-	
+
 	@InjectMocks
 	private FuneralSchemeService service;
-	
-	private FuneralScheme scheme;
-	
+
+	private final ServiceUnitTest<FuneralScheme, Integer> serviceTests = new ServiceUnitTest<>() {
+		@Override
+		protected List<FuneralScheme> initializeList() {
+			return FuneralSchemesJSON.all();
+		}
+	};
+
 	@Test
-	void init() {
-//		scheme = FuneralSchemesJSON.any();
-		FuneralSchemesJSON.all().forEach(System.out::println);
+	void common_tests() throws Exception {
+		assertTrue(serviceTests.save());
+		assertTrue(serviceTests.get());
+		assertTrue(serviceTests.all());
+		assertTrue(serviceTests.update());
+		assertTrue(serviceTests.failtWithUnknownId(129));
+		assertTrue(serviceTests.delete());
 	}
-	
-//	@Test
-//	void saving_funeral_scheme() {
-//		when(repo.save(any(FuneralScheme.class))).thenReturn(scheme);
-//		
-//		FuneralScheme response = service.save(new FuneralScheme());
-//		
-//		assertThat(response)
-//			.isNotNull()
-//			.isEqualTo(response);
-//	}
+
 }

@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lfs.server.branch.Branch;
 import lfs.server.branch.CurrentBranch;
+import lfs.server.core.EntityWithId;
 import lfs.server.util.BeanUtil;
 import lombok.Data;
 
@@ -29,7 +30,7 @@ import lombok.Data;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AuditableEntity<ID> {
+public abstract class AuditableEntity<ID> implements EntityWithId<ID> {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true, updatable=false)
@@ -40,8 +41,6 @@ public abstract class AuditableEntity<ID> {
 	private LocalDateTime createdAt;
 	
 	private boolean deleted;
-	
-	public abstract ID getId();
 	
 	@PrePersist
 	void prePersist() {

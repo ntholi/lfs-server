@@ -18,26 +18,16 @@ import lombok.extern.log4j.Log4j2;
  * @param <I> the entity's id
  */
 @Log4j2
-public abstract class BaseService<T, I, R extends AuditableRepository<T, I>> {
+public class BaseService<T, ID, R extends AuditableRepository<T, ID>> {
 
 	protected R repo;
-	private final String className;
 	
 	@Autowired
-	@SuppressWarnings("unchecked")
 	public BaseService(R repo) {
 		this.repo = repo;
-		Class<T> type = null;
-		try{
-			type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-					.getActualTypeArguments()[0];
-		}catch(Exception ex) {
-			log.error("Error determining service's entity type", ex);
-		}
-		className = type != null? type.getSimpleName(): "";
 	}
 
-	public Optional<T> get(I id) {
+	public Optional<T> get(ID id) {
 		return repo.findById(id);
 	}
 	
@@ -49,17 +39,29 @@ public abstract class BaseService<T, I, R extends AuditableRepository<T, I>> {
 		return repo.save(entity);
 	}
 	
-	public T update(I id, T entity) {
+	public T update(ID id, T entity) {
 		if(entity == null) {
-			throw new NullPointerException(className+" object provide is null, cannot update a null object");
+			throw new NullPointerException(className()+" object provide is null, cannot update a null object");
 		}
 		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound(className, id).get();
+			throw ExceptionSupplier.notFound(className(), id).get();
 		}
 		return repo.save(entity);
 	}
 
-	public void delete(I id) {
+	public void delete(ID id) {
 		repo.deleteById(id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected String className() {
+		Class<T> type = null;
+		try{
+			type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+					.getActualTypeArguments()[0];
+		}catch(Exception ex) {
+			log.error("Error determining service's entity type", ex);
+		}
+		return type != null? type.getSimpleName(): "";
 	}
 }

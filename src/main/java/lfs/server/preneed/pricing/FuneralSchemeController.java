@@ -45,6 +45,7 @@ public class FuneralSchemeController extends BaseController<FuneralScheme, Funer
 				: new ResponseEntity<>(pagedAssembler.toModel(page),HttpStatus.OK);
 	}
 
+	@Override
 	protected FuneralSchemeDTO generateDTO(FuneralScheme entity) {
 		return DtoMapper.INSTANCE.map(entity);
 	}
