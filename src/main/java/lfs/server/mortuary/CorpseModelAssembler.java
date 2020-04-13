@@ -9,13 +9,14 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import lfs.server.core.CommonLinks;
+import lfs.server.core.DtoMapper;
 
 @Component
 public class CorpseModelAssembler implements RepresentationModelAssembler<Corpse, EntityModel<CorpseResponseDTO>> {
 	
 	@Override
 	public EntityModel<CorpseResponseDTO> toModel(Corpse corpse) {
-		CorpseResponseDTO dto = CorpseMapper.INSTANCE.toDto(corpse);
+		CorpseResponseDTO dto = DtoMapper.INSTANCE.map(corpse);
 		String tagNo = corpse.getTagNo();
 		OtherMortuary otherMortuaryId = corpse.getTransferredFrom();
 		var model = new EntityModel<>(dto,

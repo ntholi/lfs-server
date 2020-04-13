@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lfs.server.core.BaseController;
+import lfs.server.core.DtoMapper;
 import lfs.server.exceptions.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 
@@ -91,7 +92,7 @@ public class CorpseController extends BaseController<Corpse, CorpseResponseDTO, 
 
 	@Override
 	protected CorpseResponseDTO generateDTO(Corpse entity) {
-		return CorpseMapper.INSTANCE.toDto(entity);
+		return DtoMapper.INSTANCE.map(entity);
 	}
 
 	@Override

@@ -23,36 +23,36 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/funeral-schemes")
 @AllArgsConstructor
-public class FuneralSchemeController extends BaseController<FuneralScheme, FuneralSchemeDAO, Integer>{
+public class FuneralSchemeController extends BaseController<FuneralScheme, FuneralSchemeDTO, Integer>{
 
 	private FuneralSchemeService service;
 	
-	private PagedResourcesAssembler<FuneralSchemeDAO> pagedAssembler;
+	private PagedResourcesAssembler<FuneralSchemeDTO> pagedAssembler;
 	
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<FuneralSchemeDAO> get(@PathVariable Integer id) {
+	public ResponseEntity<FuneralSchemeDTO> get(@PathVariable Integer id) {
 		return getResponse(service.get(id), 
 				ExceptionSupplier.notFound(FuneralScheme.class, id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeDAO>>> all(Pageable pageable) {
-		Page<FuneralSchemeDAO> page = service.all(pageable)
+	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeDTO>>> all(Pageable pageable) {
+		Page<FuneralSchemeDTO> page = service.all(pageable)
 				.map(o -> addLinks(o));
 		return page.isEmpty()? new ResponseEntity<>(HttpStatus.NO_CONTENT) 
 				: new ResponseEntity<>(pagedAssembler.toModel(page),HttpStatus.OK);
 	}
 
 	@Override
-	protected FuneralSchemeDAO generateDTO(FuneralScheme entity) {
-		FuneralSchemeDAO dao = new FuneralSchemeDAO();
+	protected FuneralSchemeDTO generateDTO(FuneralScheme entity) {
+		FuneralSchemeDTO dao = new FuneralSchemeDTO();
 		dao.setName(entity.getName());
 		return dao;
 	}
 	
 	@PostMapping
-	public ResponseEntity<FuneralSchemeDAO> save(@Valid @RequestBody FuneralScheme entity) {
+	public ResponseEntity<FuneralSchemeDTO> save(@Valid @RequestBody FuneralScheme entity) {
 		var model = addLinks(service.save(entity));
 		return new ResponseEntity<>(model, HttpStatus.CREATED);
 	}

@@ -1,7 +1,6 @@
 package lfs.server.preneed.pricing;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,7 +15,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
 
 import lfs.server.audit.AuditableEntity;
 import lombok.AllArgsConstructor;
@@ -81,10 +79,6 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
 	private List<PenaltyDeductable> penaltyDeductables;
-	
-
-	@PastOrPresent
-	private LocalDate date;
 	
 //	public FuneralSchemeBenefit getBenefit(ItemType itemType) {
 //		
