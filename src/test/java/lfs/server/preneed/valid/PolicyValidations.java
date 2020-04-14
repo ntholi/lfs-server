@@ -102,6 +102,22 @@ public class PolicyValidations extends ValidationTest<Policy>{
 	}
 	
 	@Test
+	void dateOfBirth() {
+		LocalDate today = LocalDate.now();
+		
+		assertThat(validate(withRequired().dateOfBirth(today.plusDays(1)).build()))
+			.containsKey("dateOfBirth")
+			.containsValue(pastOrPresent)
+			.size().isEqualTo(1);
+		
+		assertThat(validate(withRequired().dateOfBirth(today).build()))
+			.isEmpty();
+		
+		assertThat(validate(withRequired().dateOfBirth(today.minusDays(1)).build()))
+			.isEmpty();
+	}
+	
+	@Test
 	void nationalIdNnumber() {
 		assertThat(validate(withRequired().nationalIdNnumber("12").build()))
 			.containsKey("nationalIdNnumber")

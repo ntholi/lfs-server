@@ -42,6 +42,9 @@ public abstract class ValidationTest<T> {
 	@Value("{javax.validation.constraints.Size.message}")
 	protected String size;
 	
+	@Value("{javax.validation.constraints.PastOrPresent.message}")
+	protected String pastOrPresent;
+	
 	protected Map<String, String> validate(T entity) {
 		var validatorFactory = Validation.buildDefaultValidatorFactory();
 		var validator = validatorFactory.getValidator();

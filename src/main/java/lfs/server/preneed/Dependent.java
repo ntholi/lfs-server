@@ -3,6 +3,7 @@ package lfs.server.preneed;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,13 +20,14 @@ import org.hibernate.annotations.Parameter;
 import lfs.server.audit.AuditableEntity;
 import lfs.server.persistence.IdGenerator;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
@@ -58,7 +60,8 @@ public class Dependent extends AuditableEntity<String>{
 	@Column(length = 30)
 	private String relationship;
 	
-	@Size(max = 50)
+	@Nullable
+	@Size(min = 3, max = 50)
 	@Column(length = 50)
     private String phoneNumber;
 	
