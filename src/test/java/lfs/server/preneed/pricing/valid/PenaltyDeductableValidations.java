@@ -22,17 +22,17 @@ public class PenaltyDeductableValidations extends ValidationTest<PenaltyDeductab
 	
 	@Test
 	void monthsBeforeActive() {
-		assertThat(valid(builder.months(-2).build()))
+		assertThat(validate(builder.months(-2).build()))
 			.containsKey("months")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.months(256).build()))
+		assertThat(validate(builder.months(256).build()))
 			.containsKey("months")
 			.containsValue(max)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.months(255).build()))
+		assertThat(validate(builder.months(255).build()))
 			.isEmpty();
 	}
 	
@@ -40,22 +40,22 @@ public class PenaltyDeductableValidations extends ValidationTest<PenaltyDeductab
 	void amount() throws Exception {
 		validatePrecisionAndScale("amount", 9,2);
 		
-		assertThat(valid(builder.amount(new BigDecimal(-2)).build()))
+		assertThat(validate(builder.amount(new BigDecimal(-2)).build()))
 			.containsKey("amount")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.amount(new BigDecimal("10.102")).build()))
+		assertThat(validate(builder.amount(new BigDecimal("10.102")).build()))
 			.containsKey("amount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.amount(new BigDecimal(1_000_000_000)).build()))
+		assertThat(validate(builder.amount(new BigDecimal(1_000_000_000)).build()))
 			.containsKey("amount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.amount(new BigDecimal(100_000_000)).build())).isEmpty();
-		assertThat(valid(builder.amount(new BigDecimal("0.12")).build())).isEmpty();
+		assertThat(validate(builder.amount(new BigDecimal(100_000_000)).build())).isEmpty();
+		assertThat(validate(builder.amount(new BigDecimal("0.12")).build())).isEmpty();
 	}
 }

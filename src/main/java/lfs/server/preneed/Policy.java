@@ -1,5 +1,6 @@
 package lfs.server.preneed;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -29,12 +30,13 @@ import lfs.server.core.entity.Gender;
 import lfs.server.persistence.IdGenerator;
 import lfs.server.preneed.pricing.FuneralScheme;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
@@ -77,12 +79,13 @@ public class Policy extends AuditableEntity<String> {
 	private String passportNumber;
 
 	@Nullable
-	@Size(min = 3, max = 50)
-	@Column(length = 50)
+	@Size(min = 3, max = 40)
+	@Column(length = 40)
 	private String nationalIdNnumber;
 	
 	@Nullable
 	@Column(length = 150)
+	@Size(min = 2, max = 150)
 	private String residentialArea;
 	
 	@Column(columnDefinition = "TINYINT UNSIGNED")
@@ -103,10 +106,15 @@ public class Policy extends AuditableEntity<String> {
 	@JoinColumn(name="funeralScheme")
 	private FuneralScheme funeralScheme;
 
-	@Min(value = 0L, message = "{validation.number.positive}")
+	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 6, fraction = 2)
 	@Column(nullable=false, precision = 8, scale = 2)
-	private double premium;
+	private BigDecimal premiumAmount;
+	
+	@Min(value = 0L, message = "{validation.number.negative}")
+	@Digits(integer = 8, fraction = 2)
+	@Column(nullable=false, precision = 10, scale = 2)
+	private BigDecimal coverAmount;
 	
 	private boolean active;
 	

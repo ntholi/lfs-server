@@ -21,17 +21,17 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 	
 	@Test
 	void name() {
-		assertThat(valid(builder.name("").build()))
+		assertThat(validate(builder.name("").build()))
 			.containsKey("name")
 			.containsValue(notBlank)
 			.size().isEqualTo(1);
 
-		assertThat(valid(builder.name(null).build()))
+		assertThat(validate(builder.name(null).build()))
 			.containsKey("name")
 			.containsValue(notBlank)
 			.size().isEqualTo(1);
 
-		assertThat(valid(builder.name("Hello World").build()))
+		assertThat(validate(builder.name("Hello World").build()))
 			.isEmpty();	
 	}
 	
@@ -40,38 +40,38 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 	void registrationFee() {
 		validatePrecisionAndScale("registrationFee", 6,2);
 		
-		assertThat(valid(withName().registrationFee(new BigDecimal(-2)).build()))
+		assertThat(validate(withName().registrationFee(new BigDecimal(-2)).build()))
 			.containsKey("registrationFee")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().registrationFee(new BigDecimal("10.234")).build()))
+		assertThat(validate(withName().registrationFee(new BigDecimal("10.234")).build()))
 			.containsKey("registrationFee")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().registrationFee(new BigDecimal(1_000_000)).build()))
+		assertThat(validate(withName().registrationFee(new BigDecimal(1_000_000)).build()))
 			.containsKey("registrationFee")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().registrationFee(new BigDecimal("100000.24")).build()))
+		assertThat(validate(withName().registrationFee(new BigDecimal("100000.24")).build()))
 			.isEmpty();
 	}
 	
 	@Test
 	void monthsBeforeActive() {
-		assertThat(valid(withName().monthsBeforeActive(-2).build()))
+		assertThat(validate(withName().monthsBeforeActive(-2).build()))
 			.containsKey("monthsBeforeActive")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().monthsBeforeActive(256).build()))
+		assertThat(validate(withName().monthsBeforeActive(256).build()))
 			.containsKey("monthsBeforeActive")
 			.containsValue(max)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().monthsBeforeActive(255).build()))
+		assertThat(validate(withName().monthsBeforeActive(255).build()))
 			.isEmpty();
 	}
 	
@@ -79,38 +79,38 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 	void penaltyFee() {
 		validatePrecisionAndScale("registrationFee", 6,2);
 		
-		assertThat(valid(withName().penaltyFee(new BigDecimal(-2)).build()))
+		assertThat(validate(withName().penaltyFee(new BigDecimal(-2)).build()))
 			.containsKey("penaltyFee")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().penaltyFee(new BigDecimal("10.234")).build()))
+		assertThat(validate(withName().penaltyFee(new BigDecimal("10.234")).build()))
 			.containsKey("penaltyFee")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().penaltyFee(new BigDecimal(1_000_000)).build()))
+		assertThat(validate(withName().penaltyFee(new BigDecimal(1_000_000)).build()))
 			.containsKey("penaltyFee")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().penaltyFee(new BigDecimal("100000.24")).build()))
+		assertThat(validate(withName().penaltyFee(new BigDecimal("100000.24")).build()))
 			.isEmpty();
 	}
 	
 	@Test
 	void monthsBeforePenalty() {
-		assertThat(valid(withName().monthsBeforePenalty(-2).build()))
+		assertThat(validate(withName().monthsBeforePenalty(-2).build()))
 			.containsKey("monthsBeforePenalty")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().monthsBeforePenalty(256).build()))
+		assertThat(validate(withName().monthsBeforePenalty(256).build()))
 			.containsKey("monthsBeforePenalty")
 			.containsValue(max)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(withName().monthsBeforePenalty(255).build()))
+		assertThat(validate(withName().monthsBeforePenalty(255).build()))
 			.isEmpty();
 	}
 

@@ -23,17 +23,17 @@ public class FuneralSchemeBenefitValidations extends ValidationTest<FuneralSchem
 	void discount() throws Exception {
 		validatePrecisionAndScale("discount", 1,4);
 		
-		assertThat(valid(builder.discount(new BigDecimal("10.10")).build()))
+		assertThat(validate(builder.discount(new BigDecimal("10.10")).build()))
 			.containsKey("discount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.discount(new BigDecimal("2.10012")).build()))
+		assertThat(validate(builder.discount(new BigDecimal("2.10012")).build()))
 			.containsKey("discount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.discount(new BigDecimal("2")).build())).isEmpty();
-		assertThat(valid(builder.discount(new BigDecimal("0.1204")).build())).isEmpty();
+		assertThat(validate(builder.discount(new BigDecimal("2")).build())).isEmpty();
+		assertThat(validate(builder.discount(new BigDecimal("0.1204")).build())).isEmpty();
 	}
 }

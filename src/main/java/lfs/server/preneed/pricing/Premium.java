@@ -46,8 +46,8 @@ public class Premium extends AuditableEntity<Integer> {
 	private BigDecimal premiumAmount;
 	
 	@Min(value = 0L, message = "{validation.number.negative}")
-	@Digits(integer = 10, fraction = 2)
-	@Column(nullable=false, precision = 12, scale = 2)
+	@Digits(integer = 8, fraction = 2)
+	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
 	
 	@ManyToOne

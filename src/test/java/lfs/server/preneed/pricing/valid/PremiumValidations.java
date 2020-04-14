@@ -21,76 +21,84 @@ public class PremiumValidations extends ValidationTest<Premium>{
 	
 	@Test
 	void minmumAge() {
-		assertThat(valid(builder.minmumAge(-1).build()))
+		assertThat(validate(builder.minmumAge(-1).build()))
 			.containsKey("minmumAge")
 			.containsValue(negative)
 			.size().isEqualTo(1);
-		assertThat(valid(builder.minmumAge(256).build()))
+		assertThat(validate(builder.minmumAge(256).build()))
 			.containsKey("minmumAge")
 			.containsValue(max)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.minmumAge(1).build())).isEmpty();
+		assertThat(validate(builder.minmumAge(1).build())).isEmpty();
 	}
 	
 	@Test
 	void maximumAge() {
-		assertThat(valid(builder.maximumAge(-1).build()))
+		assertThat(validate(builder.maximumAge(-1).build()))
 			.containsKey("maximumAge")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 	
-		assertThat(valid(builder.maximumAge(256).build()))
+		assertThat(validate(builder.maximumAge(256).build()))
 			.containsKey("maximumAge")
 			.containsValue(max)
 			.size().isEqualTo(1);
 	
-		assertThat(valid(builder.maximumAge(1).build())).isEmpty();
+		assertThat(validate(builder.maximumAge(1).build())).isEmpty();
 	}
 	
 	@Test
 	void premiumAmount() {
 		validatePrecisionAndScale("premiumAmount", 6,2);
 		
-		assertThat(valid(builder.premiumAmount(new BigDecimal(-1)).build()))
+		assertThat(validate(builder.premiumAmount(new BigDecimal(-1)).build()))
 			.containsKey("premiumAmount")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.premiumAmount(new BigDecimal("12.123")).build()))
+		assertThat(validate(builder.premiumAmount(new BigDecimal("12.123")).build()))
 			.containsKey("premiumAmount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.premiumAmount(new BigDecimal(1_000_000L)).build()))
+		assertThat(validate(builder.premiumAmount(new BigDecimal(1_000_000L)).build()))
 			.containsKey("premiumAmount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.premiumAmount(new BigDecimal("100000.00")).build()))
+		assertThat(validate(builder.premiumAmount(new BigDecimal("0.23")).build()))
+			.isEmpty();
+		assertThat(validate(builder.premiumAmount(new BigDecimal(100_000)).build()))
+			.isEmpty();
+		assertThat(validate(builder.premiumAmount(new BigDecimal("100000.00")).build()))
 			.isEmpty();
 	}
 	
 	@Test
 	void coverAmount() {
-		validatePrecisionAndScale("coverAmount", 10,2);
+		validatePrecisionAndScale("coverAmount", 8,2);
 		
-		assertThat(valid(builder.coverAmount(new BigDecimal(-1)).build()))
+		assertThat(validate(builder.coverAmount(new BigDecimal(-1)).build()))
 			.containsKey("coverAmount")
 			.containsValue(negative)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.coverAmount(new BigDecimal("12.123")).build()))
+		assertThat(validate(builder.coverAmount(new BigDecimal("12.123")).build()))
 			.containsKey("coverAmount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.coverAmount(new BigDecimal(12_000_000_000L)).build()))
+		assertThat(validate(builder.coverAmount(new BigDecimal(100_000_000)).build()))
 			.containsKey("coverAmount")
 			.containsValue(digits)
 			.size().isEqualTo(1);
 		
-		assertThat(valid(builder.coverAmount(new BigDecimal("1000000000.00")).build()))
+		assertThat(validate(builder.coverAmount(new BigDecimal("0.23")).build()))
+			.isEmpty();
+		assertThat(validate(builder.coverAmount(new BigDecimal(10_000_000)).build()))
+			.isEmpty();
+		assertThat(validate(builder.coverAmount(new BigDecimal("10000000.00")).build()))
 			.isEmpty();
 	}
 }
