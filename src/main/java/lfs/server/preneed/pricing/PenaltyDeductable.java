@@ -10,16 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import lfs.server.audit.AuditableEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 public class PenaltyDeductable extends AuditableEntity<Integer> {
@@ -28,12 +30,14 @@ public class PenaltyDeductable extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@Min(value = 0L, message = "{validation.number.positive}")
+	@Min(value = 0L, message = "{validation.number.negative}")
 	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Max(255)
 	private int months;
 	
 	@Digits(integer=9, fraction=2)
 	@Column(precision=11, scale=2)
+	@Min(value = 0L, message = "{validation.number.negative}")
 	private BigDecimal amount;
 	
 	@ManyToOne

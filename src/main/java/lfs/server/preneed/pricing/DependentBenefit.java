@@ -15,12 +15,13 @@ import javax.validation.constraints.Min;
 
 import lfs.server.audit.AuditableEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 public class DependentBenefit extends AuditableEntity<Integer> {
@@ -29,17 +30,17 @@ public class DependentBenefit extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@Min(value = 0L, message = "{validation.number.positive}") 
+	@Min(value = 0L, message = "{validation.number.negative}") 
 	@Max(255)
 	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
 	private int minmumAge;
 	
-	@Min(value = 0L, message = "{validation.number.positive}")
+	@Min(value = 0L, message = "{validation.number.negative}")
 	@Max(255)
 	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
 	private int maximumAge;
 	
-	@Min(value = 0L, message = "{validation.number.positive}")
+	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 10, fraction = 2)
 	@Column(nullable=false, precision = 12, scale = 2)
 	private BigDecimal coverAmount;

@@ -14,13 +14,14 @@ import javax.validation.constraints.Digits;
 import lfs.server.audit.AuditableEntity;
 import lfs.server.sales.items.ItemType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 public class FuneralSchemeBenefit extends AuditableEntity<Integer> {

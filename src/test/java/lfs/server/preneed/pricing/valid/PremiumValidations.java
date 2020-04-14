@@ -10,14 +10,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lfs.server.common.ValidationTest;
-import lfs.server.preneed.pricing.DependentBenefit;
-import lfs.server.preneed.pricing.DependentBenefit.DependentBenefitBuilder;
+import lfs.server.preneed.pricing.Premium;
+import lfs.server.preneed.pricing.Premium.PremiumBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-public class DependentBenefitValidations extends ValidationTest<DependentBenefit>{
+public class PremiumValidations extends ValidationTest<Premium>{
 
-	private DependentBenefitBuilder builder = DependentBenefit.builder();
+	private PremiumBuilder builder = Premium.builder();
 	
 	@Test
 	void minmumAge() {
@@ -49,6 +49,29 @@ public class DependentBenefitValidations extends ValidationTest<DependentBenefit
 	}
 	
 	@Test
+	void premiumAmount() {
+		validatePrecisionAndScale("premiumAmount", 6,2);
+		
+		assertThat(valid(builder.premiumAmount(new BigDecimal(-1)).build()))
+			.containsKey("premiumAmount")
+			.containsValue(negative)
+			.size().isEqualTo(1);
+		
+		assertThat(valid(builder.premiumAmount(new BigDecimal("12.123")).build()))
+			.containsKey("premiumAmount")
+			.containsValue(digits)
+			.size().isEqualTo(1);
+		
+		assertThat(valid(builder.premiumAmount(new BigDecimal(1_000_000L)).build()))
+			.containsKey("premiumAmount")
+			.containsValue(digits)
+			.size().isEqualTo(1);
+		
+		assertThat(valid(builder.premiumAmount(new BigDecimal("100000.00")).build()))
+			.isEmpty();
+	}
+	
+	@Test
 	void coverAmount() {
 		validatePrecisionAndScale("coverAmount", 10,2);
 		
@@ -70,5 +93,4 @@ public class DependentBenefitValidations extends ValidationTest<DependentBenefit
 		assertThat(valid(builder.coverAmount(new BigDecimal("1000000000.00")).build()))
 			.isEmpty();
 	}
-	
 }
