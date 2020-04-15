@@ -10,14 +10,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lfs.server.common.ValidationTest;
-import lfs.server.preneed.pricing.PenaltyDeductable;
-import lfs.server.preneed.pricing.PenaltyDeductable.PenaltyDeductableBuilder;
-
+import lfs.server.preneed.pricing.PenaltyDeductible;
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-public class PenaltyDeductableValidations extends ValidationTest<PenaltyDeductable>{
+public class PenaltyDeductableValidations extends ValidationTest<PenaltyDeductible>{
 
-	private PenaltyDeductableBuilder builder = PenaltyDeductable.builder();
+	private PenaltyDeductible.PenaltyDeductibleBuilder builder = PenaltyDeductible.builder();
 	
 	
 	@Test

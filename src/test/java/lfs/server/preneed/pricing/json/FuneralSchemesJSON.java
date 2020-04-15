@@ -8,7 +8,7 @@ import lfs.server.common.JSONReader;
 import lfs.server.preneed.pricing.DependentBenefit;
 import lfs.server.preneed.pricing.FuneralScheme;
 import lfs.server.preneed.pricing.FuneralSchemeBenefit;
-import lfs.server.preneed.pricing.PenaltyDeductable;
+import lfs.server.preneed.pricing.PenaltyDeductible;
 import lfs.server.preneed.pricing.Premium;
 
 public class FuneralSchemesJSON {
@@ -29,9 +29,55 @@ public class FuneralSchemesJSON {
 		return list;
 	}
 	
-	
 	public static FuneralScheme any() {
 		return all().get(1);
+	}
+	
+	public static FuneralScheme withDependancies() throws IOException {
+		FuneralScheme fs = any();
+		var benefits = getFuneralSchemeBenefit(fs);
+		benefits.forEach(i -> i.setFuneralScheme(null));
+		var premiums = getPemiums(fs);
+		premiums.forEach(i -> i.setFuneralScheme(null));
+		var dependentBen = getDependentBenefit(fs);
+		dependentBen.forEach(i -> i.setFuneralScheme(null));
+		var deductables = getPenaltyDeductable(fs);
+		deductables.forEach(i -> i.setFuneralScheme(null));
+		fs.setBenefits(benefits);
+		fs.setPremiums(premiums);
+		fs.setDependentBenefits(dependentBen);
+		fs.setPenaltyDeductibles(deductables);
+		return fs;
+	}
+	
+	public static FuneralScheme withDependanciesButNoIds() throws IOException {
+		FuneralScheme fs = any();
+		var benefits = getFuneralSchemeBenefit(fs);
+		benefits.forEach(i -> {
+			i.setId(null);
+			i.setFuneralScheme(null);
+		});
+		var premiums = getPemiums(fs);
+		premiums.forEach(i -> {
+			i.setId(null);
+			i.setFuneralScheme(null);
+		});
+		var dependentBen = getDependentBenefit(fs);
+		dependentBen.forEach(i -> {
+			i.setId(null);
+			i.setFuneralScheme(null);
+		});
+		var deductables = getPenaltyDeductable(fs);
+		deductables.forEach(i -> {
+			i.setId(null);
+			i.setFuneralScheme(null);
+		});
+		fs.setId(null);
+		fs.setBenefits(benefits);
+		fs.setPremiums(premiums);
+		fs.setDependentBenefits(dependentBen);
+		fs.setPenaltyDeductibles(deductables);
+		return fs;
 	}
 	
 	public FuneralScheme get(int id) {
@@ -80,14 +126,14 @@ public class FuneralSchemesJSON {
 				.collect(Collectors.toList());
 	}
 	
-	public static List<PenaltyDeductable> getPenaltyDeductable() throws IOException {
-		JSONReader<PenaltyDeductable> reader = new JSONReader<>(PenaltyDeductable.class);
+	public static List<PenaltyDeductible> getPenaltyDeductable() throws IOException {
+		JSONReader<PenaltyDeductible> reader = new JSONReader<>(PenaltyDeductible.class);
 		reader.addMixIn(FuneralSchemeMixIn.class);
-		List<PenaltyDeductable> premiums = reader.read("PenaltyDeductable.json");
+		List<PenaltyDeductible> premiums = reader.read("PenaltyDeductable.json");
 		return premiums;
 	}
 	
-	public static List<PenaltyDeductable> getPenaltyDeductable(FuneralScheme fs) throws IOException {
+	public static List<PenaltyDeductible> getPenaltyDeductable(FuneralScheme fs) throws IOException {
 		return getPenaltyDeductable().stream()
 				.filter(item -> item.getFuneralScheme().getId() == fs.getId())
 				.collect(Collectors.toList());

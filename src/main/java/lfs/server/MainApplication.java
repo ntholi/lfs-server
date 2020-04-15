@@ -10,8 +10,8 @@ import lfs.server.mortuary.CorpseRepository;
 @SpringBootApplication
 public class MainApplication implements CommandLineRunner{
 
-	@Autowired
-	CorpseRepository repo;
+//	@Autowired
+//	CorpseRepository repo;
 			
 	public static void main(String[] args) {
 		SpringApplication.run(MainApplication.class, args);

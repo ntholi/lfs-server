@@ -1,5 +1,10 @@
 package lfs.server.preneed.pricing;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -51,6 +56,48 @@ public class FuneralSchemeController extends BaseController<FuneralScheme, Funer
 		return new ResponseEntity<>(model, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/{id}/penalty-deductibles")
+	public ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(Integer id) {
+		var list = service.getPenaltyDeductibles(id);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
+	}
+
+	@PostMapping("/{id}/funeral-scheme-benefit")
+	public ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(Integer id) {
+		var list = service.getFuneralSchemeBenefit(id);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
+	}
+
+	@PostMapping("/{id}/dependent-benefits")
+	public ResponseEntity<List<DependentBenefit>> getDependentBenefits(Integer id) {
+		var list = service.getDependentBenefits(id);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
+	}
+
+	@PostMapping("/{id}/premiums")
+	public ResponseEntity<List<Premium>> getPremiums(Integer id) {
+		var list = service.getPremiums(id);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
+	}
+	
+	@Override
+	protected FuneralSchemeDTO addLinks(FuneralScheme entity) {
+		FuneralSchemeDTO dto =  super.addLinks(entity);
+		dto.add(linkTo(methodOn(getClass()).getPremiums(entity.getId())).withSelfRel());
+		dto.add(linkTo(methodOn(getClass()).getDependentBenefits(entity.getId())).withSelfRel());
+		dto.add(linkTo(methodOn(getClass()).getFuneralSchemeBenefit(entity.getId())).withSelfRel());
+		dto.add(linkTo(methodOn(getClass()).getPenaltyDeductibles(entity.getId())).withSelfRel());
+		return dto;
+	}
+
 	@Override
 	protected FuneralSchemeDTO generateDTO(FuneralScheme entity) {
 		return DtoMapper.INSTANCE.map(entity);

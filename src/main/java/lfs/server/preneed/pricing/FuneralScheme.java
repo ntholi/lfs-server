@@ -82,7 +82,7 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
-	private List<PenaltyDeductable> penaltyDeductables;
+	private List<PenaltyDeductible> penaltyDeductibles;
 	
 //	public FuneralSchemeBenefit getBenefit(ItemType itemType) {
 //		

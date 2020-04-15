@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class PenaltyDeductable extends AuditableEntity<Integer> {
+public class PenaltyDeductible extends AuditableEntity<Integer> {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
@@ -44,7 +44,7 @@ public class PenaltyDeductable extends AuditableEntity<Integer> {
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
 	
-	public PenaltyDeductable(int months, BigDecimal amount) {
+	public PenaltyDeductible(int months, BigDecimal amount) {
 		this.months = months;
 		this.amount = amount;
 	}
