@@ -17,10 +17,10 @@ import org.springframework.data.domain.PageRequest;
 
 import lfs.server.core.AuditableRepository;
 import lfs.server.core.BaseService;
-import lfs.server.core.EntityWithId;
+import lfs.server.core.Entity;
 import lfs.server.exceptions.ObjectNotFoundException;
 
-public abstract class ServiceUnitTest<T extends EntityWithId<ID>, ID> {
+public abstract class ServiceUnitTest<T extends Entity<ID>, ID> {
 	
 	private AuditableRepository<T, ID> repo;
 	private BaseService<T, ID, AuditableRepository<T,ID>> service;

@@ -1,6 +1,6 @@
 package lfs.server.core;
 
-public interface EntityWithId<ID> {
+public interface Entity<ID> {
 
 	public ID getId();
 }
