@@ -2,7 +2,6 @@ package lfs.server.preneed.valid;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lfs.server.common.ValidationTest;
 import lfs.server.preneed.Dependent;
 import lfs.server.preneed.Dependent.DependentBuilder;
-import lfs.server.preneed.Policy;
-import lfs.server.preneed.Policy.PolicyBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)

@@ -26,8 +26,8 @@ public final class ExceptionSupplier {
 			new ObjectNotFoundException(objectName+ " with id '"+ id +NOT_FOUND);
 	}
 	
-	public static Supplier<RuntimeException> corpseNotFound(String tagNo){
+	public static Supplier<RuntimeException> notFoundOnUpdate(String objectName){
 		return () ->
-			new ObjectNotFoundException("Corpse with tagNo '"+ tagNo +NOT_FOUND);
+			new ObjectNotFoundException(objectName+" object provide is null, cannot update a null object");
 	}
 }

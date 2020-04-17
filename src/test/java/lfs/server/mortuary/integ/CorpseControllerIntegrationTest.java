@@ -74,7 +74,7 @@ class CorpseControllerIntegrationTest implements ControllerUnitTest {
 	@Test
 	void get_for_non_existing_corpse() throws Exception {
 		String unknownId = "unknown_id";
-		String exMsg = ExceptionSupplier.corpseNotFound(unknownId).get().getMessage();
+		String exMsg = ExceptionSupplier.notFound("Corpse",unknownId).get().getMessage();
 
 		var result = mockMvc.perform(get(URL+unknownId))
 				.andExpect(status().isNotFound());

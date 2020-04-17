@@ -80,7 +80,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	void get_for_non_existing_corpse() throws Exception {
-		String exMsg = ExceptionSupplier.corpseNotFound(TAG_NO).get().getMessage();
+		String exMsg = ExceptionSupplier.notFound("Corpse", TAG_NO).get().getMessage();
 		
 		when(repo.findById(anyString())).thenReturn(Optional.ofNullable(null));
 		
