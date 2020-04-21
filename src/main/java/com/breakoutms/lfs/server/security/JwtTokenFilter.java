@@ -21,7 +21,6 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class JwtTokenFilter extends GenericFilterBean {
-    public static final String BEARER = "Bearer";
 
     private UserDetailsServiceImpl userDetailsService;
 
@@ -65,8 +64,8 @@ public class JwtTokenFilter extends GenericFilterBean {
      * @return jwt if present, empty otherwise
      */
     private Optional<String> getBearerToken(String headerVal) {
-        if (headerVal != null && headerVal.startsWith(BEARER)) {
-            return Optional.of(headerVal.replace(BEARER, "").trim());
+        if (headerVal != null && headerVal.startsWith(JwtUtils.BEARER)) {
+            return Optional.of(headerVal.replace(JwtUtils.BEARER, "").trim());
         }
         return Optional.empty();
     }

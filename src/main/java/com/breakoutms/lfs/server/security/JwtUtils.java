@@ -1,10 +1,10 @@
 package com.breakoutms.lfs.server.security;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.breakoutms.lfs.server.user.Role;
+import com.breakoutms.lfs.server.user.dto.RoleDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -26,6 +27,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtils {
 
+	public static final String BEARER = "Bearer";
     private static final String ROLES_KEY = "roles";
 
     private final String secretKey;
@@ -48,9 +50,11 @@ public class JwtUtils {
      */
     public String createToken(String username, List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLES_KEY, roles.stream().map(role ->new SimpleGrantedAuthority(role.getAuthority()))
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList()));
+        claims.put(ROLES_KEY, 
+        		roles.stream()
+        		.map(RoleDto::new)
+        		.collect(Collectors.toList())
+        );
         Date now = new Date();
         Date expiresAt = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()
@@ -97,8 +101,20 @@ public class JwtUtils {
 	public List<GrantedAuthority> getRoles(String token) {
         List<Map<String, String>>  roleClaims = Jwts.parser().setSigningKey(secretKey)
                 .parseClaimsJws(token).getBody().get(ROLES_KEY, List.class);
-        return roleClaims.stream().map(roleClaim ->
-                new SimpleGrantedAuthority(roleClaim.get("authority")))
-                .collect(Collectors.toList());
+        
+        List<GrantedAuthority> auths = new ArrayList<>();
+        for (Map<String, String> map : roleClaims) {
+			String name = map.get("name");
+			String privileges = map.get("privileges");
+			
+			auths.add(new SimpleGrantedAuthority(name));
+			if(privileges != null) {
+				String[] array = RoleDto.privilegesFromString(privileges);
+				for (int i = 0; i < array.length; i++) {
+					auths.add(new SimpleGrantedAuthority(array[i]));
+				}
+			}
+		}
+        return auths;
     }
 }

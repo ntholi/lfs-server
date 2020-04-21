@@ -46,13 +46,13 @@ public class UserService {
 		token = jwtProvider.createToken(username, user.getRoles());
 		return LoginResponseDto.builder()
 				.accessToken(token)
-				.username(username)
+				.tokenType(JwtUtils.BEARER)
 				.build();
 	}
 
 	@Transactional
 	public User register(User user) {
-		log.info("Registering new user with username"+user.getUsername());
+		log.info("Registering new user with username: "+user.getUsername());
 		if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			return userRepository.save(user);
