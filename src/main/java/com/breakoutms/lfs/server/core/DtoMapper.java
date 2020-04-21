@@ -9,6 +9,8 @@ import com.breakoutms.lfs.server.preneed.Policy;
 import com.breakoutms.lfs.server.preneed.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeDTO;
+import com.breakoutms.lfs.server.user.User;
+import com.breakoutms.lfs.server.user.dto.UserDto;
 
 @Mapper(componentModel="spring")
 public abstract class DtoMapper {
@@ -18,4 +20,5 @@ public abstract class DtoMapper {
 	public abstract CorpseResponseDTO map(Corpse corpse);
 	public abstract FuneralSchemeDTO map(FuneralScheme funeralScheme);
 	public abstract PolicyDTO map(Policy policy);
+	public abstract User map(UserDto userDto);
 }

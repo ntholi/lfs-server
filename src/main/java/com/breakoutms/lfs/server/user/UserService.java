@@ -1,15 +1,17 @@
 package com.breakoutms.lfs.server.user;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.security.JwtUtils;
+import com.breakoutms.lfs.server.user.dto.LoginResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +23,6 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final AuthenticationManager authenticationManager;
-	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
 
@@ -33,39 +34,28 @@ public class UserService {
 	 * @param password  password
 	 * @return Optional of the Java Web Token, empty otherwise
 	 */
-	public String login(String username, String password) {
+	public LoginResponseDto login(String username, String password) {
 		log.info("Attempting to login user, with username: "+ username);
 		String token = null;
-		Optional<User> user = userRepository.findByUsername(username);
-		if (user.isPresent()) {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			token = jwtProvider.createToken(username, user.get().getRoles());
+		Optional<User> userOp = userRepository.findByUsername(username);
+		if(userOp.isEmpty()) {
+			throw new UsernameNotFoundException("unable to find user with username: "+ username);
 		}
-		return token;
+		User user = userOp.get();
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+		token = jwtProvider.createToken(username, user.getRoles());
+		return LoginResponseDto.builder()
+				.accessToken(token)
+				.username(username)
+				.build();
 	}
 
-	/**
-	 * Create a new user in the database.
-	 *
-	 * @param username username
-	 * @param password password
-	 * @param firstName first name
-	 * @param lastName last name
-	 * @return Optional of user, empty if the user already exists.
-	 */
-	public User register(String username, String password, String firstName, String lastName) {
-		log.info("Registering new user with username"+username);
-		if (!userRepository.findByUsername(username).isPresent()) {
-			Optional<Role> role = roleRepository.findByRoleName("ROLE_USER");
-
-
-			User.UserBuilder sb = User.builder();
-
-			return userRepository.save(sb.username(username)
-					.password(passwordEncoder.encode(password))
-					.firstName(firstName)
-					.lastName(lastName)
-					.roles(Arrays.asList(role.get())).build());
+	@Transactional
+	public User register(User user) {
+		log.info("Registering new user with username"+user.getUsername());
+		if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			return userRepository.save(user);
 		}
 		return null; //TODO: throw exception if findByUsername is not in database new HttpServerErrorException(HttpStatus.BAD_REQUEST,"User already exists")
 	}

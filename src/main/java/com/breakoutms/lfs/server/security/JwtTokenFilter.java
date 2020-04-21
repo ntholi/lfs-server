@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class JwtTokenFilter extends GenericFilterBean {
-    private static final String BEARER = "Bearer";
+    public static final String BEARER = "Bearer";
 
     private UserDetailsServiceImpl userDetailsService;
 

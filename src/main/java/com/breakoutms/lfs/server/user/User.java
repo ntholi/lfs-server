@@ -2,9 +2,9 @@ package com.breakoutms.lfs.server.user;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,11 +37,12 @@ public class User {
     
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns
-            = @JoinColumn(name = "user_id",
-            referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id",
-                    referencedColumnName = "id"))
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "users_roles", 
+            joinColumns = @JoinColumn(
+              name = "user_id", referencedColumnName = "id"), 
+            inverseJoinColumns = @JoinColumn(
+              name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 }

@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -29,8 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Entry points
         http.authorizeRequests()
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/register").permitAll() //TODO: disable this
+                .antMatchers("/users/login").permitAll()
+                .antMatchers("/users/register").permitAll() //TODO: disable this
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

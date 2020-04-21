@@ -1,9 +1,16 @@
 package com.breakoutms.lfs.server.user;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,36 +29,20 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
 
-    private String roleName;
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
+ 
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = Privilege.class)
+    @Column(name = "privilege")
+    private List<Privilege> privileges;
 
-    private String description;
+	@Override
+	public String getAuthority() {
+		return name;
+	}
 
-    @Override
-    public String getAuthority() {
-        return roleName;
-    }
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
