@@ -9,7 +9,7 @@
 		<version>2.2.6.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>lfs.server</groupId>
+	<groupId>com.breakoutms.lfs.server</groupId>
 	<artifactId>lfs-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>lfs-server</name>
