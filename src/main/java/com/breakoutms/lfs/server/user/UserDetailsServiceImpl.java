@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.security.JwtUtils;
+import com.breakoutms.lfs.server.user.repo.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

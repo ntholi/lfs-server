@@ -8,9 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.breakoutms.lfs.server.user.Privilege;
+import com.breakoutms.lfs.server.user.Privilege.Type;
 import com.breakoutms.lfs.server.user.Role;
-import com.breakoutms.lfs.server.user.User;
 import com.breakoutms.lfs.server.user.UserService;
+import com.breakoutms.lfs.server.user.dto.UserDto;
 
 @SpringBootApplication
 public class MainApplication implements CommandLineRunner{
@@ -29,6 +30,7 @@ public class MainApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 //		userService.register(createTestUser());
+//		userService.register(createAdminTestUser());
 		
 //		NextOfKin n1 = new NextOfKin(null, "NextOfKin1 names", "NextOfKin1 surname", 
 //				"father", "+2665781736", "Ha Seoli", null);
@@ -46,8 +48,8 @@ public class MainApplication implements CommandLineRunner{
 //		repo.save(corpse);
 	}
 
-	private User createTestUser() {
-		User user = new User();
+	private UserDto createTestUser() {
+		UserDto user = new UserDto();
 		user.setFirstName("Thabo");
 		user.setLastName("Lebese");
 		user.setUsername("thabo");
@@ -55,9 +57,27 @@ public class MainApplication implements CommandLineRunner{
 		
 		Role role = new Role();
 		role.setName("ROLE_USER");
-		role.setPrivileges(List.of(Privilege.READ_PRIVILEGE, Privilege.WRITE_PRIVILEGE));
+		role.setPrivileges(List.of(new Privilege(Type.READ), 
+				new Privilege(Type.WRITE)));
 		user.setRoles(List.of(role));
 		return user;
+	}
+	
+	private UserDto createAdminTestUser() {
+		UserDto admin = new UserDto();
+		admin.setUsername("admin");
+		admin.setPassword("111111");
+		admin.setFirstName("Administrator");
+		Role role = new Role();
+		role.setName("ROLE_ADMIN");
+		role.setPrivileges(List.of(
+				new Privilege(Type.READ), 
+				new Privilege(Type.WRITE),
+				new Privilege(Type.UPDATE),
+				new Privilege(Type.DELETE)
+		));
+		admin.setRoles(List.of(role));
+		return admin;
 	}
 
 }

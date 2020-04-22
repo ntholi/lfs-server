@@ -17,7 +17,8 @@ public class RoleDto {
 		if(role.getPrivileges() != null) {
 			privileges = role.getPrivileges()
 				.stream()
-				.map(Privilege::toString)
+				.map(Privilege::getType)
+				.map(Privilege.Type::toString)
 				.collect(Collectors.joining(","));
 		}
 	}

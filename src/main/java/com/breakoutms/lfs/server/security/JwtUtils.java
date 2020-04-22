@@ -108,7 +108,7 @@ public class JwtUtils {
 			String privileges = map.get("privileges");
 			
 			auths.add(new SimpleGrantedAuthority(name));
-			if(privileges != null) {
+			if(privileges != null && !privileges.isBlank()) {
 				String[] array = RoleDto.privilegesFromString(privileges);
 				for (int i = 0; i < array.length; i++) {
 					auths.add(new SimpleGrantedAuthority(array[i]));

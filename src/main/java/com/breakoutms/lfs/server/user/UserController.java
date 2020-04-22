@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.breakoutms.lfs.server.core.DtoMapper;
 import com.breakoutms.lfs.server.user.dto.LoginDto;
 import com.breakoutms.lfs.server.user.dto.LoginResponseDto;
 import com.breakoutms.lfs.server.user.dto.UserDto;
@@ -35,8 +34,7 @@ public class UserController {
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public User signup(@RequestBody @Valid UserDto userDto){
-    	User user = DtoMapper.INSTANCE.map(userDto);
-        return userService.register(user);
+        return userService.register(userDto);
     }
 
     @GetMapping
