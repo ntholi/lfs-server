@@ -30,8 +30,8 @@ public class MainApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		userService.register(createTestUser());
-		userService.register(createAdminTestUser());
+//		userService.register(createTestUser());
+//		userService.register(createAdminTestUser());
 		
 //		NextOfKin n1 = new NextOfKin(null, "NextOfKin1 names", "NextOfKin1 surname", 
 //				"father", "+2665781736", "Ha Seoli", null);

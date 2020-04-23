@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
@@ -43,7 +44,11 @@ public class UserService {
 		log.info("Attempting to login user, with username: "+ username);
 		Optional<User> userOp = userRepo.findByUsername(username);
 		if(userOp.isEmpty()) {
-			throw new UsernameNotFoundException("unable to find user with username: "+ username);
+			String error = "unable to find user with username: "+ username;
+			// log this error here because exception is going to be changed in the @ControllerAdvice
+			// for security reasons
+			log.error(error);
+			throw new UsernameNotFoundException(error);
 		}
 		User user = userOp.get();
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

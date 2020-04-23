@@ -1,6 +1,5 @@
 package com.breakoutms.lfs.server.exceptions;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,37 +29,55 @@ import lombok.extern.log4j.Log4j2;
 public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final String TIMESTAMP = "timestamp";
-	private static final String STATUS = "status";
+	private static final String ERROR_CODE = "errorCode";
 	private static final String ERROR = "error";
 	private static final String MESSAGE = "message";
-	private static final String STACK_TRACE = "stack_trace";
+	
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request) {
+        return response(HttpStatus.CONFLICT, 
+        		ErrorCode.USER_ALREADY_EXISTS, ex);
+    }
+    
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+        return response(HttpStatus.UNAUTHORIZED, 
+        		ErrorCode.INVALID_CREDENTIALS, 
+        		// we don't what to UsernameNotFoundException because that will be giving the user
+        		// to much information
+        		new BadCredentialsException("Invalid username/password"));
+    }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        return response(HttpStatus.FORBIDDEN, 
+        		ErrorCode.ACCESS_DENIED, ex);
+    }
+    
 	@ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFoundException ex, WebRequest request) {
-        Map<String, Object> body = generatBody(ex);
-        body.put(STATUS, HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return response(HttpStatus.NOT_FOUND, 
+        		ErrorCode.NOT_FOUND, 
+        		ex);
     }
 	
 	@ExceptionHandler(Throwable.class)
     public ResponseEntity<Object> handleException(Throwable ex, WebRequest request) {
-        Map<String, Object> body = generatBody(ex);
-        body.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
-        body.put(STACK_TRACE, Arrays.stream(ex.getStackTrace())
-        		.map(StackTraceElement::toString)
-        		.collect(Collectors.joining("\n")));
-        
-        log.error("Error: "+ ex.getMessage(), ex);
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, 
+        		ErrorCode.INTERNAL_SERVER_ERROR, 
+        		ex);
     }
 
-	private Map<String, Object> generatBody(Throwable ex) {
+	private ResponseEntity<Object> response(HttpStatus status, ErrorCode errorCode, Throwable ex) {
+		log.error(ex);
 		Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
         body.put(ERROR, getErrorName(rootCause));
         body.put(MESSAGE, rootCause.getMessage());
-		return body;
+        body.put(ERROR_CODE, errorCode.getCode());
+        return new ResponseEntity<>(body, status);
 	}
 
     private String getErrorName(Throwable ex) {
@@ -79,7 +99,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
-        body.put(STATUS, status.value());
+        body.put(ERROR_CODE, status.value());
         String[] fields = getFieldsWithErrors(ex.getBindingResult());
         String message = "Invalid input for "+ concat(fields);
         body.put(MESSAGE, message);
