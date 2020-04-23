@@ -28,19 +28,18 @@ import lombok.ToString;
         @Index(columnList = "type", name = "unique_privilege_type", unique=true)
 })
 public class Privilege {
-	public enum Type {READ, WRITE, UPDATE, DELETE}
-	
+		
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private PrivilegeType type;
     
     @JsonIgnore
     @ManyToMany(mappedBy = "privileges")
     private List<Role> roles;
     
-    public Privilege(Type type) {
+    public Privilege(PrivilegeType type) {
     	this.type = type;
     }
 }

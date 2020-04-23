@@ -27,6 +27,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtils {
 
+	public static final String ROLE_PREFIX = "ROLE_";
 	public static final String BEARER = "Bearer";
     private static final String ROLES_KEY = "roles";
 
@@ -107,7 +108,7 @@ public class JwtUtils {
 			String name = map.get("name");
 			String privileges = map.get("privileges");
 			
-			auths.add(new SimpleGrantedAuthority(name));
+			auths.add(new SimpleGrantedAuthority(ROLE_PREFIX+name));
 			if(privileges != null && !privileges.isBlank()) {
 				String[] array = RoleDto.privilegesFromString(privileges);
 				for (int i = 0; i < array.length; i++) {

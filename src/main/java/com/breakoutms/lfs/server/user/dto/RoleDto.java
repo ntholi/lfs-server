@@ -3,13 +3,15 @@ package com.breakoutms.lfs.server.user.dto;
 import java.util.stream.Collectors;
 
 import com.breakoutms.lfs.server.user.Privilege;
+import com.breakoutms.lfs.server.user.PrivilegeType;
 import com.breakoutms.lfs.server.user.Role;
+import com.breakoutms.lfs.server.user.RoleName;
 
 import lombok.Data;
 
 @Data
 public class RoleDto {
-	private String name;
+	private RoleName name;
 	private String privileges;
 	
 	public RoleDto(Role role) {
@@ -18,7 +20,7 @@ public class RoleDto {
 			privileges = role.getPrivileges()
 				.stream()
 				.map(Privilege::getType)
-				.map(Privilege.Type::toString)
+				.map(PrivilegeType::toString)
 				.collect(Collectors.joining(","));
 		}
 	}

@@ -100,7 +100,7 @@ public class UserService {
 
 	private Role roleFromDb(List<Role> savedRoles, Role role) {
 		for (Role savedRole : savedRoles) {
-			if(role.getName().equalsIgnoreCase(savedRole.getName())) {
+			if(role.getName() == savedRole.getName()) {
 				return savedRole;
 			}
 		}

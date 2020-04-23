@@ -8,8 +8,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.breakoutms.lfs.server.user.Privilege;
-import com.breakoutms.lfs.server.user.Privilege.Type;
+import com.breakoutms.lfs.server.user.PrivilegeType;
 import com.breakoutms.lfs.server.user.Role;
+import com.breakoutms.lfs.server.user.RoleName;
 import com.breakoutms.lfs.server.user.UserService;
 import com.breakoutms.lfs.server.user.dto.UserDto;
 
@@ -29,8 +30,8 @@ public class MainApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-//		userService.register(createTestUser());
-//		userService.register(createAdminTestUser());
+		userService.register(createTestUser());
+		userService.register(createAdminTestUser());
 		
 //		NextOfKin n1 = new NextOfKin(null, "NextOfKin1 names", "NextOfKin1 surname", 
 //				"father", "+2665781736", "Ha Seoli", null);
@@ -56,9 +57,9 @@ public class MainApplication implements CommandLineRunner{
 		user.setPassword("111111");
 		
 		Role role = new Role();
-		role.setName("ROLE_USER");
-		role.setPrivileges(List.of(new Privilege(Type.READ), 
-				new Privilege(Type.WRITE)));
+		role.setName(RoleName.PRENEED);
+		role.setPrivileges(List.of(new Privilege(PrivilegeType.READ), 
+				new Privilege(PrivilegeType.WRITE)));
 		user.setRoles(List.of(role));
 		return user;
 	}
@@ -69,12 +70,12 @@ public class MainApplication implements CommandLineRunner{
 		admin.setPassword("111111");
 		admin.setFirstName("Administrator");
 		Role role = new Role();
-		role.setName("ROLE_ADMIN");
+		role.setName(RoleName.ADMIN);
 		role.setPrivileges(List.of(
-				new Privilege(Type.READ), 
-				new Privilege(Type.WRITE),
-				new Privilege(Type.UPDATE),
-				new Privilege(Type.DELETE)
+				new Privilege(PrivilegeType.READ), 
+				new Privilege(PrivilegeType.WRITE),
+				new Privilege(PrivilegeType.UPDATE),
+				new Privilege(PrivilegeType.DELETE)
 		));
 		admin.setRoles(List.of(role));
 		return admin;

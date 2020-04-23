@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,8 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,12 +30,13 @@ import lombok.ToString;
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_role_name", unique=true)
 })
-public class Role implements GrantedAuthority{ //TODO: Role should not implement GrantedAuthority
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleName name;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
@@ -49,9 +50,4 @@ public class Role implements GrantedAuthority{ //TODO: Role should not implement
         inverseJoinColumns = @JoinColumn(
           name = "privilege_id", referencedColumnName = "id"))
     private List<Privilege> privileges;
-
-	@Override
-	public String getAuthority() {
-		return name;
-	}
 }

@@ -1,10 +1,14 @@
 package com.breakoutms.lfs.server.user;
 
+import static com.breakoutms.lfs.server.security.JwtUtils.ROLE_PREFIX;
 import static org.springframework.security.core.userdetails.User.withUsername;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,28 +17,40 @@ import org.springframework.stereotype.Service;
 import com.breakoutms.lfs.server.security.JwtUtils;
 import com.breakoutms.lfs.server.user.repo.UserRepository;
 
-@Service
-public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+import lombok.AllArgsConstructor;
 
-    @Autowired
-    JwtUtils jwtProvider;
+@Service
+@AllArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+	private final UserRepository userRepository;
+    private final JwtUtils jwtProvider;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String s) {
         User user = userRepository.findByUsername(s).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User with name %s does not exist", s)));
-
-        return withUsername(user.getUsername())
+                new UsernameNotFoundException(String.format("Username '%s' does not exist", s)));
+        
+		return withUsername(user.getUsername())
             .password(user.getPassword())
-            .authorities(user.getRoles())
+            .authorities(getGrantedAuthority(user.getRoles()))
             .accountExpired(false)
             .accountLocked(false)
             .credentialsExpired(false)
             .disabled(false)
             .build();
     }
+
+	protected List<GrantedAuthority> getGrantedAuthority(List<Role> list) {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : list) {
+			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX+role.getName()));
+			for (Privilege privilege : role.getPrivileges()) {
+				authorities.add(new SimpleGrantedAuthority(privilege.getType().name()));
+			}
+		}
+		return authorities;
+	}
 
     /**
      * Extract username and roles from a validated jwt string.
