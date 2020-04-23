@@ -4,5 +4,6 @@ public enum PrivilegeType {
 	READ, 
 	WRITE, 
 	UPDATE, 
-	DELETE
+	DELETE,
+	VIEW_REPORTS
 }

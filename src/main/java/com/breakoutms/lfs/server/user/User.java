@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,16 +32,25 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "SMALLINT UNSIGNED")
     private Long id;
 
+    @NotBlank
+    @Size(min = 3, max = 50)
+    @Column(nullable = false, length = 50)
     private String username;
 
     @JsonIgnore
+    @Size(min = 6, max = 100)
+    @Column(length = 100)
     private String password;
     
+    @Size(min = 2, max = 50)
+    @Column(length = 50)
     private String firstName;
     
+    @Size(min = 2, max = 50)
+    @Column(length = 50)
     private String lastName;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
