@@ -13,10 +13,13 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -28,12 +31,16 @@ import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
+import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
-@WebMvcTest(FuneralSchemeController.class)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = FuneralSchemeController.class)
+@WithMockUser(authorities = {"ROLE_PRENEED", "READ", "WRITE", "UPDATE", "DELETE"})
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 
 	@Autowired private MockMvc mockMvc;
+	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private FuneralSchemeRepository repo;
 	@MockBean private BranchRepository branchRepo;
 	@SpyBean private FuneralSchemeService service;
@@ -41,7 +48,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	private static final List<FuneralScheme> list = FuneralSchemesJSON.all();
 	private FuneralScheme entity = list.get(0);
 	private static final Integer ID = 5;
-	private static final String URL = "/funeral-schemes/";
+	private static final String URL = "/preneed/funeral-schemes/";
 
 	private Expectations expect;
 	
@@ -55,10 +62,10 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 	    ResultActions result = mockMvc.perform(get(URL+ID));
 	    result.andExpect(status().isOk());
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/premiums/")));
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/dependent-benefits/")));
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/funeral-scheme-benefit/")));
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/penalty-deductibles/")));
+	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/premiums")));
+	    result.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(entity.getId()+"/dependent-benefits")));
+	    result.andExpect(jsonPath("_links.funeralSchemeBenefit.href", endsWith(entity.getId()+"/funeral-scheme-benefit")));
+	    result.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(entity.getId()+"/penalty-deductibles")));
 	    result.andDo(print());
 	    expect.forEntity(result, entity);
 	    verify(service).get(ID);

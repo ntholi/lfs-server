@@ -20,8 +20,8 @@ public class MainApplication implements CommandLineRunner{
 //	@Autowired
 //	CorpseRepository repo;
 	
-	@Autowired
-	UserService userService;
+//	@Autowired
+//	UserService userService;
 			
 	public static void main(String[] args) {
 		SpringApplication.run(MainApplication.class, args);

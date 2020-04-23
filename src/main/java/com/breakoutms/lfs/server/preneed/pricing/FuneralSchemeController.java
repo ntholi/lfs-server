@@ -29,7 +29,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/funeral-schemes")
+@RequestMapping("/preneed/funeral-schemes")
 @AllArgsConstructor
 public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeDTO> {
 
@@ -59,32 +59,32 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 		);
 	}
 	
-	@PostMapping("/{id}/penalty-deductibles")
-	ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(Integer id) {
+	@GetMapping("/{id}/penalty-deductibles")
+	ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(@PathVariable Integer id) {
 		var list = service.getPenaltyDeductibles(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(list);
 	}
 
-	@PostMapping("/{id}/funeral-scheme-benefit")
-	ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(Integer id) {
+	@GetMapping("/{id}/funeral-scheme-benefit")
+	ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(@PathVariable Integer id) {
 		var list = service.getFuneralSchemeBenefit(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(list);
 	}
 
-	@PostMapping("/{id}/dependent-benefits")
-	ResponseEntity<List<DependentBenefit>> getDependentBenefits(Integer id) {
+	@GetMapping("/{id}/dependent-benefits")
+	ResponseEntity<List<DependentBenefit>> getDependentBenefits(@PathVariable Integer id) {
 		var list = service.getDependentBenefits(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(list);
 	}
 
-	@PostMapping("/{id}/premiums")
-	ResponseEntity<List<Premium>> getPremiums(Integer id) {
+	@GetMapping("/{id}/premiums")
+	public ResponseEntity<List<Premium>> getPremiums(@PathVariable Integer id) {
 		var list = service.getPremiums(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 

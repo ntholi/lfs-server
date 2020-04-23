@@ -27,7 +27,7 @@ import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 
 @ExtendWith(MockitoExtension.class)
-class FuneralSchemeServiceUnitTest implements UnitTest {
+public class FuneralSchemeServiceUnitTest implements UnitTest {
 
 	@Mock
 	private FuneralSchemeRepository repo;
@@ -77,7 +77,7 @@ class FuneralSchemeServiceUnitTest implements UnitTest {
 	}
 	
 	@Test
-	public void failtWithUnknownId() {
+	void failt_to_update_with_unknownId() {
 		Integer unknownId = 12341234;
 		when(repo.existsById(unknownId)).thenReturn(false);
 
@@ -89,7 +89,7 @@ class FuneralSchemeServiceUnitTest implements UnitTest {
 	}
 	
 	@Test
-	public void delete() {
+	void delete() {
 		Integer id = entity.getId();
 		service.delete(id);
 		verify(repo).deleteById(id);
