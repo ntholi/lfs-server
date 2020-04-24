@@ -61,7 +61,7 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	}
 
 	@PutMapping("/{tagNo}")
-	ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @RequestBody Corpse corpse) {
+	ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @Valid @RequestBody Corpse corpse) {
 		return ResponseEntity.ok(
 				createDtoWithLinks(service.update(tagNo, corpse))
 		);

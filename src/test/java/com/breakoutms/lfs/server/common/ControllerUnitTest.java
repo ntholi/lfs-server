@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public interface ControllerUnitTest extends UnitTest {
 	
+	String READ = "READ";
+	String WRITE = "WRITE";
+	String UPDATE = "UPDATE";
+	
 	public default ResultActions post(MockMvc mockMvc, String url, Object obj) throws Exception {
 		return mockMvc.perform(MockMvcRequestBuilders.post(url)
 				  .content(asJsonString(obj))

@@ -20,6 +20,8 @@ import com.breakoutms.lfs.server.util.FieldUtils;
 
 public class Expectations {
 
+	private static final String STATUS = "status";
+	private static final String MESSAGE = "message";
 	private String baseUrl;
 	private Branch branch;
 
@@ -109,14 +111,14 @@ public class Expectations {
 	
 	public static ResultActions forObjectNotFound(ResultActions result, String message) throws Exception {
 		return result.andExpect(status().isNotFound())
-				.andExpect(jsonPath("status").value(404))
-				.andExpect(jsonPath("error", is(message)));
+				.andExpect(jsonPath(STATUS).value(404))
+				.andExpect(jsonPath(MESSAGE, is(message)));
 	}
 	
 	public static ResultActions forInvalidFields(ResultActions result, String message) throws Exception {
 		return result.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("status").value(400))
-				.andExpect(jsonPath("error", is(message)));
+				.andExpect(jsonPath(STATUS).value(400))
+				.andExpect(jsonPath(MESSAGE, is(message)));
 	}
 
 	private static <T> Map<String, Object> getValues(T object){

@@ -16,6 +16,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 
@@ -39,6 +40,7 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private Integer id;
 	
 	@NotBlank
+	@Size(min = 1, max = 25)
 	@Column(nullable=false, length = 25)
 	private String name;
 	
