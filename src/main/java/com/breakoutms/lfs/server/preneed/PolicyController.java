@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.DtoMapper;
 import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
@@ -54,7 +53,7 @@ public class PolicyController implements EntityController<Policy, PolicyDTO> {
 
 	@Override
 	public PolicyDTO createDtoWithLinks(Policy entity) {
-		var dto = DtoMapper.INSTANCE.map(entity);
+		var dto = PreneedMapper.INSTANCE.map(entity);
 		var id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		return dto;

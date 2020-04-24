@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing;
+package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,6 +19,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.preneed.pricing.DependentBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.PenaltyDeductible;
+import com.breakoutms.lfs.server.preneed.pricing.Premium;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

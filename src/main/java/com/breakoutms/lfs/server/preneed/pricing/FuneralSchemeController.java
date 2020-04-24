@@ -22,10 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.DtoMapper;
 import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
 import com.breakoutms.lfs.server.user.Domain;
 
 import lombok.AllArgsConstructor;
@@ -33,28 +36,29 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/funeral-schemes")
 @AllArgsConstructor
-public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeDTO> {
+public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeViewModel> {
 
 	private final FuneralSchemeService service;
-	private final PagedResourcesAssembler<FuneralSchemeDTO> pagedAssembler;
+	private final PagedResourcesAssembler<FuneralSchemeViewModel> pagedAssembler;
 	
 
 	@GetMapping("/{id}")
-	public ResponseEntity<FuneralSchemeDTO> get(@PathVariable Integer id) {
+	public ResponseEntity<FuneralSchemeViewModel> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Funeral Scheme", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeDTO>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeViewModel>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 
 	@PostMapping
-	public ResponseEntity<FuneralSchemeDTO> save(@Valid @RequestBody FuneralScheme entity) {
+	public ResponseEntity<FuneralSchemeViewModel> save(@Valid @RequestBody FuneralSchemeDTO dto) {
+		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.save(entity)), 
 				HttpStatus.CREATED
@@ -62,7 +66,9 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<FuneralSchemeDTO> update(@PathVariable Integer id, @Valid @RequestBody FuneralScheme entity) {
+	public ResponseEntity<FuneralSchemeViewModel> update(@PathVariable Integer id, 
+			@Valid @RequestBody FuneralSchemeDTO dto) {
+		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.update(id, entity)), 
 				HttpStatus.OK
@@ -103,8 +109,8 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 	
 	@Override
-	public FuneralSchemeDTO createDtoWithLinks(FuneralScheme entity) {
-		FuneralSchemeDTO dto = DtoMapper.INSTANCE.map(entity);
+	public FuneralSchemeViewModel createDtoWithLinks(FuneralScheme entity) {
+		FuneralSchemeViewModel dto = PreneedMapper.INSTANCE.map(entity);
 		var id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		dto.add(linkTo(methodOn(getClass()).getPremiums(id)).withRel("premiums"));

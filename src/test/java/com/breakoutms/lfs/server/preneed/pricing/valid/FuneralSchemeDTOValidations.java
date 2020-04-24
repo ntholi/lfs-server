@@ -10,14 +10,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.breakoutms.lfs.server.common.ValidationTest;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme.FuneralSchemeBuilder;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO.FuneralSchemeDTOBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
+public class FuneralSchemeDTOValidations extends ValidationTest<FuneralSchemeDTO>{
 	
-	private FuneralSchemeBuilder builder = FuneralScheme.builder();
+	private FuneralSchemeDTOBuilder builder = FuneralSchemeDTO.builder();
 	
 	@Test
 	void name() {
@@ -38,8 +38,6 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 	
 	@Test
 	void registrationFee() {
-		validatePrecisionAndScale("registrationFee", 6,2);
-		
 		assertThat(validate(withName().registrationFee(new BigDecimal(-2)).build()))
 			.containsKey("registrationFee")
 			.containsValue(negative)
@@ -77,7 +75,6 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 	
 	@Test
 	void penaltyFee() {
-		validatePrecisionAndScale("registrationFee", 6,2);
 		
 		assertThat(validate(withName().penaltyFee(new BigDecimal(-2)).build()))
 			.containsKey("penaltyFee")
@@ -114,7 +111,7 @@ public class FuneralSchemeValidations extends ValidationTest<FuneralScheme>{
 			.isEmpty();
 	}
 
-	private FuneralSchemeBuilder withName() {
+	private FuneralSchemeDTOBuilder withName() {
 		return builder.name("Hello");
 	}
 }

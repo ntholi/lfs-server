@@ -15,10 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

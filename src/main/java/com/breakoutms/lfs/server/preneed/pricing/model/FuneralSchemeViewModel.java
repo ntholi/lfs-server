@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing;
+package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 
@@ -11,12 +11,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Relation(collectionRelation = "funeralSchemes")
-public class FuneralSchemeDTO extends RepresentationModel<FuneralSchemeDTO> {
+public class FuneralSchemeViewModel extends RepresentationModel<FuneralSchemeViewModel> {
 
 	private Integer id;
 	private String name;
 	private BigDecimal registrationFee;
 	private int monthsBeforeActive;
+	private boolean includesFirstPremium;
 	private BigDecimal penaltyFee;
 	private int monthsBeforePenalty;
 }

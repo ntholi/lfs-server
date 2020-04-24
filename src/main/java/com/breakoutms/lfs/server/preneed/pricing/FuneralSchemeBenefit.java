@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.sales.items.ItemType;
 
 import lombok.AllArgsConstructor;

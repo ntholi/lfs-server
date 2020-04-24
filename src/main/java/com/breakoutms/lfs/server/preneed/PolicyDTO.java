@@ -7,7 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

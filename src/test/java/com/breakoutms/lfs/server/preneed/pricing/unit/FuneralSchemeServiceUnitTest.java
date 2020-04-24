@@ -21,10 +21,10 @@ import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.UnitTest;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(MockitoExtension.class)
 public class FuneralSchemeServiceUnitTest implements UnitTest {

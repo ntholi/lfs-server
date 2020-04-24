@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.breakoutms.lfs.server.core.AuditableRepository;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @Repository
 public interface FuneralSchemeRepository extends AuditableRepository<FuneralScheme, Integer> {

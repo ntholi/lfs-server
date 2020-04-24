@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

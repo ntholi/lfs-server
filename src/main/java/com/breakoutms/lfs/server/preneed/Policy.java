@@ -28,7 +28,7 @@ import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

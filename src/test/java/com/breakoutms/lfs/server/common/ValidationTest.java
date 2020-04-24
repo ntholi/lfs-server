@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.validation.ConstraintViolation;
@@ -49,10 +48,18 @@ public abstract class ValidationTest<T> {
 		var validatorFactory = Validation.buildDefaultValidatorFactory();
 		var validator = validatorFactory.getValidator();
 		Set<ConstraintViolation<T>> validations = validator.validate(entity);
-		Map<String, String> map = validations
-				.stream()
-				.collect(Collectors.toMap(v -> v.getPropertyPath().toString(), 
-						ConstraintViolation::getMessageTemplate));
+		
+		Map<String, String> map = new HashMap<>();
+		for (ConstraintViolation<T> v : validations) {
+			String key = v.getPropertyPath().toString();
+			String value = v.getMessageTemplate();
+			if(map.containsKey(key)) {
+				throw new IllegalStateException("Multiple validation violations found for field: '"+
+						key +"', consider using "+getClass().getName()+".validateMultipe");
+			}
+			map.put(key, value);
+		}		
+		
 		return map;
 	}
 	

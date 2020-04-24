@@ -2,7 +2,7 @@ package com.breakoutms.lfs.server.preneed.pricing.json;
 
 import java.io.IOException;
 
-import com.breakoutms.lfs.server.preneed.pricing.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
