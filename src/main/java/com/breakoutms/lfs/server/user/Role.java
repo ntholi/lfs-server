@@ -40,7 +40,7 @@ public class Role {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private RoleName name;
+    private Domain name;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")

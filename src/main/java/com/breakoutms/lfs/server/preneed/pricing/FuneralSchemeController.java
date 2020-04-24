@@ -25,11 +25,12 @@ import com.breakoutms.lfs.server.core.DtoMapper;
 import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.user.Domain;
 
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/preneed/funeral-schemes")
+@RequestMapping("/"+Domain.Const.PRENEED+"/funeral-schemes")
 @AllArgsConstructor
 public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeDTO> {
 
@@ -38,7 +39,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	
 
 	@GetMapping("/{id}")
-	ResponseEntity<FuneralSchemeDTO> get(@PathVariable Integer id) {
+	public ResponseEntity<FuneralSchemeDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Funeral Scheme", id));

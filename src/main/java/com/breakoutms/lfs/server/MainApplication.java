@@ -2,7 +2,6 @@ package com.breakoutms.lfs.server;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,8 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.breakoutms.lfs.server.user.Privilege;
 import com.breakoutms.lfs.server.user.PrivilegeType;
 import com.breakoutms.lfs.server.user.Role;
-import com.breakoutms.lfs.server.user.RoleName;
-import com.breakoutms.lfs.server.user.UserService;
+import com.breakoutms.lfs.server.user.Domain;
 import com.breakoutms.lfs.server.user.dto.UserDto;
 
 @SpringBootApplication
@@ -57,7 +55,7 @@ public class MainApplication implements CommandLineRunner{
 		user.setPassword("111111");
 		
 		Role role = new Role();
-		role.setName(RoleName.PRENEED);
+		role.setName(Domain.PRENEED);
 		role.setPrivileges(List.of(new Privilege(PrivilegeType.READ), 
 				new Privilege(PrivilegeType.WRITE)));
 		user.setRoles(List.of(role));
@@ -70,7 +68,7 @@ public class MainApplication implements CommandLineRunner{
 		admin.setPassword("111111");
 		admin.setFirstName("Administrator");
 		Role role = new Role();
-		role.setName(RoleName.ADMIN);
+		role.setName(Domain.ADMIN);
 		role.setPrivileges(List.of(
 				new Privilege(PrivilegeType.READ), 
 				new Privilege(PrivilegeType.WRITE),

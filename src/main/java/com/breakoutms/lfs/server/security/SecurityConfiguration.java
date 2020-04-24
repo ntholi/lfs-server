@@ -1,9 +1,11 @@
 package com.breakoutms.lfs.server.security;
 
+import static com.breakoutms.lfs.server.user.Domain.ADMIN;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,13 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.breakoutms.lfs.server.user.RoleName;
+import com.breakoutms.lfs.server.user.Domain;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 import lombok.AllArgsConstructor;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
@@ -26,25 +27,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/users/login").permitAll()
-                .antMatchers("/mortuary/**").hasAnyRole(RoleName.MORTUARY.name(), RoleName.ADMIN.name())
-                .antMatchers("/undertaker/**").hasAnyRole(RoleName.UNDERTAKER.name(), RoleName.ADMIN.name())
-                .antMatchers("/preneed/**").hasAnyRole(RoleName.PRENEED.name(), RoleName.ADMIN.name())
-                .antMatchers("/sales/**").hasAnyRole(RoleName.SALES.name(), RoleName.ADMIN.name())
-                .antMatchers("/revenue/**").hasAnyRole(RoleName.REVENUE.name(), RoleName.ADMIN.name())
-                .antMatchers("/**").hasRole(RoleName.ADMIN.name())
-                .anyRequest().authenticated();
+                .antMatchers("/users/login").permitAll();
+        for(Domain domain: Domain.values()) {
+        	authorize(http, domain);
+        }
+        http.authorizeRequests().antMatchers("/**")
+        		.hasRole(ADMIN.name())
+        	.anyRequest().authenticated();
 
-        // Disable CSRF (cross site request forgery)
+
         http.csrf().disable();
-
-        // No session will be created or used by spring security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(new JwtTokenFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
     }
     
-    @Bean
+    private void authorize(HttpSecurity http, Domain domain) throws Exception {
+    	http.authorizeRequests()
+    		.antMatchers(HttpMethod.GET, domain.antPattern()).access(domain.canRead())   
+    		.antMatchers(HttpMethod.POST, domain.antPattern()).access(domain.canWrite())
+    		.antMatchers(HttpMethod.PUT, domain.antPattern()).access(domain.canUpdate())
+    		.antMatchers(HttpMethod.DELETE, domain.antPattern()).access(domain.canDelete());
+	}
+
+	@Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();

@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j2;
 public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final String TIMESTAMP = "timestamp";
-	private static final String ERROR_CODE = "errorCode";
+	private static final String ERROR_CODE = "status";
 	private static final String ERROR = "error";
 	private static final String MESSAGE = "message";
 	

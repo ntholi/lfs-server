@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.preneed.pricing.unit;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,6 +23,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
@@ -35,11 +38,10 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = FuneralSchemeController.class)
-@WithMockUser(authorities = {"ROLE_PRENEED", "READ", "WRITE", "UPDATE", "DELETE"})
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 
-	@Autowired private MockMvc mockMvc;
+	private MockMvc mockMvc;
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private FuneralSchemeRepository repo;
 	@MockBean private BranchRepository branchRepo;
@@ -52,12 +54,20 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private Expectations expect;
 	
+    @Autowired
+    private WebApplicationContext context;
+	
 	@BeforeEach
 	public void setup() {
 		expect = new Expectations(URL, getBranch());
+		mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity()) 
+                .build();
 	}
-
+	
 	@Test
+	@WithMockUser(authorities = {"READ", "ROLE_PRENEED"})
 	void get_funeralScheme() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 	    ResultActions result = mockMvc.perform(get(URL+ID));
