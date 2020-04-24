@@ -39,21 +39,21 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	private final PagedResourcesAssembler<CorpseResponseDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	ResponseEntity<CorpseResponseDTO> get(@PathVariable String id) {
+	public ResponseEntity<CorpseResponseDTO> get(@PathVariable String id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Funeral Scheme", id));
 	}
 
 	@GetMapping
-	ResponseEntity<PagedModel<EntityModel<CorpseResponseDTO>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<CorpseResponseDTO>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 
 	@PostMapping
-	ResponseEntity<CorpseResponseDTO> save(@Valid @RequestBody Corpse entity) {
+	public ResponseEntity<CorpseResponseDTO> save(@Valid @RequestBody Corpse entity) {
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.save(entity)), 
 				HttpStatus.CREATED
@@ -61,19 +61,19 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	}
 
 	@PutMapping("/{tagNo}")
-	ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @Valid @RequestBody Corpse corpse) {
+	public ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @Valid @RequestBody Corpse corpse) {
 		return ResponseEntity.ok(
 				createDtoWithLinks(service.update(tagNo, corpse))
 		);
 	}
 
 	@DeleteMapping("/{tagNo}")
-	void delete(String tagNo) {
+	public void delete(String tagNo) {
 		service.delete(tagNo);
 	}
 
 	@GetMapping("{tagNo}/next-of-kins/")
-	ResponseEntity<List<NextOfKin>> getNextOfKins(@PathVariable String tagNo) {
+	public ResponseEntity<List<NextOfKin>> getNextOfKins(@PathVariable String tagNo) {
 		var list =  service.getNextOfKins(tagNo);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
@@ -81,14 +81,14 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	}
 
 	@GetMapping("other-mortuaries/{id}")
-	ResponseEntity<OtherMortuary> getTransforedFrom(@PathVariable Integer id) {
+	public ResponseEntity<OtherMortuary> getTransforedFrom(@PathVariable Integer id) {
 		return service.getTransforedFrom(id)
 				.map(ResponseEntity::ok)
 				.orElseThrow(ExceptionSupplier.notFound("OtherMortuary", id));
 	}
 
 	@GetMapping("/other-mortuaries")
-	ResponseEntity<Iterable<OtherMortuary>> getOtherMortuaries() {
+	public ResponseEntity<Iterable<OtherMortuary>> getOtherMortuaries() {
 		var list = service.getOtherMortuaries();
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 

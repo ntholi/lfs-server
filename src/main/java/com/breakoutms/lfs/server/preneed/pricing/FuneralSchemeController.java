@@ -47,14 +47,14 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 	
 	@GetMapping
-	ResponseEntity<PagedModel<EntityModel<FuneralSchemeDTO>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeDTO>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 
 	@PostMapping
-	ResponseEntity<FuneralSchemeDTO> save(@Valid @RequestBody FuneralScheme entity) {
+	public ResponseEntity<FuneralSchemeDTO> save(@Valid @RequestBody FuneralScheme entity) {
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.save(entity)), 
 				HttpStatus.CREATED
@@ -62,7 +62,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 	
 	@PutMapping("/{id}")
-	ResponseEntity<FuneralSchemeDTO> update(@PathVariable Integer id, @Valid @RequestBody FuneralScheme entity) {
+	public ResponseEntity<FuneralSchemeDTO> update(@PathVariable Integer id, @Valid @RequestBody FuneralScheme entity) {
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.update(id, entity)), 
 				HttpStatus.OK
@@ -71,7 +71,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 
 	
 	@GetMapping("/{id}/penalty-deductibles")
-	ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(@PathVariable Integer id) {
+	public ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(@PathVariable Integer id) {
 		var list = service.getPenaltyDeductibles(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
@@ -79,7 +79,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 
 	@GetMapping("/{id}/funeral-scheme-benefit")
-	ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(@PathVariable Integer id) {
+	public ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(@PathVariable Integer id) {
 		var list = service.getFuneralSchemeBenefit(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
@@ -87,7 +87,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	}
 
 	@GetMapping("/{id}/dependent-benefits")
-	ResponseEntity<List<DependentBenefit>> getDependentBenefits(@PathVariable Integer id) {
+	public ResponseEntity<List<DependentBenefit>> getDependentBenefits(@PathVariable Integer id) {
 		var list = service.getDependentBenefits(id);
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
