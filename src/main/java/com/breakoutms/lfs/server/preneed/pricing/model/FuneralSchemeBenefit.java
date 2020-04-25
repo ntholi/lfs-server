@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing;
+package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 
@@ -11,11 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.sales.items.ItemType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,32 +21,37 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class DependentBenefit extends AuditableEntity<Integer> {
+public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 
+	public enum Deductable {
+		FREE, DEDUCTABLE
+	}
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@Min(value = 0L, message = "{validation.number.negative}") 
-	@Max(255)
-	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
-	private int minmumAge;
+	@Column(columnDefinition = "TINYINT UNSIGNED")
+	private ItemType itemType;
 	
-	@Min(value = 0L, message = "{validation.number.negative}")
-	@Max(255)
-	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
-	private int maximumAge;
+	@Column(columnDefinition="ENUM('FREE','DEDUCTABLE')")
+	private Deductable deductable;
 	
-	@Min(value = 0L, message = "{validation.number.negative}")
-	@Digits(integer = 8, fraction = 2)
-	@Column(nullable=false, precision = 10, scale = 2)
-	private BigDecimal coverAmount;
+	@Column(precision=5, scale=4)
+	@Digits(integer=1, fraction=4)
+	private BigDecimal discount;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
+
+	
+	public boolean isFree() {
+		return (deductable != null && deductable == Deductable.FREE);
+	}
 }

@@ -10,8 +10,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.breakoutms.lfs.server.common.ValidationTest;
-import com.breakoutms.lfs.server.preneed.pricing.DependentBenefit;
-import com.breakoutms.lfs.server.preneed.pricing.DependentBenefit.DependentBenefitBuilder;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit.DependentBenefitBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)

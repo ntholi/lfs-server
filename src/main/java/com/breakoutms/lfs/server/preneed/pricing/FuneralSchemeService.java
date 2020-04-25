@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 import lombok.AllArgsConstructor;
@@ -49,8 +52,8 @@ public class FuneralSchemeService {
 		return repo.getPenaltyDeductibles(id);
 	}
 
-	public List<FuneralSchemeBenefit> getFuneralSchemeBenefit(Integer id) {
-		return repo.getFuneralSchemeBenefit(id);
+	public List<FuneralSchemeBenefit> getFuneralSchemeBenefits(Integer id) {
+		return repo.getFuneralSchemeBenefits(id);
 	}
 
 	public List<DependentBenefit> getDependentBenefits(Integer id) {

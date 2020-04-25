@@ -3,9 +3,15 @@ package com.breakoutms.lfs.server.preneed;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
 
@@ -14,9 +20,12 @@ public abstract class PreneedMapper {
 
 	public static final PreneedMapper INSTANCE = Mappers.getMapper(PreneedMapper.class);
 	
+	public abstract PolicyDTO map(Policy policy);
+	
 	public abstract FuneralScheme map(FuneralSchemeDTO funeralScheme);
 	public abstract FuneralSchemeViewModel map(FuneralScheme funeralScheme);
 	public abstract PremiumViewModel map(Premium premium);
-	
-	public abstract PolicyDTO map(Policy policy);
+	public abstract PenaltyDeductibleViewModel map(PenaltyDeductible penaltyDeductible);
+	public abstract FuneralSchemeBenefitViewModel map(FuneralSchemeBenefit funeralSchemeBenefit);
+	public abstract DependentBenefitViewModel map(DependentBenefit dependentBenefit);
 }

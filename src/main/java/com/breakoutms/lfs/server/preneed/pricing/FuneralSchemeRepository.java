@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.breakoutms.lfs.server.core.AuditableRepository;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 @Repository
@@ -16,7 +19,7 @@ public interface FuneralSchemeRepository extends AuditableRepository<FuneralSche
 	List<PenaltyDeductible> getPenaltyDeductibles(Integer id);
 
 	@Query("FROM FuneralSchemeBenefit e WHERE e.funeralScheme.id = :id AND e.deleted=false")
-	List<FuneralSchemeBenefit> getFuneralSchemeBenefit(Integer id);
+	List<FuneralSchemeBenefit> getFuneralSchemeBenefits(Integer id);
 
 	@Query("FROM DependentBenefit e WHERE e.funeralScheme.id = :id AND e.deleted=false")
 	List<DependentBenefit> getDependentBenefits(Integer id);

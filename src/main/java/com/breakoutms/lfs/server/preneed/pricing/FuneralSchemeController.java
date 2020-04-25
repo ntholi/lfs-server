@@ -28,9 +28,12 @@ import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
 import com.breakoutms.lfs.server.user.Domain;
 
@@ -91,33 +94,60 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		CollectionModel<PremiumViewModel> result = new CollectionModel<>(list,
+		var result = new CollectionModel<>(list,
 				linkTo(methodOn(getClass()).getPremiums(id)).withSelfRel());
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/{id}/dependent-benefits")
+	public ResponseEntity<CollectionModel<DependentBenefitViewModel>> getDependentBenefits(@PathVariable Integer id) {
+		List<DependentBenefitViewModel> list = new ArrayList<>();
+		for (var entity: service.getDependentBenefits(id)) {
+			var dto = PreneedMapper.INSTANCE.map(entity);
+			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
+			list.add(dto);
+		}
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		var result = new CollectionModel<>(list,
+				linkTo(methodOn(getClass()).getDependentBenefits(id)).withSelfRel());
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/{id}/funeral-scheme-benefits")
+	public ResponseEntity<CollectionModel<FuneralSchemeBenefitViewModel>> getFuneralSchemeBenefits(@PathVariable Integer id) {
+		List<FuneralSchemeBenefitViewModel> list = new ArrayList<>();
+		for (var entity: service.getFuneralSchemeBenefits(id)) {
+			var dto = PreneedMapper.INSTANCE.map(entity);
+			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
+			list.add(dto);
+		}
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		var result = new CollectionModel<>(list,
+				linkTo(methodOn(getClass()).getFuneralSchemeBenefits(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{id}/penalty-deductibles")
-	public ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(@PathVariable Integer id) {
-		var list = service.getPenaltyDeductibles(id);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(list);
-	}
-
-	@GetMapping("/{id}/funeral-scheme-benefit")
-	public ResponseEntity<List<FuneralSchemeBenefit>> getFuneralSchemeBenefit(@PathVariable Integer id) {
-		var list = service.getFuneralSchemeBenefit(id);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(list);
-	}
-
-	@GetMapping("/{id}/dependent-benefits")
-	public ResponseEntity<List<DependentBenefit>> getDependentBenefits(@PathVariable Integer id) {
-		var list = service.getDependentBenefits(id);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(list);
+	public ResponseEntity<CollectionModel<PenaltyDeductibleViewModel>> getPenaltyDeductibles(@PathVariable Integer id) {
+		List<PenaltyDeductibleViewModel> list = new ArrayList<>();
+		for (var entity: service.getPenaltyDeductibles(id)) {
+			var dto = PreneedMapper.INSTANCE.map(entity);
+			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
+			list.add(dto);
+		}
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		var result = new CollectionModel<>(list,
+				linkTo(methodOn(getClass()).getPenaltyDeductibles(id)).withSelfRel());
+		return ResponseEntity.ok(result);
 	}
 	
 	
@@ -128,7 +158,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		dto.add(linkTo(methodOn(getClass()).getPremiums(id)).withRel("premiums"));
 		dto.add(linkTo(methodOn(getClass()).getDependentBenefits(id)).withRel("dependentBenefits"));
-		dto.add(linkTo(methodOn(getClass()).getFuneralSchemeBenefit(id)).withRel("funeralSchemeBenefit"));
+		dto.add(linkTo(methodOn(getClass()).getFuneralSchemeBenefits(id)).withRel("funeralSchemeBenefits"));
 		dto.add(linkTo(methodOn(getClass()).getPenaltyDeductibles(id)).withRel("penaltyDeductibles"));
 		return dto;
 	}

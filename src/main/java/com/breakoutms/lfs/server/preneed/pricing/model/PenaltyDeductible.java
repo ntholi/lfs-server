@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing;
+package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 
@@ -11,10 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.sales.items.ItemType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,37 +22,32 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
+public class PenaltyDeductible extends AuditableEntity<Integer> {
 
-	public enum Deductable {
-		FREE, DEDUCTABLE
-	}
-	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
+	@Min(value = 0L, message = "{validation.number.negative}")
 	@Column(columnDefinition = "TINYINT UNSIGNED")
-	private ItemType itemType;
+	@Max(255)
+	private int months;
 	
-	@Column(columnDefinition="ENUM('FREE','DEDUCTABLE')")
-	private Deductable deductable;
-	
-	@Column(precision=5, scale=4)
-	@Digits(integer=1, fraction=4)
-	private BigDecimal discount;
+	@Digits(integer=9, fraction=2)
+	@Column(precision=11, scale=2)
+	@Min(value = 0L, message = "{validation.number.negative}")
+	private BigDecimal amount;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
-
 	
-	public boolean isFree() {
-		return (deductable != null && deductable == Deductable.FREE);
+	public PenaltyDeductible(int months, BigDecimal amount) {
+		this.months = months;
+		this.amount = amount;
 	}
 }

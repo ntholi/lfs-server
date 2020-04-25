@@ -38,7 +38,10 @@ import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
@@ -74,7 +77,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	    result.andExpect(status().isOk());
 	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/premiums")));
 	    result.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(entity.getId()+"/dependent-benefits")));
-	    result.andExpect(jsonPath("_links.funeralSchemeBenefit.href", endsWith(entity.getId()+"/funeral-scheme-benefit")));
+	    result.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(entity.getId()+"/funeral-scheme-benefits")));
 	    result.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(entity.getId()+"/penalty-deductibles")));
 	    result.andDo(print());
 	    expect.forEntity(result, entity);
@@ -184,7 +187,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-	void get_FuneralScheme_premiums() throws Exception {
+	void get_premiums() throws Exception {
 		List<Premium> value = FuneralSchemesJSON
 				.getPemiums()
 				.stream()
@@ -198,9 +201,75 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.premiums[0].premiumAmount").value(value.get(0).getPremiumAmount()))
 			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()))
-			.andExpect(jsonPath("_embedded.premiums[0].funeralScheme").doesNotExist());
+			.andExpect(jsonPath("_embedded.premiums[0].funeralScheme").doesNotExist())
+			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/premiums")));
 
 		verify(service).getPremiums(anyInt()); 
 	}
-
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_dependentBenefit() throws Exception {
+		List<DependentBenefit> value = FuneralSchemesJSON
+				.getDependentBenefit()
+				.stream()
+				.limit(3)
+				.collect(Collectors.toList());
+		
+		when(repo.getDependentBenefits(anyInt())).thenReturn(value);
+		
+		mockMvc.perform(get(URL+"/"+ID+"/dependent-benefits"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("_embedded.dependentBenefits[0].minmumAge").value(value.get(0).getMinmumAge()))
+		.andExpect(jsonPath("_embedded.dependentBenefits[2].maximumAge").value(value.get(2).getMaximumAge()))
+		.andExpect(jsonPath("_embedded.dependentBenefits[0].funeralScheme").doesNotExist())
+		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/dependent-benefits")));
+		
+		verify(service).getDependentBenefits(anyInt()); 
+	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_funeralSchemeBenefits() throws Exception {
+		List<FuneralSchemeBenefit> value = FuneralSchemesJSON
+				.getFuneralSchemeBenefit()
+				.stream()
+				.limit(3)
+				.collect(Collectors.toList());
+		
+		when(repo.getFuneralSchemeBenefits(anyInt())).thenReturn(value);
+		
+		mockMvc.perform(get(URL+"/"+ID+"/funeral-scheme-benefits"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("_embedded.funeralSchemeBenefits[0].deductable").value(value.get(0).getDeductable().name()))
+		.andExpect(jsonPath("_embedded.funeralSchemeBenefits[2].discount").value(value.get(2).getDiscount()))
+		.andExpect(jsonPath("_embedded.funeralSchemeBenefits[0].funeralScheme").doesNotExist())
+		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/funeral-scheme-benefits")));
+		
+		verify(service).getFuneralSchemeBenefits(anyInt()); 
+	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_penaltyDeductibles() throws Exception {
+		List<PenaltyDeductible> value = FuneralSchemesJSON
+				.getPenaltyDeductable()
+				.stream()
+				.limit(3)
+				.collect(Collectors.toList());
+		
+		when(repo.getPenaltyDeductibles(anyInt())).thenReturn(value);
+		
+		mockMvc.perform(get(URL+"/"+ID+"/penalty-deductibles"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("_embedded.penaltyDeductibles[0].months").value(value.get(0).getMonths()))
+		.andExpect(jsonPath("_embedded.penaltyDeductibles[2].amount").value(value.get(2).getAmount()))
+		.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
+		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
+		
+		verify(service).getPenaltyDeductibles(anyInt()); 
+	}
 }

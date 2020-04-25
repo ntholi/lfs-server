@@ -10,8 +10,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.breakoutms.lfs.server.common.ValidationTest;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeBenefit;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeBenefit.FuneralSchemeBenefitBuilder;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.FuneralSchemeBenefitBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
