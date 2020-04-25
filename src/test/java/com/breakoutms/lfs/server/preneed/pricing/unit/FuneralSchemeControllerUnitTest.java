@@ -197,7 +197,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.premiums[0].premiumAmount").value(value.get(0).getPremiumAmount()))
-			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()));
+			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()))
+			.andExpect(jsonPath("_embedded.premiums[0].funeralScheme").doesNotExist());
 
 		verify(service).getPremiums(anyInt()); 
 	}

@@ -18,5 +18,4 @@ public class PremiumViewModel extends RepresentationModel<PremiumViewModel> {
 	private int maximumAge;
 	private BigDecimal premiumAmount;
 	private BigDecimal coverAmount;
-	private FuneralScheme funeralScheme;
 }

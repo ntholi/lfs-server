@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class PenaltyDeductible extends AuditableEntity<Integer> {
 	@Min(value = 0L, message = "{validation.number.negative}")
 	private BigDecimal amount;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
 	

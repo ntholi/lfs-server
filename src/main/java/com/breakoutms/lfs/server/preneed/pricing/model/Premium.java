@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +52,7 @@ public class Premium extends AuditableEntity<Integer> {
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
 	
-	@ManyToOne//(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
 
