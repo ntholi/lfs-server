@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,8 +28,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
@@ -40,16 +37,17 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
-import com.breakoutms.lfs.server.preneed.pricing.Premium;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = FuneralSchemeController.class)
+@WebMvcTest(FuneralSchemeController.class)
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
+	@Autowired
 	private MockMvc mockMvc;
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private FuneralSchemeRepository repo;
@@ -63,16 +61,9 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private Expectations expect;
 	
-    @Autowired
-    private WebApplicationContext context;
-	
 	@BeforeEach
 	public void setup() {
 		expect = new Expectations(URL, getBranch());
-		mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity()) 
-                .build();
 	}
 	
 	@Test
@@ -114,7 +105,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
-	    expect.forPage(result, list, "funeralSchemeList", url);
+	    expect.forPage(result, list, "funeralSchemes", url);
 	    verify(service).all(pageRequest);
 	}
 	
@@ -205,8 +196,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		mockMvc.perform(get(URL+"/"+ID+"/premiums"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("[0].premiumAmount").value(value.get(0).getPremiumAmount()))
-			.andExpect(jsonPath("[2].premiumAmount").value(value.get(2).getPremiumAmount()));
+			.andExpect(jsonPath("_embedded.premiums[0].premiumAmount").value(value.get(0).getPremiumAmount()))
+			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()));
 
 		verify(service).getPremiums(anyInt()); 
 	}

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.breakoutms.lfs.server.core.AuditableRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 @Repository
 public interface FuneralSchemeRepository extends AuditableRepository<FuneralScheme, Integer> {

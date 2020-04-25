@@ -1,9 +1,10 @@
-package com.breakoutms.lfs.server.preneed.pricing;
+package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +15,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,7 +52,7 @@ public class Premium extends AuditableEntity<Integer> {
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
 	
-	@ManyToOne
+	@ManyToOne//(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
 

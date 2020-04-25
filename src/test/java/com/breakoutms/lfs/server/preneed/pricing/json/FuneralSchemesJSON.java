@@ -8,8 +8,8 @@ import com.breakoutms.lfs.server.common.JSONReader;
 import com.breakoutms.lfs.server.preneed.pricing.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.PenaltyDeductible;
-import com.breakoutms.lfs.server.preneed.pricing.Premium;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 public class FuneralSchemesJSON {
 

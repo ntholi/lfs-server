@@ -3,12 +3,14 @@ package com.breakoutms.lfs.server.preneed.pricing;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,7 @@ import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
 import com.breakoutms.lfs.server.user.Domain;
 
 import lombok.AllArgsConstructor;
@@ -38,6 +41,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeViewModel> {
 
+	private static final String FUNERAL_SCHEME = "funeralScheme";
 	private final FuneralSchemeService service;
 	private final PagedResourcesAssembler<FuneralSchemeViewModel> pagedAssembler;
 	
@@ -75,7 +79,23 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 		);
 	}
 
-	
+	@GetMapping("/{id}/premiums")
+	public ResponseEntity<CollectionModel<PremiumViewModel>> getPremiums(@PathVariable Integer id) {
+		List<PremiumViewModel> list = new ArrayList<>();
+		for (var entity: service.getPremiums(id)) {
+			var dto = PreneedMapper.INSTANCE.map(entity);
+			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
+			list.add(dto);
+		}
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		CollectionModel<PremiumViewModel> result = new CollectionModel<>(list,
+				linkTo(methodOn(getClass()).getPremiums(id)).withSelfRel());
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/{id}/penalty-deductibles")
 	public ResponseEntity<List<PenaltyDeductible>> getPenaltyDeductibles(@PathVariable Integer id) {
 		var list = service.getPenaltyDeductibles(id);
@@ -99,14 +119,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(list);
 	}
-
-	@GetMapping("/{id}/premiums")
-	public ResponseEntity<List<Premium>> getPremiums(@PathVariable Integer id) {
-		var list = service.getPremiums(id);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(list);
-	}
+	
 	
 	@Override
 	public FuneralSchemeViewModel createDtoWithLinks(FuneralScheme entity) {

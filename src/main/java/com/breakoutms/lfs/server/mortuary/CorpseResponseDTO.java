@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "corpseList")
+@Relation(collectionRelation = "corpses")
 public class CorpseResponseDTO extends RepresentationModel<CorpseResponseDTO>{
 	private String tagNo;
 	private String names;

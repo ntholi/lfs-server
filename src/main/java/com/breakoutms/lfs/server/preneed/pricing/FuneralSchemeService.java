@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 import lombok.AllArgsConstructor;
 
