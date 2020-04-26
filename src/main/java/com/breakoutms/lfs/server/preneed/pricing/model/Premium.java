@@ -15,12 +15,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data @Builder
@@ -52,6 +52,7 @@ public class Premium extends AuditableEntity<Integer> {
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
 	
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;

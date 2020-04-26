@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
@@ -30,10 +31,13 @@ public class FuneralSchemeService {
 		return repo.findAll(pageable);
 	}
 	
+	@Transactional
 	public FuneralScheme save(final FuneralScheme entity) {
+		setAssociations(entity);
 		return repo.save(entity);
 	}
 	
+	@Transactional
 	public FuneralScheme update(Integer id, FuneralScheme entity) {
 		if(entity == null) {
 			throw ExceptionSupplier.notFoundOnUpdate("Funeral Scheme").get();
@@ -41,7 +45,32 @@ public class FuneralSchemeService {
 		if(!repo.existsById(id)) {
 			throw ExceptionSupplier.notFound("Funeral Scheme", id).get();
 		}
+		entity.setId(id);
+		setAssociations(entity);
 		return repo.save(entity);
+	}
+	
+	protected void setAssociations(final FuneralScheme entity) {
+		if(entity.getPremiums() != null) {
+			entity.getPremiums().forEach(premium ->
+				premium.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getDependentBenefits() != null) {
+			entity.getDependentBenefits().forEach(premium ->
+				premium.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getBenefits() != null) {
+			entity.getBenefits().forEach(premium ->
+				premium.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getPenaltyDeductibles() != null) {
+			entity.getPenaltyDeductibles().forEach(premium ->
+				premium.setFuneralScheme(entity)
+			);
+		}
 	}
 
 	public void delete(Integer id) {

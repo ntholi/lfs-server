@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
         @Index(columnList = "name", name = "unique_funeral_scheme_name", unique=true)
 })
 public class FuneralScheme extends AuditableEntity<Integer> {
-	
+
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
@@ -86,6 +86,10 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
 	private List<PenaltyDeductible> penaltyDeductibles;
+	
+	public FuneralScheme(String name) {
+		this.name = name;
+	}
 	
 //	public FuneralSchemeBenefit getBenefit(ItemType itemType) {
 //		

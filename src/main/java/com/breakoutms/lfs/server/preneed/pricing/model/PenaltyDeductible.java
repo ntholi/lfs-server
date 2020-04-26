@@ -15,12 +15,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data @Builder
@@ -42,6 +42,7 @@ public class PenaltyDeductible extends AuditableEntity<Integer> {
 	@Min(value = 0L, message = "{validation.number.negative}")
 	private BigDecimal amount;
 	
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;

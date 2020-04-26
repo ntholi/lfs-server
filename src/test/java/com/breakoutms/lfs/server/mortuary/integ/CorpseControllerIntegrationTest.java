@@ -86,7 +86,7 @@ class CorpseControllerIntegrationTest implements ControllerUnitTest {
 
 		ResultActions result = mockMvc.perform(get(url))
 				.andExpect(status().isOk());
-		expect.forPage(result, corpseList, "corpseList", url);
+		expect.forPage(result, corpseList, "corpses", url);
 	}
 
 	@Test

@@ -1,8 +1,8 @@
 package com.breakoutms.lfs.server.preneed.pricing.json;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.breakoutms.lfs.server.common.JSONReader;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
@@ -13,10 +13,10 @@ import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 public class FuneralSchemesJSON {
 
-	private static List<FuneralScheme> list;
-	private static JSONReader<FuneralScheme> json;
+	private List<FuneralScheme> list;
+	private JSONReader<FuneralScheme> json;
 	
-	static {
+	public FuneralSchemesJSON() {
 		try {
 			json = new JSONReader<>(FuneralScheme.class);
 			list = json.read("FuneralScheme.json");
@@ -26,7 +26,7 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static List<FuneralScheme> all() {
-		return list;
+		return new FuneralSchemesJSON().list;
 	}
 	
 	public static FuneralScheme any() {
@@ -82,7 +82,8 @@ public class FuneralSchemesJSON {
 	
 	public FuneralScheme get(int id) {
 		return list.stream()
-				.filter(item -> item.getId() == id)
+				.filter(item -> item.getId() != null)
+				.filter(item -> item.getId().equals(id))
 				.findFirst()
 				.get();
 	}
@@ -95,9 +96,14 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static List<Premium> getPemiums(FuneralScheme fs) throws IOException {
-		return getPemiums().stream()
-			.filter(item -> item.getFuneralScheme().getId() == fs.getId())
-			.collect(Collectors.toList());
+		List<Premium> list = new ArrayList<>();
+		for (var item : getPemiums()) {
+			if(item.getFuneralScheme() != null 
+					&& item.getFuneralScheme().getId().equals(fs.getId())) {
+				list.add(item);
+			}
+		}
+		return list;
 	}
 	
 	public static List<DependentBenefit> getDependentBenefit() throws IOException {
@@ -108,9 +114,14 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static List<DependentBenefit> getDependentBenefit(FuneralScheme fs) throws IOException {
-		return getDependentBenefit().stream()
-				.filter(item -> item.getFuneralScheme().getId() == fs.getId())
-				.collect(Collectors.toList());
+		List<DependentBenefit> list = new ArrayList<>();
+		for (var item : getDependentBenefit()) {
+			if(item.getFuneralScheme() != null 
+					&& item.getFuneralScheme().getId().equals(fs.getId())) {
+				list.add(item);
+			}
+		}
+		return list;
 	}
 	
 	public static List<FuneralSchemeBenefit> getFuneralSchemeBenefit() throws IOException {
@@ -121,9 +132,14 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static List<FuneralSchemeBenefit> getFuneralSchemeBenefit(FuneralScheme fs) throws IOException {
-		return getFuneralSchemeBenefit().stream()
-				.filter(item -> item.getFuneralScheme().getId() == fs.getId())
-				.collect(Collectors.toList());
+		List<FuneralSchemeBenefit> list = new ArrayList<>();
+		for (var item : getFuneralSchemeBenefit()) {
+			if(item.getFuneralScheme() != null 
+					&& item.getFuneralScheme().getId().equals(fs.getId())) {
+				list.add(item);
+			}
+		}
+		return list;
 	}
 	
 	public static List<PenaltyDeductible> getPenaltyDeductable() throws IOException {
@@ -134,9 +150,14 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static List<PenaltyDeductible> getPenaltyDeductable(FuneralScheme fs) throws IOException {
-		return getPenaltyDeductable().stream()
-				.filter(item -> item.getFuneralScheme().getId() == fs.getId())
-				.collect(Collectors.toList());
+		List<PenaltyDeductible> list = new ArrayList<>();
+		for (var item : getPenaltyDeductable()) {
+			if(item.getFuneralScheme() != null 
+					&& item.getFuneralScheme().getId().equals(fs.getId())) {
+				list.add(item);
+			}
+		}
+		return list;
 	}
 
 }

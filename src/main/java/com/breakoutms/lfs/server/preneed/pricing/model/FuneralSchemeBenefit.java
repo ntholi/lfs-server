@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,12 +16,12 @@ import javax.validation.constraints.Digits;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.sales.items.ItemType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Entity
@@ -39,6 +41,7 @@ public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "TINYINT UNSIGNED")
 	private ItemType itemType;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition="ENUM('FREE','DEDUCTABLE')")
 	private Deductable deductable;
 	
@@ -46,6 +49,7 @@ public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 	@Digits(integer=1, fraction=4)
 	private BigDecimal discount;
 	
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;

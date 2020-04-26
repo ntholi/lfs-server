@@ -26,5 +26,4 @@ public interface FuneralSchemeRepository extends AuditableRepository<FuneralSche
 
 	@Query("FROM Premium e WHERE e.funeralScheme.id = :id AND e.deleted=false")
 	List<Premium> getPremiums(Integer id);
-
 }

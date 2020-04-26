@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public abstract class FuneralSchemeMixIn extends MixIn {
 	
+//	@JsonIgnore(false)
 	@JsonDeserialize(using = FuneralSchemeIdDeserializer.class)
 	abstract FuneralScheme getFuneralScheme();
 }

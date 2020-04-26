@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.UnitTest;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
@@ -38,7 +39,7 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 	private FuneralScheme entity = FuneralSchemesJSON.any();
 
 	@Test
-	void get() throws Exception {
+	void get_by_id() throws Exception {
 		when(repo.findById(entity.getId())).thenReturn(Optional.of(entity));
 		FuneralScheme response = service.get(entity.getId()).orElse(null);
 		assertThat(response).isEqualTo(entity);
@@ -78,14 +79,16 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 	
 	@Test
 	void failt_to_update_with_unknownId() {
-		Integer unknownId = 12341234;
+		var unknownId = 123456;
+		String exMsg = ExceptionSupplier.notFound(FuneralScheme.class, unknownId).get().getMessage();
+		
 		when(repo.existsById(unknownId)).thenReturn(false);
 
 		Throwable thrown = catchThrowable(() -> {
 			service.update(unknownId, new FuneralScheme());
 		});
 		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
-		assertThat(thrown).hasMessageContaining("not found");
+		assertThat(thrown).hasMessageContaining(exMsg);
 	}
 	
 	@Test

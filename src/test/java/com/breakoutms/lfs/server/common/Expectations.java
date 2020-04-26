@@ -35,7 +35,9 @@ public class Expectations {
 		int size = (int) map.get("size");;
 		int totalElements = list.size();
 		int pageSize = totalElements > size? size: totalElements;
-		result.andExpect(jsonPath("page.totalElements").value(totalElements))
+		result
+//				.andDo(print())
+				.andExpect(jsonPath("page.totalElements").value(totalElements))
 				.andExpect(jsonPath("page.totalPages").value(Math.ceil(totalElements/pageSize)))
 				.andExpect(jsonPath("page.number").value(pageNo))
 				.andExpect(jsonPath("page.size", either(is(size)).or(is(pageSize))));
@@ -82,16 +84,17 @@ public class Expectations {
 		return result;
 	}
 
-	public <T> void forCommonLinks(final ResultActions result, final Object id) throws Exception {
-		forCommonLinks(result, id, "");
+	public <T> ResultActions forCommonLinks(final ResultActions result, final Object id) throws Exception {
+		return forCommonLinks(result, id, "");
 	}
 	
-	private <T> void forCommonLinks(final ResultActions result, final Object id, String path) throws Exception {
+	private <T> ResultActions forCommonLinks(final ResultActions result, final Object id, String path) throws Exception {
 		result.andExpect(jsonPath(path+"_links.self.href", endsWith(baseUrl+id)));
 	    result.andExpect(jsonPath(path+"_links.all.href", endsWith(baseUrl.substring(0, baseUrl.length()-1))));
 	    if(branch != null) {
 	    	result.andExpect(jsonPath(path+"_links.branch.href", endsWith("/branches/"+branch.getId())));
 	    }
+	    return result;
 	}
 
 	public <T> ResultActions forEntity(final ResultActions result, final T object) throws Exception {
