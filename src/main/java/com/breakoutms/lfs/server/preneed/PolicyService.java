@@ -31,10 +31,10 @@ public class PolicyService {
 	
 	public Policy update(String id, Policy entity) {
 		if(entity == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Funeral Scheme").get();
+			throw ExceptionSupplier.notFoundOnUpdate("Policy").get();
 		}
 		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Funeral Scheme", id).get();
+			throw ExceptionSupplier.notFound("Policy", id).get();
 		}
 		return repo.save(entity);
 	}

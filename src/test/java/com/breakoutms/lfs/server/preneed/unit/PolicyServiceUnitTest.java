@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing.unit;
+package com.breakoutms.lfs.server.preneed.unit;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,35 +22,34 @@ import org.springframework.data.domain.PageRequest;
 import com.breakoutms.lfs.server.common.UnitTest;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.PolicyService;
+import com.breakoutms.lfs.server.preneed.model.Policy;
 
 @ExtendWith(MockitoExtension.class)
-public class FuneralSchemeServiceUnitTest implements UnitTest {
+public class PolicyServiceUnitTest implements UnitTest {
 
 	@Mock
-	private FuneralSchemeRepository repo;
+	private PolicyRepository repo;
 
 	@InjectMocks
-	private FuneralSchemeService service;
+	private PolicyService service;
 	
-	private FuneralScheme entity = FuneralSchemesJSON.any();
+	private Policy entity = createEntity();
 
 	@Test
 	void get_by_id() throws Exception {
 		when(repo.findById(entity.getId())).thenReturn(Optional.of(entity));
-		FuneralScheme response = service.get(entity.getId()).orElse(null);
+		Policy response = service.get(entity.getId()).orElse(null);
 		assertThat(response).isEqualTo(entity);
 	}
-	
+
 	@Test
 	void all() {
 		PageRequest pagable = PageRequest.of(0, 1);
-		when(repo.findAll(pagable)).thenReturn(new PageImpl<FuneralScheme>(List.of(entity), pagable, 1));
+		when(repo.findAll(pagable)).thenReturn(new PageImpl<Policy>(List.of(entity), pagable, 1));
 		
-		Page<FuneralScheme> page = service.all(pagable);
+		Page<Policy> page = service.all(pagable);
 		assertThat(page).isNotEmpty();
 		assertThat(page).hasSize(1);
 		assertThat(page.get()).first().isEqualTo(entity);
@@ -58,8 +57,8 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 
 	@Test
 	void save() throws Exception {
-		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
-		FuneralScheme response = service.save(new FuneralScheme());
+		when(repo.save(any(Policy.class))).thenReturn(entity);
+		Policy response = service.save(new Policy());
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(response);
@@ -69,9 +68,9 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 	void update() throws Exception {
 		var id = entity.getId();
 		when(repo.existsById(id)).thenReturn(true);
-		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
+		when(repo.save(any(Policy.class))).thenReturn(entity);
 
-		FuneralScheme response = service.update(id, new FuneralScheme());
+		Policy response = service.update(id, new Policy());
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(response);
@@ -79,13 +78,13 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 	
 	@Test
 	void failt_to_update_with_unknownId() {
-		var unknownId = 123456;
-		String exMsg = ExceptionSupplier.notFound(FuneralScheme.class, unknownId).get().getMessage();
+		var unknownId = "123456";
+		String exMsg = ExceptionSupplier.notFound(Policy.class, unknownId).get().getMessage();
 		
 		when(repo.existsById(unknownId)).thenReturn(false);
 
 		Throwable thrown = catchThrowable(() -> {
-			service.update(unknownId, new FuneralScheme());
+			service.update(unknownId, new Policy());
 		});
 		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
 		assertThat(thrown).hasMessageContaining(exMsg);
@@ -96,5 +95,12 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 		var id = entity.getId();
 		service.delete(id);
 		verify(repo).deleteById(id);
+	}
+	
+	private Policy createEntity() {
+		Policy entity = new Policy();
+		entity.setNames("Thabo");
+		entity.setSurname("Lebese");
+		return entity;
 	}
 }
