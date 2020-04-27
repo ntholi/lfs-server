@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed;
+package com.breakoutms.lfs.server.preneed.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -128,16 +128,6 @@ public class Policy extends AuditableEntity<String> {
 	public String getId(){
 		return policyNumber;
 	}
-
-//	public double getCoverAmountAtReg() { //TODO THIS SHOULD BE TURNED INTO A FIELD VARIABLE
-//		int ageAtReg = getAgeAtRegistration();
-//		Premium premium = FuneralSchemeDAO.getPremium(getFuneralScheme(), 
-//				ageAtReg);
-//		if(premium != null) {
-//			return premium.getCoverAmount();
-//		}
-//		return 0;
-//	}
 
 	public int getAge() {
 		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());

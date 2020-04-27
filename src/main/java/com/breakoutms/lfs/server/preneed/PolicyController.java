@@ -18,33 +18,35 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/policies")
 @AllArgsConstructor
-public class PolicyController implements EntityController<Policy, PolicyDTO> {
+public class PolicyController implements EntityController<Policy, PolicyViewModel> {
 
 	private final PolicyService service;
-	private final PagedResourcesAssembler<PolicyDTO> pagedAssembler;
+	private final PagedResourcesAssembler<PolicyViewModel> pagedAssembler;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PolicyDTO> get(String id) {
+	public ResponseEntity<PolicyViewModel> get(String id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Funeral Scheme", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PolicyDTO>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<PolicyViewModel>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 	
 	@PostMapping
-	public ResponseEntity<PolicyDTO> save(@Valid @RequestBody Policy entity) {
+	public ResponseEntity<PolicyViewModel> save(@Valid @RequestBody Policy entity) {
 		return new ResponseEntity<>(
 				createDtoWithLinks(service.save(entity)), 
 				HttpStatus.CREATED
@@ -52,7 +54,7 @@ public class PolicyController implements EntityController<Policy, PolicyDTO> {
 	}
 
 	@Override
-	public PolicyDTO createDtoWithLinks(Policy entity) {
+	public PolicyViewModel createDtoWithLinks(Policy entity) {
 		var dto = PreneedMapper.INSTANCE.map(entity);
 		var id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));

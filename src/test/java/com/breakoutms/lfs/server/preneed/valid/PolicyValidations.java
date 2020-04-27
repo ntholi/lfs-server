@@ -11,8 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.breakoutms.lfs.server.common.ValidationTest;
-import com.breakoutms.lfs.server.preneed.Policy;
-import com.breakoutms.lfs.server.preneed.Policy.PolicyBuilder;
+import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.Policy.PolicyBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)

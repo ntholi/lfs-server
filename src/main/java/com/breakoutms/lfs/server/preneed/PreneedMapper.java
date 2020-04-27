@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.preneed;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -20,12 +22,12 @@ public abstract class PreneedMapper {
 
 	public static final PreneedMapper INSTANCE = Mappers.getMapper(PreneedMapper.class);
 	
-	public abstract PolicyDTO map(Policy policy);
-	
 	public abstract FuneralScheme map(FuneralSchemeDTO funeralScheme);
 	public abstract FuneralSchemeViewModel map(FuneralScheme funeralScheme);
 	public abstract PremiumViewModel map(Premium premium);
 	public abstract PenaltyDeductibleViewModel map(PenaltyDeductible penaltyDeductible);
 	public abstract FuneralSchemeBenefitViewModel map(FuneralSchemeBenefit funeralSchemeBenefit);
 	public abstract DependentBenefitViewModel map(DependentBenefit dependentBenefit);
+	
+	public abstract PolicyViewModel map(Policy policy);
 }
