@@ -14,8 +14,6 @@ import javax.validation.constraints.Size;
 
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,7 +63,8 @@ public class PolicyDTO {
 	@NotNull
 	private LocalDate registrationDate;
 	
-	private FuneralScheme funeralScheme;
+	@NotBlank
+	private String funeralScheme;
 
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 6, fraction = 2)

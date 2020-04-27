@@ -19,6 +19,7 @@ import com.breakoutms.lfs.server.core.EntityController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 
 import lombok.AllArgsConstructor;
@@ -46,9 +47,10 @@ public class PolicyController implements EntityController<Policy, PolicyViewMode
 	}
 	
 	@PostMapping
-	public ResponseEntity<PolicyViewModel> save(@Valid @RequestBody Policy entity) {
+	public ResponseEntity<PolicyViewModel> save(@Valid @RequestBody PolicyDTO dto) {
+		Policy entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.save(entity)), 
+				createDtoWithLinks(service.save(entity, dto.getFuneralScheme())), 
 				HttpStatus.CREATED
 		);
 	}

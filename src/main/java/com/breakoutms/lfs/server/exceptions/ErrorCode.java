@@ -8,6 +8,8 @@ public enum ErrorCode {
 	
 	ACCESS_DENIED(3),
 	
+	INVALID_OPERATION(4),
+	
 	POLICY_NOT_FOUND(10),
 	
 	NOT_FOUND(404),

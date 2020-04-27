@@ -5,9 +5,15 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
+import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 import lombok.AllArgsConstructor;
 
@@ -16,6 +22,7 @@ import lombok.AllArgsConstructor;
 public class PolicyService {
 	
 	private final PolicyRepository repo;
+	private final FuneralSchemeRepository funeralSchemeRepo;
 	
 	public Optional<Policy> get(String id) {
 		return repo.findById(id);
@@ -25,10 +32,22 @@ public class PolicyService {
 		return repo.findAll(pageable);
 	}
 	
-	public Policy save(final Policy entity) {
-		return repo.save(entity);
+	@Transactional
+	public Policy save(Policy policy, final String funeralSchemeName) {
+		FuneralScheme funeralScheme = funeralSchemeRepo.findByName(funeralSchemeName)
+				.orElseThrow(() -> new ObjectNotFoundException(
+						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
+		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge())
+				.orElseThrow(() -> new InvalidOperationException(
+						"Unable to determine Premium for "+funeralSchemeName+" funeral scheme "+
+						"with policy holder's age at "+ policy.getAge()));
+		policy.setFuneralScheme(funeralScheme);
+		policy.setCoverAmount(premium.getCoverAmount());
+		policy.setPremiumAmount(premium.getPremiumAmount());
+		return repo.save(policy);
 	}
 	
+	@Transactional
 	public Policy update(String id, Policy entity) {
 		if(entity == null) {
 			throw ExceptionSupplier.notFoundOnUpdate("Policy").get();

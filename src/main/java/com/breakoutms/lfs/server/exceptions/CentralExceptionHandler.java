@@ -62,6 +62,13 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
         		ex);
     }
 	
+	@ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<Object> handleInvalidOperationException(InvalidOperationException ex, WebRequest request) {
+        return response(HttpStatus.NOT_ACCEPTABLE, 
+        		ErrorCode.INVALID_OPERATION, 
+        		ex);
+    }
+	
 	@ExceptionHandler(Throwable.class)
     public ResponseEntity<Object> handleException(Throwable ex, WebRequest request) {
         return response(HttpStatus.INTERNAL_SERVER_ERROR, 

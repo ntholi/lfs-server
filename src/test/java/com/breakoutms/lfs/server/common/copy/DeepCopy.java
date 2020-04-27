@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.common.copy;
 
+import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
@@ -11,6 +12,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DeepCopy {
+	
+	
+	public static Policy copy(Policy object) {
+		Gson gson = new GsonBuilder()
+				.setExclusionStrategies(new FuneralSchemeExclusion())
+				.create();
+		return gson.fromJson(gson.toJson(object), Policy.class);
+	}
 	
 	public static FuneralScheme copy(FuneralScheme object) {
 		Gson gson = new GsonBuilder()

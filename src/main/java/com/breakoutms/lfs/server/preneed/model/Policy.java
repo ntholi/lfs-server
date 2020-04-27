@@ -67,6 +67,7 @@ public class Policy extends AuditableEntity<String> {
 	private Gender gender;
 	
 	@PastOrPresent
+	@NotNull
 	private LocalDate dateOfBirth;
 	
 	@Nullable
@@ -107,11 +108,13 @@ public class Policy extends AuditableEntity<String> {
 	@JoinColumn(name="funeralScheme")
 	private FuneralScheme funeralScheme;
 
+	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 6, fraction = 2)
 	@Column(nullable=false, precision = 8, scale = 2)
 	private BigDecimal premiumAmount;
 	
+	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 8, fraction = 2)
 	@Column(nullable=false, precision = 10, scale = 2)
@@ -127,6 +130,12 @@ public class Policy extends AuditableEntity<String> {
 	@Override
 	public String getId(){
 		return policyNumber;
+	}
+	
+	public Policy(String names, String surname, LocalDate dateOfBirth) {
+		this.names = names;
+		this.surname = surname;
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public int getAge() {

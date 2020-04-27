@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.preneed.pricing.json;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.breakoutms.lfs.server.common.JSONReader;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
@@ -30,11 +31,23 @@ public class FuneralSchemesJSON {
 	}
 	
 	public static FuneralScheme any() {
-		return all().get(1);
+		var list = all();
+		return list.get(ThreadLocalRandom.current().nextInt(list.size()));
+	}
+	
+	public static FuneralScheme byName(String name) throws IOException {
+		var fs = all().stream()
+					.filter(i -> i.getName().equals(name))
+					.findFirst()
+					.get();
+		return addDependancies(fs);
 	}
 	
 	public static FuneralScheme withDependancies() throws IOException {
-		FuneralScheme fs = any();
+		return addDependancies(any());
+	}
+
+	protected static FuneralScheme addDependancies(FuneralScheme fs) throws IOException {
 		var benefits = getFuneralSchemeBenefit(fs);
 		benefits.forEach(i -> i.setFuneralScheme(null));
 		var premiums = getPemiums(fs);

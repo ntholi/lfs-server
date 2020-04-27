@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.preneed.pricing;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,12 @@ public interface FuneralSchemeRepository extends AuditableRepository<FuneralSche
 
 	@Query("FROM Premium e WHERE e.funeralScheme.id = :id AND e.deleted=false")
 	List<Premium> getPremiums(Integer id);
+
+	@Query("FROM FuneralScheme e WHERE e.name = :name AND e.deleted=false")
+	Optional<FuneralScheme> findByName(String name);
+	
+	@Query("FROM Premium e WHERE e.funeralScheme = :funeralScheme "
+			+ "AND (:age >= e.minmumAge AND :age <= e.maximumAge) "
+			+ "AND e.deleted=false AND e.deleted=false")
+	Optional<Premium> findPremium(FuneralScheme funeralScheme, int age);
 }
