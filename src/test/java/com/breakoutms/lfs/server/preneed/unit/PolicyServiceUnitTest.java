@@ -72,7 +72,9 @@ public class PolicyServiceUnitTest implements UnitTest {
 		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
 			.thenReturn(Optional.of(new Premium()));
 		when(repo.save(any(Policy.class))).thenReturn(entity);
-		Policy response = service.save(new Policy("","", LocalDate.now()), "");
+		Policy response = service.save(Policy.builder()
+				.dateOfBirth(LocalDate.now())
+				.build(), "");
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(response);

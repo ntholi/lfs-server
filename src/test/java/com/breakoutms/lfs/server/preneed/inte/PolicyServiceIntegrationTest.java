@@ -2,9 +2,11 @@ package com.breakoutms.lfs.server.preneed.inte;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.PolicyService;
@@ -95,20 +98,62 @@ class PolicyServiceIntegrationTest {
 	@Test
 	void calculates_premium_and_coverAmount_when_saving_Policy() throws Exception {
 		deleteAllFuneralSchemes();
-		int age = 55;
-		FuneralScheme fs = FuneralSchemesJSON.byName("PLAN D");
-		funeralSchemeService.save(fs);
+		int age1 = 55;
+		int age2 = 18;
+		FuneralScheme f1 = FuneralSchemesJSON.byName("PLAN D");
+		FuneralScheme f2 = FuneralSchemesJSON.byName("PLAN A+");
+		funeralSchemeService.save(f1);
+		funeralSchemeService.save(f2);
 		
+		Policy policy1 = Policy.builder()
+				.dateOfBirth(LocalDate.now().minusYears(age1))
+				.registrationDate(LocalDate.now())
+				.build();
+		
+		Policy policy2 = Policy.builder()
+				.dateOfBirth(LocalDate.now().minusYears(age2))
+				.registrationDate(LocalDate.now())
+				.build();
+		
+		var saved1 = service.save(policy1, "PLAN D");
+		var saved2 = service.save(policy2, "PLAN A+");
+		
+		assertThat(saved1.getFuneralScheme()).isNotNull();
+		assertThat(saved1.getFuneralScheme().getName()).isEqualTo("PLAN D");
+		assertThat(policy1.getPremiumAmount()).isEqualTo(new BigDecimal("20.0"));
+		assertThat(policy1.getCoverAmount()).isEqualTo(new BigDecimal("2500.0"));
+
+		assertThat(saved2.getAge()).isEqualTo(age2);
+		assertThat(saved2.getFuneralScheme().getName()).isEqualTo("PLAN A+");
+		assertThat(policy2.getPremiumAmount()).isEqualTo(new BigDecimal("200.0"));
+		assertThat(policy2.getCoverAmount()).isEqualTo(new BigDecimal("15000.0"));
+	}
+	
+	
+	@Test
+	void expect_notFound_exception_when_Policy_contains_unkown_FuneralScheme_name() throws Exception {
+		Throwable thrown = catchThrowable(() -> {
+			service.save(new Policy(), "unkown_name");
+		});
+		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
+	}
+	
+	@Test
+	void throw_Exception_when_unable_to_get_premium_from_FuneralScheme_with_given_age() 
+			throws Exception {
+		int age = 76;
+		FuneralScheme fs = FuneralSchemesJSON.byName("PLAN A");
+		funeralSchemeService.save(fs);
 		Policy entity = Policy.builder()
 				.dateOfBirth(LocalDate.now().minusYears(age))
-				.registrationDate(LocalDate.now())
 				.funeralScheme(fs)
 				.build();
-		var saved = service.save(entity, "PLAN D");
 		
-		assertThat(saved.getFuneralScheme()).isNotNull();
-		assertThat(entity.getPremiumAmount()).isEqualTo(new BigDecimal("20.0"));
-		assertThat(entity.getCoverAmount()).isEqualTo(new BigDecimal("2500.0"));
+		Throwable thrown = catchThrowable(() -> {
+			service.save(entity, "PLAN A");
+		});
+		System.out.println(thrown.getMessage());
+		assertThat(thrown).isInstanceOf(InvalidOperationException.class);
 	}
 	
 	@Test

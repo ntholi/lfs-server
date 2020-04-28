@@ -132,12 +132,6 @@ public class Policy extends AuditableEntity<String> {
 		return policyNumber;
 	}
 	
-	public Policy(String names, String surname, LocalDate dateOfBirth) {
-		this.names = names;
-		this.surname = surname;
-		this.dateOfBirth = dateOfBirth;
-	}
-
 	public int getAge() {
 		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
 	}
