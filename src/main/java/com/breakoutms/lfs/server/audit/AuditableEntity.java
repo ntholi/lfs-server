@@ -17,10 +17,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.breakoutms.lfs.server.branch.Branch;
-import com.breakoutms.lfs.server.branch.CurrentBranch;
 import com.breakoutms.lfs.server.core.Entity;
-import com.breakoutms.lfs.server.util.BeanUtil;
-
 import lombok.Data;
 
 /**
@@ -46,8 +43,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	@PrePersist
 	void prePersist() {
 		if(branch == null) {
-			//TODO: consider an efficient way of doing this, or maybe this is the best you can implement it, I don't know
-			branch = BeanUtil.getBean(CurrentBranch.class).get();
+			branch = Branch.current();
 		}
 	}
 }

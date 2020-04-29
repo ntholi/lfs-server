@@ -9,19 +9,25 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 
 import com.breakoutms.lfs.server.core.entity.District;
+import com.breakoutms.lfs.server.util.BeanUtil;
+
+import lombok.Data;
 
 @Entity
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_branch_name", unique=true)
 })
+@Data
 public class Branch {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
+	@NotBlank
 	@Column(nullable = false, length = 50)
 	private String name;
 	
@@ -33,36 +39,13 @@ public class Branch {
 			columnDefinition = "SMALLINT")
 	@Digits(integer = 3, fraction = 0)
 	private short syncNumber;
-
-	public Integer getId() {
-		return id;
+    
+	public static Branch current() {
+		return BranchHolder.INSTANCE;
 	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public District getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(District district) {
-		this.district = district;
-	}
-
-	public short getSyncNumber() {
-		return syncNumber;
-	}
-
-	public void setSyncNumber(short syncNumber) {
-		this.syncNumber = syncNumber;
-	}
+	
+    private static class BranchHolder {
+    	//Initialization-on-demand holder idiom
+        private static final Branch INSTANCE = BeanUtil.getBean(CurrentBranch.class).get();
+    }
 }
