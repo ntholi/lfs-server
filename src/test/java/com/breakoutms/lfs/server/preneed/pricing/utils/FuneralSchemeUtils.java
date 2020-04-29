@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing.unit;
+package com.breakoutms.lfs.server.preneed.pricing.utils;
 
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;

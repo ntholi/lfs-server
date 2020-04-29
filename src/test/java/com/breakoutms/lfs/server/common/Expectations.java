@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.time.temporal.Temporal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,8 @@ import com.breakoutms.lfs.server.util.FieldUtils;
 
 public class Expectations {
 
-	private static final String STATUS = "status";
-	private static final String MESSAGE = "message";
+	public static final String STATUS = "status";
+	public static final String MESSAGE = "message";
 	private String baseUrl;
 	private Branch branch;
 
@@ -74,7 +75,11 @@ public class Expectations {
 	    	}
 	    	System.out.println(item);
 	    	if(item.getValue() != null) {
-	    		result.andExpect(jsonPath(path+item.getKey()).value(item.getValue()));
+	    		var value = item.getValue();
+	    		if(value instanceof Temporal) {
+	    			value = value.toString();
+	    		}
+	    		result.andExpect(jsonPath(path+item.getKey()).value(value));
 	    	}
 	    	else {
 	    		result.andExpect(jsonPath(path+item.getKey()).isEmpty());

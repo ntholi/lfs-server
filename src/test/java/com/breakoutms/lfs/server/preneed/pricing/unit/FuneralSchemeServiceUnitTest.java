@@ -30,13 +30,9 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 @ExtendWith(MockitoExtension.class)
 public class FuneralSchemeServiceUnitTest implements UnitTest {
 
-	@Mock
-	private FuneralSchemeRepository repo;
-
-	@InjectMocks
-	private FuneralSchemeService service;
-	
-	private FuneralScheme entity = FuneralSchemesJSON.any();
+	@Mock private FuneralSchemeRepository repo;
+	@InjectMocks private FuneralSchemeService service;
+	private final FuneralScheme entity = FuneralSchemesJSON.any();
 
 	@Test
 	void get_by_id() throws Exception {

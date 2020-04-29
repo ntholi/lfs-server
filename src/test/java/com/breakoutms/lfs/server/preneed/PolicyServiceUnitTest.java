@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.unit;
+package com.breakoutms.lfs.server.preneed;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +34,7 @@ import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
-import com.breakoutms.lfs.server.preneed.pricing.unit.FuneralSchemeUtils;
+import com.breakoutms.lfs.server.preneed.pricing.utils.FuneralSchemeUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class PolicyServiceUnitTest implements UnitTest {
@@ -132,10 +132,12 @@ public class PolicyServiceUnitTest implements UnitTest {
 	@Test
 	void update() throws Exception {
 		var id = entity.getId();
+		FuneralScheme fs = FuneralSchemesJSON.byName("PLAN D");
+		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(fs));
 		when(repo.existsById(id)).thenReturn(true);
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 
-		Policy response = service.update(id, new Policy());
+		Policy response = service.update(id, new Policy(), "");
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(response);
@@ -149,7 +151,7 @@ public class PolicyServiceUnitTest implements UnitTest {
 		when(repo.existsById(unknownId)).thenReturn(false);
 
 		Throwable thrown = catchThrowable(() -> {
-			service.update(unknownId, new Policy());
+			service.update(unknownId, new Policy(), "");
 		});
 		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
 		assertThat(thrown).hasMessageContaining(exMsg);

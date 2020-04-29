@@ -1,5 +1,6 @@
-package com.breakoutms.lfs.server.preneed.unit;
+package com.breakoutms.lfs.server.preneed;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,11 +41,13 @@ import com.breakoutms.lfs.server.preneed.PolicyController;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.PolicyService;
 import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.preneed.pricing.unit.FuneralSchemeUtils;
+import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
+
+import lombok.val;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PolicyController.class)
@@ -57,10 +61,9 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@MockBean private BranchRepository branchRepo;
 	@SpyBean private PolicyService service;
 	
-	private static final List<Policy> list = createPolicyList();
-	private Policy entity = list.get(0);
+	private final Policy entity = createEntity();
 	private static final String ID = "5";
-	private static final String URL = "/preneed/funeral-schemes/";
+	private static final String URL = "/preneed/policies/";
 
 	private Expectations expect;
 	
@@ -69,24 +72,17 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 		expect = new Expectations(URL, getBranch());
 	}
 	
-	private static List<Policy> createPolicyList() {
-		Policy entity = new Policy();
-		entity.setNames("Thabo");
-		entity.setSurname("Lebese");
-		return null;
-	}
 
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_by_id() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
-	    ResultActions result = mockMvc.perform(get(URL+ID));
-	    result.andExpect(status().isOk());
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/premiums")));
-	    result.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(entity.getId()+"/dependent-benefits")));
-	    result.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(entity.getId()+"/funeral-scheme-benefits")));
-	    result.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(entity.getId()+"/penalty-deductibles")));
-	    result.andDo(print());
+	    ResultActions result = mockMvc.perform(get(URL+ID))
+	    		.andExpect(status().isOk())
+	    		.andDo(print())
+	    		.andExpect(jsonPath("_links.funeralScheme.href", 
+	    				endsWith("/funeral-schemes/"+entity.getFuneralScheme().getId())));
+	    
 	    expect.forEntity(result, entity);
 	    verify(service).get(ID);
 	}
@@ -109,6 +105,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_all() throws Exception {
 
+		List<Policy> list = Arrays.asList(entity);
 		var url = URL+"?page=0&size=20&sort=createdAt,desc";
 		
 		var pageRequest = PageRequestHelper.from(url);
@@ -136,25 +133,26 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void succesfull_save() throws Exception {
-		int age = 55;
-		FuneralScheme fs = FuneralSchemesJSON.byName("PLAN D");
-		Policy entity = Policy.builder()
-				.dateOfBirth(LocalDate.now().minusYears(age))
-				.funeralScheme(fs)
-				.build();
-		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(fs));
+		val funeralSchem = entity.getFuneralScheme();
+		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(entity.getFuneralScheme()));
 		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
-			.thenReturn(Optional.of(FuneralSchemeUtils.getPremium(fs, age)));
+			.thenReturn(Optional.of(new Premium()));
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 
-		var result = post(mockMvc, URL, entity);
+		PolicyDTO policyDTO = PolicyDTO.builder()
+				.names(entity.getNames())
+				.surname(entity.getSurname())
+				.funeralScheme(funeralSchem.getName())
+				.registrationDate(entity.getRegistrationDate())
+				.dateOfBirth(entity.getDateOfBirth())
+				.build();
+				
+		var result = post(mockMvc, URL, policyDTO);
 		result.andDo(print());
 		result.andExpect(status().isCreated());
 		expect.forEntity(result, entity)
-			.andExpect(jsonPath("_links.premiums.href", endsWith(URL+ID+"/premiums")))
-			.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(URL+ID+"/dependent-benefits")))
-			.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(URL+ID+"/funeral-scheme-benefits")))
-			.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(URL+ID+"/penalty-deductibles")));
+			.andExpect(jsonPath("_links.funeralScheme.href", 
+				endsWith("/funeral-schemes/"+entity.getFuneralScheme().getId())));
 		
 		verify(service).save(any(Policy.class), anyString());
 	}
@@ -163,14 +161,17 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save_fails_because_of_invalid_field() throws Exception {
-		String exMsg = "Invalid input for 'Names'";
-		
 		var entity = new Policy();
+		entity.setDateOfBirth(LocalDate.now());
 		entity.setNames(" ");
 		
-		var result = post(mockMvc, URL, entity);
-		
-	   Expectations.forInvalidFields(result, exMsg);
+		post(mockMvc, URL, entity)
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath(Expectations.STATUS).value(400))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Registration Date")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Funeral Scheme")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Surname")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Names")));
 	   
 	   verify(service, times(0)).save(any(Policy.class), anyString());
 	}
@@ -178,53 +179,64 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void succesfull_update() throws Exception {
+		val funeralSchem = entity.getFuneralScheme();
+		
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(Policy.class))).thenReturn(entity);
+		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(entity.getFuneralScheme()));
 
-		var result = put(mockMvc, URL+ID, entity);
-		result.andDo(print());
+		PolicyDTO policyDTO = PolicyDTO.builder()
+				.policyNumber(entity.getPolicyNumber())
+				.names(entity.getNames())
+				.surname(entity.getSurname())
+				.funeralScheme(funeralSchem.getName())
+				.registrationDate(entity.getRegistrationDate())
+				.dateOfBirth(entity.getDateOfBirth())
+				.build();
+		
+		var result = put(mockMvc, URL+ID, policyDTO);
 		
 		result.andExpect(status().isOk());
 		expect.forEntity(result, entity);
 		
-		verify(service).update(anyString(), any(Policy.class));
+		verify(service).update(ID, entity, funeralSchem.getName());
 	}
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update_fails_if_any_field_is_invalid() throws Exception {
-		String exMsg = "Invalid input for 'Names'";
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 		
 		var entity = new Policy();
+		entity.setDateOfBirth(LocalDate.now());
 		entity.setNames(" ");
 
-		var result = put(mockMvc, URL+ID, entity);
-		Expectations.forInvalidFields(result, exMsg);
+		put(mockMvc, URL+ID, entity)
+		.andExpect(status().isBadRequest())
+		.andExpect(jsonPath(Expectations.STATUS).value(400))
+		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Registration Date")))
+		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Funeral Scheme")))
+		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Surname")))
+		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Names")));
 
-		verify(service, times(0)).update(anyString(), any(Policy.class));
+		verify(service, times(0)).update(anyString(), any(Policy.class), anyString());
 	}
 	
-//	@Test
-//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-//	void get_premiums() throws Exception {
-//		List<Premium> value = PolicysJSON
-//				.getPemiums()
-//				.stream()
-//				.limit(3)
-//				.collect(Collectors.toList());
-//		
-//		when(repo.getPremiums(anyInt())).thenReturn(value);
-//		
-//		mockMvc.perform(get(URL+"/"+ID+"/premiums"))
-//			.andDo(print())
-//			.andExpect(status().isOk())
-//			.andExpect(jsonPath("_embedded.premiums[0].premiumAmount").value(value.get(0).getPremiumAmount()))
-//			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()))
-//			.andExpect(jsonPath("_embedded.premiums[0].funeralScheme").doesNotExist())
-//			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/premiums")));
-//
-//		verify(service).getPremiums(anyInt()); 
-//	}
+	private Policy createEntity() {
+		Policy entity = new Policy();
+		entity.setPolicyNumber(ID);
+		entity.setNames("Thabo");
+		entity.setSurname("Lebese");
+		entity.setFuneralScheme(createFuneralScheme());
+		entity.setRegistrationDate(LocalDate.now());
+		entity.setDateOfBirth(LocalDate.now().minusYears(20));
+		return entity;
+	}
+	
+	private FuneralScheme createFuneralScheme() {
+		FuneralScheme funeralScheme = new FuneralScheme("Plan A");
+		funeralScheme.setId(3);
+		return funeralScheme;
+	}
 }

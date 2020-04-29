@@ -34,9 +34,7 @@ public class PolicyService {
 	
 	@Transactional
 	public Policy save(Policy policy, final String funeralSchemeName) {
-		FuneralScheme funeralScheme = funeralSchemeRepo.findByName(funeralSchemeName)
-				.orElseThrow(() -> new ObjectNotFoundException(
-						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
+		FuneralScheme funeralScheme = getFuneralScheme(funeralSchemeName);
 		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge())
 				.orElseThrow(() -> new InvalidOperationException(
 						"Unable to determine Premium for "+funeralSchemeName+" funeral scheme "+
@@ -48,16 +46,22 @@ public class PolicyService {
 	}
 	
 	@Transactional
-	public Policy update(String id, Policy entity) {
+	public Policy update(String id, Policy entity, String funeralSchemeName) {
 		if(entity == null) {
 			throw ExceptionSupplier.notFoundOnUpdate("Policy").get();
 		}
 		if(!repo.existsById(id)) {
 			throw ExceptionSupplier.notFound("Policy", id).get();
 		}
+		entity.setFuneralScheme(getFuneralScheme(funeralSchemeName));
 		return repo.save(entity);
 	}
 
+	protected FuneralScheme getFuneralScheme(final String funeralSchemeName) {
+		return funeralSchemeRepo.findByName(funeralSchemeName)
+				.orElseThrow(() -> new ObjectNotFoundException(
+						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
+	}
 	public void delete(String id) {
 		repo.deleteById(id);
 	}

@@ -15,6 +15,8 @@ import lombok.Data;
 @Data @Builder
 public class FuneralSchemeDTO {
 	
+	private Integer id;
+	
 	@NotBlank
 	@Size(min = 1, max = 25)
 	private String name;

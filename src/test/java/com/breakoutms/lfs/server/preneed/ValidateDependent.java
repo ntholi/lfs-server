@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.valid;
+package com.breakoutms.lfs.server.preneed;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +15,7 @@ import com.breakoutms.lfs.server.preneed.model.Dependent.DependentBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-public class DependentValidations extends ValidationTest<Dependent>{
+public class ValidateDependent extends ValidationTest<Dependent>{
 
 	private DependentBuilder builder = Dependent.builder();
 	

@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -104,7 +105,7 @@ public class Policy extends AuditableEntity<String> {
 	@Column(nullable=false)
 	private LocalDate registrationDate;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeralScheme")
 	private FuneralScheme funeralScheme;
 

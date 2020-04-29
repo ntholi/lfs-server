@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.valid;
+package com.breakoutms.lfs.server.preneed;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +16,7 @@ import com.breakoutms.lfs.server.preneed.model.Policy.PolicyBuilder;
 
 @TestPropertySource("classpath:messages.properties")
 @ExtendWith(SpringExtension.class)
-public class PolicyValidations extends ValidationTest<Policy>{
+public class ValidatePolicy extends ValidationTest<Policy>{
 
 	private PolicyBuilder builder = Policy.builder();
 	

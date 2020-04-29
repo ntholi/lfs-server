@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.inte;
+package com.breakoutms.lfs.server.preneed;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -166,7 +166,7 @@ class PolicyServiceIntegrationTest {
 		var copy = persistAndGetCopy(entity);
 		
 		copy.setNames(after);
-		var updatedEntity = service.update(copy.getId(), copy);
+		var updatedEntity = service.update(copy.getId(), copy, entity.getFuneralScheme().getName());
 		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
 		assertThat(updatedEntity.getNames()).isEqualTo(after);
 	}
@@ -177,7 +177,7 @@ class PolicyServiceIntegrationTest {
 		String exMsg = ExceptionSupplier.notFound(Policy.class, unknownId).get().getMessage();
 		
 		Throwable thrown = catchThrowable(() -> {
-			service.update(unknownId, new Policy());
+			service.update(unknownId, new Policy(), "");
 		});
 		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
 		assertThat(thrown).hasMessageContaining(exMsg);

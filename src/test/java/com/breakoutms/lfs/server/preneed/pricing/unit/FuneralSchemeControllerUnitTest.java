@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,17 +51,16 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
-	@Autowired
-	private MockMvc mockMvc;
-	@MockBean private UserDetailsServiceImpl requiredBean;
-	@MockBean private FuneralSchemeRepository repo;
-	@MockBean private BranchRepository branchRepo;
-	@SpyBean private FuneralSchemeService service;
 	
-	private static final List<FuneralScheme> list = FuneralSchemesJSON.all();
-	private FuneralScheme entity = list.get(0);
-	private static final Integer ID = 5;
-	private static final String URL = "/preneed/funeral-schemes/";
+	@Autowired private MockMvc mockMvc;
+	@MockBean private FuneralSchemeRepository repo;
+	@SpyBean private FuneralSchemeService service;
+	@MockBean private UserDetailsServiceImpl requiredBean;
+	@MockBean private BranchRepository branchRepo;
+	
+	private final FuneralScheme entity = createEntity();
+	private final Integer ID = 5;
+	private final String URL = "/preneed/funeral-schemes/";
 
 	private Expectations expect;
 	
@@ -68,7 +68,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	public void setup() {
 		expect = new Expectations(URL, getBranch());
 	}
-	
+
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_by_id() throws Exception {
@@ -81,6 +81,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	    result.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(entity.getId()+"/penalty-deductibles")));
 	    result.andDo(print());
 	    expect.forEntity(result, entity);
+	    
 	    verify(service).get(ID);
 	}
 	
@@ -95,6 +96,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	    var result = mockMvc.perform(get(URL+unkownId))
 	    		.andExpect(status().isNotFound());
 	    Expectations.forObjectNotFound(result, exMsg);
+	    
 	    verify(service).get(unkownId);
 	}
 	
@@ -104,12 +106,14 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 		var url = URL+"?page=0&size=20&sort=createdAt,desc";
 		
+		var list = Arrays.asList(entity);
 		var pageRequest = PageRequestHelper.from(url);
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
 		
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
 	    expect.forPage(result, list, "funeralSchemes", url);
+	    
 	    verify(service).all(pageRequest);
 	}
 	
@@ -123,6 +127,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		
 		mockMvc.perform(get(url))
 	    		.andExpect(status().isNoContent());
+		
 		verify(service).all(pageRequest);
 	}
 	
@@ -140,7 +145,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 			.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(URL+ID+"/funeral-scheme-benefits")))
 			.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(URL+ID+"/penalty-deductibles")));
 		
-		verify(service).save(any(FuneralScheme.class));
+		verify(service).save(entity);
 	}
 
 
@@ -171,7 +176,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		result.andExpect(status().isOk());
 		expect.forEntity(result, entity);
 		
-		verify(service).update(anyInt(), any(FuneralScheme.class));
+		verify(service).update(ID, entity);
 	}
 	
 	@Test
@@ -209,7 +214,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 			.andExpect(jsonPath("_embedded.premiums[0].funeralScheme").doesNotExist())
 			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/premiums")));
 
-		verify(service).getPremiums(anyInt()); 
+		verify(service).getPremiums(ID); 
 	}
 	
 	@Test
@@ -231,7 +236,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		.andExpect(jsonPath("_embedded.dependentBenefits[0].funeralScheme").doesNotExist())
 		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/dependent-benefits")));
 		
-		verify(service).getDependentBenefits(anyInt()); 
+		verify(service).getDependentBenefits(ID); 
 	}
 	
 	@Test
@@ -253,7 +258,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		.andExpect(jsonPath("_embedded.funeralSchemeBenefits[0].funeralScheme").doesNotExist())
 		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/funeral-scheme-benefits")));
 		
-		verify(service).getFuneralSchemeBenefits(anyInt()); 
+		verify(service).getFuneralSchemeBenefits(ID); 
 	}
 	
 	@Test
@@ -275,6 +280,10 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
 		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
 		
-		verify(service).getPenaltyDeductibles(anyInt()); 
+		verify(service).getPenaltyDeductibles(ID); 
+	}
+	
+	private FuneralScheme createEntity() {
+		return FuneralSchemesJSON.all().get(0);
 	}
 }
