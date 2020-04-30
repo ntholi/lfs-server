@@ -7,6 +7,9 @@ import org.mapstruct.factory.Mappers;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -34,4 +37,7 @@ public abstract class PreneedMapper {
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)
 	protected abstract Policy map(PolicyDTO dto);
+	
+	public abstract PolicyPayment map(PolicyPaymentDTO dto);
+	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
 }

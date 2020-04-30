@@ -38,6 +38,7 @@ import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
 import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
+import lombok.val;
 
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/funeral-schemes")
@@ -154,7 +155,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	@Override
 	public FuneralSchemeViewModel toViewModel(FuneralScheme entity) {
 		FuneralSchemeViewModel dto = PreneedMapper.INSTANCE.map(entity);
-		var id = entity.getId();
+		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		dto.add(linkTo(methodOn(getClass()).getPremiums(id)).withRel("premiums"));
 		dto.add(linkTo(methodOn(getClass()).getDependentBenefits(id)).withRel("dependentBenefits"));

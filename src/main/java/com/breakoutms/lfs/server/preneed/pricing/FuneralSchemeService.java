@@ -49,6 +49,10 @@ public class FuneralSchemeService {
 		setAssociations(entity);
 		return repo.save(entity);
 	}
+
+	public void delete(Integer id) {
+		repo.deleteById(id);
+	}
 	
 	protected void setAssociations(final FuneralScheme entity) {
 		if(entity.getPremiums() != null) {
@@ -71,10 +75,6 @@ public class FuneralSchemeService {
 				premium.setFuneralScheme(entity)
 			);
 		}
-	}
-
-	public void delete(Integer id) {
-		repo.deleteById(id);
 	}
 
 	public List<PenaltyDeductible> getPenaltyDeductibles(Integer id) {
