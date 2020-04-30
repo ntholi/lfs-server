@@ -20,6 +20,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class IdGenerator extends SequenceStyleGenerator {
 
+	public static final String STRATEGY = "com.breakoutms.lfs.server.persistence.IdGenerator";
 	public static final String ID_TYPE_STRING = "java.lang.String";
 	public static final String ID_TYPE_INTEGER = "java.lang.Integer";
 	public static final String ID_TYPE_LONG = "java.lang.Long";
