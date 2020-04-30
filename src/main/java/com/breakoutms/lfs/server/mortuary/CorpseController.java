@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.DtoMapper;
-import com.breakoutms.lfs.server.core.EntityController;
+import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 
@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/corpses")
 @AllArgsConstructor
-class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
+class CorpseController implements ViewModelController<Corpse, CorpseResponseDTO>  {
 
 	private final CorpseService service;
 	private final PagedResourcesAssembler<CorpseResponseDTO> pagedAssembler;
@@ -55,7 +55,7 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	@PostMapping
 	public ResponseEntity<CorpseResponseDTO> save(@Valid @RequestBody Corpse entity) {
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.save(entity)), 
+				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
 		);
 	}
@@ -63,7 +63,7 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	@PutMapping("/{tagNo}")
 	public ResponseEntity<CorpseResponseDTO> update(@PathVariable String tagNo, @Valid @RequestBody Corpse corpse) {
 		return ResponseEntity.ok(
-				createDtoWithLinks(service.update(tagNo, corpse))
+				toViewModel(service.update(tagNo, corpse))
 		);
 	}
 
@@ -96,7 +96,7 @@ class CorpseController implements EntityController<Corpse, CorpseResponseDTO>  {
 	}
 
 	@Override
-	public CorpseResponseDTO createDtoWithLinks(Corpse entity) {
+	public CorpseResponseDTO toViewModel(Corpse entity) {
 		CorpseResponseDTO dto = DtoMapper.INSTANCE.map(entity);
 		var id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));

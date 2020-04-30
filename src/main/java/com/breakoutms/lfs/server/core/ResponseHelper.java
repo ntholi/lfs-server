@@ -19,17 +19,17 @@ public class ResponseHelper {
 
 	public static <T extends Entity<?>,  D extends RepresentationModel<? extends D>> 
 		ResponseEntity<D> getResponse(
-			@NotNull final EntityController<T, D> controller,
+			@NotNull final ViewModelController<T, D> controller,
 			@NotNull final Optional<T> entityOptional, 
 			@NotNull final Supplier<RuntimeException> notFoundExceptionSupplier) {
 		return entityOptional
-				.map(o -> ResponseEntity.ok(controller.createDtoWithLinks(o)))
+				.map(o -> ResponseEntity.ok(controller.toViewModel(o)))
 				.orElseThrow(notFoundExceptionSupplier);
 	}
 
 	public static <T extends Entity<?>,  D extends RepresentationModel<? extends D>> 
 		ResponseEntity<PagedModel<EntityModel<D>>> pagedGetResponse(
-			@NotNull final EntityController<T, D> controller,
+			@NotNull final ViewModelController<T, D> controller,
 			@NotNull final PagedResourcesAssembler<D> assembler,
 			@NotNull final Page<T> pagedList) {
 
@@ -37,7 +37,7 @@ public class ResponseHelper {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		Page<D> page = pagedList
-				.map(entity -> controller.createDtoWithLinks(entity));
+				.map(entity -> controller.toViewModel(entity));
 		return new ResponseEntity<>(assembler.toModel(page), HttpStatus.OK);
 	}
 }

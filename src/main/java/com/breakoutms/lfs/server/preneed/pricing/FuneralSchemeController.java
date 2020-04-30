@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.EntityController;
+import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/funeral-schemes")
 @AllArgsConstructor
-public class FuneralSchemeController implements EntityController<FuneralScheme, FuneralSchemeViewModel> {
+public class FuneralSchemeController implements ViewModelController<FuneralScheme, FuneralSchemeViewModel> {
 
 	private static final String FUNERAL_SCHEME = "funeralScheme";
 	private final FuneralSchemeService service;
@@ -67,7 +67,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	public ResponseEntity<FuneralSchemeViewModel> save(@Valid @RequestBody FuneralSchemeDTO dto) {
 		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.save(entity)), 
+				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
 		);
 	}
@@ -77,7 +77,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 			@Valid @RequestBody FuneralSchemeDTO dto) {
 		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.update(id, entity)), 
+				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
 	}
@@ -152,7 +152,7 @@ public class FuneralSchemeController implements EntityController<FuneralScheme, 
 	
 	
 	@Override
-	public FuneralSchemeViewModel createDtoWithLinks(FuneralScheme entity) {
+	public FuneralSchemeViewModel toViewModel(FuneralScheme entity) {
 		FuneralSchemeViewModel dto = PreneedMapper.INSTANCE.map(entity);
 		var id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));

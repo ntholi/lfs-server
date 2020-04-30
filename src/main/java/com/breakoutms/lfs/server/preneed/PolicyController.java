@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.EntityController;
+import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.model.Policy;
@@ -34,7 +34,7 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/policies")
 @AllArgsConstructor
-public class PolicyController implements EntityController<Policy, PolicyViewModel> {
+public class PolicyController implements ViewModelController<Policy, PolicyViewModel> {
 
 	private final PolicyService service;
 	private final PagedResourcesAssembler<PolicyViewModel> pagedAssembler;
@@ -57,7 +57,7 @@ public class PolicyController implements EntityController<Policy, PolicyViewMode
 	public ResponseEntity<PolicyViewModel> save(@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.save(entity, dto.getFuneralScheme())), 
+				toViewModel(service.save(entity, dto.getFuneralScheme())), 
 				HttpStatus.CREATED
 		);
 	}
@@ -67,13 +67,13 @@ public class PolicyController implements EntityController<Policy, PolicyViewMode
 			@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
-				createDtoWithLinks(service.update(id, entity, dto.getFuneralScheme())), 
+				toViewModel(service.update(id, entity, dto.getFuneralScheme())), 
 				HttpStatus.OK
 		);
 	}
 
 	@Override
-	public PolicyViewModel createDtoWithLinks(Policy entity) {
+	public PolicyViewModel toViewModel(Policy entity) {
 		var dto = PreneedMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
