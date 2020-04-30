@@ -26,7 +26,7 @@ import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
-import com.breakoutms.lfs.server.user.Domain;
+import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.val;

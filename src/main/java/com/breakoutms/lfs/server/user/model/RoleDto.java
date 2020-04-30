@@ -2,7 +2,7 @@ package com.breakoutms.lfs.server.user.model;
 
 import java.util.stream.Collectors;
 
-import com.breakoutms.lfs.server.user.Domain;
+import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.Data;
 

@@ -35,7 +35,7 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
-import com.breakoutms.lfs.server.user.Domain;
+import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
 

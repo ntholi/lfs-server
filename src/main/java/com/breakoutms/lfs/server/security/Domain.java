@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.user;
+package com.breakoutms.lfs.server.security;
 
 import com.breakoutms.lfs.server.user.model.PrivilegeType;
 
@@ -10,11 +10,14 @@ public enum Domain {
 	REVENUE(Const.REVENUE), 
 	ADMIN(Const.ADMIN);
 	
-	Domain(String s) {
-		String en = name().toLowerCase();
-		if(!s.equals(en)) {
-			throw new IllegalArgumentException(s);
+	private final String path;
+	
+	Domain(String str) {
+		String low = name().toLowerCase();
+		if(!str.equals(low)) {
+			throw new IllegalArgumentException(str);
 		}
+		this.path = low;
 	}
 	
 	public static class Const{
@@ -43,6 +46,6 @@ public enum Domain {
 		return String.format(attribute, name(), PrivilegeType.DELETE);
 	}
 	public String antPattern() {
-		return "/"+name().toLowerCase()+"/**";
+		return "/"+path+"/**";
 	}
 }

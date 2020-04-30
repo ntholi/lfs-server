@@ -1,20 +1,8 @@
 package com.breakoutms.lfs.server;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.breakoutms.lfs.server.branch.Branch;
-import com.breakoutms.lfs.server.branch.BranchRepository;
-import com.breakoutms.lfs.server.user.Domain;
-import com.breakoutms.lfs.server.user.UserService;
-import com.breakoutms.lfs.server.user.model.Privilege;
-import com.breakoutms.lfs.server.user.model.PrivilegeType;
-import com.breakoutms.lfs.server.user.model.Role;
-import com.breakoutms.lfs.server.user.model.User;
 
 @SpringBootApplication
 public class MainApplication implements CommandLineRunner{
@@ -22,53 +10,53 @@ public class MainApplication implements CommandLineRunner{
 //	@Autowired
 //	CorpseRepository repo;
 	
-	@Autowired
-	UserService userService;
-	@Autowired
-	BranchRepository branchRepository;
-	private User createTestUser() {
-	User user = new User();
-	user.setFirstName("Thabo");
-	user.setLastName("Lebese");
-	user.setUsername("thabo");
-	user.setPassword("111111");
-	
-	Role role = new Role();
-	role.setName(Domain.PRENEED);
-	role.setPrivileges(List.of(new Privilege(PrivilegeType.READ), 
-			new Privilege(PrivilegeType.WRITE)));
-	user.setRoles(List.of(role));
-	setBranch(user);
-	return user;
-}
-
-private void setBranch(User user) {
-	Branch branch = branchRepository.findAll().iterator().next();
-	user.setBranch(branch);
-}
-	private User createAdminTestUser() {
-	User admin = new User();
-	admin.setUsername("admin");
-	admin.setPassword("111111");
-	admin.setFirstName("Administrator");
-	Role role = new Role();
-	role.setName(Domain.ADMIN);
-	role.setPrivileges(List.of(
-			new Privilege(PrivilegeType.READ), 
-			new Privilege(PrivilegeType.WRITE),
-			new Privilege(PrivilegeType.UPDATE),
-			new Privilege(PrivilegeType.DELETE)
-	));
-	setBranch(admin);
-	admin.setRoles(List.of(role));
-	return admin;
-}
+//	@Autowired
+//	UserService userService;
+//	@Autowired
+//	BranchRepository branchRepository;
+//	private User createTestUser() {
+//	User user = new User();
+//	user.setFirstName("Thabo");
+//	user.setLastName("Lebese");
+//	user.setUsername("thabo");
+//	user.setPassword("111111");
+//	
+//	Role role = new Role();
+//	role.setName(Domain.PRENEED);
+//	role.setPrivileges(List.of(new Privilege(PrivilegeType.READ), 
+//			new Privilege(PrivilegeType.WRITE)));
+//	user.setRoles(List.of(role));
+//	setBranch(user);
+//	return user;
+//}
+//
+//private void setBranch(User user) {
+//	Branch branch = branchRepository.findAll().iterator().next();
+//	user.setBranch(branch);
+//}
+//	private User createAdminTestUser() {
+//	User admin = new User();
+//	admin.setUsername("admin");
+//	admin.setPassword("111111");
+//	admin.setFirstName("Administrator");
+//	Role role = new Role();
+//	role.setName(Domain.ADMIN);
+//	role.setPrivileges(List.of(
+//			new Privilege(PrivilegeType.READ), 
+//			new Privilege(PrivilegeType.WRITE),
+//			new Privilege(PrivilegeType.UPDATE),
+//			new Privilege(PrivilegeType.DELETE)
+//	));
+//	setBranch(admin);
+//	admin.setRoles(List.of(role));
+//	return admin;
+//}
 
 	@Override
 	public void run(String... args) throws Exception {
 		
-		userService.register(createTestUser());
-		userService.register(createAdminTestUser());
+//		userService.register(createTestUser());
+//		userService.register(createAdminTestUser());
 		
 		
 		
