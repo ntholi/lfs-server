@@ -71,23 +71,19 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private int monthsBeforePenalty;
 	
 	@OneToMany(mappedBy="funeralScheme", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true) 
+			cascade=CascadeType.ALL) 
 	private List<Premium> premiums;
 	
 	@OneToMany(mappedBy="funeralScheme", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
+			cascade=CascadeType.ALL)
 	private List<DependentBenefit> dependentBenefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
+			cascade=CascadeType.ALL)
 	private List<FuneralSchemeBenefit> benefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
+			cascade=CascadeType.ALL)
 	private List<PenaltyDeductible> penaltyDeductibles;
 	
 	public FuneralScheme(String name) {
