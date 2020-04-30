@@ -1,10 +1,11 @@
-package com.breakoutms.lfs.server.user;
+package com.breakoutms.lfs.server.user.model;
 
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,10 +13,15 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.breakoutms.lfs.server.branch.Branch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -33,7 +39,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "SMALLINT UNSIGNED")
-    private Long id;
+    private Integer id;
 
     @NotBlank
     @Size(min = 3, max = 50)
@@ -61,4 +67,19 @@ public class User {
             inverseJoinColumns = @JoinColumn(
               name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Branch branch;
+
+	public String getFullnames() {
+		StringBuilder sb = new StringBuilder();
+		if(StringUtils.isNotBlank(firstName)){
+			sb.append(firstName);
+		}
+		if(StringUtils.isNotBlank(lastName)) {
+			sb.append(" ").append(lastName);
+		}
+		return sb.toString().trim();
+	}
 }

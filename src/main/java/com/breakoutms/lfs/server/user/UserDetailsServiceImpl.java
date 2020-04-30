@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.security.JwtUtils;
+import com.breakoutms.lfs.server.user.model.Privilege;
+import com.breakoutms.lfs.server.user.model.Role;
+import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.repo.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -61,7 +64,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public Optional<UserDetails> loadUserByJwtToken(String jwtToken) {
         if (jwtProvider.isValidToken(jwtToken)) {
             return Optional.of(
-                withUsername(jwtProvider.getUsername(jwtToken))
+                withUsername(jwtProvider.getUserId(jwtToken))
                 .authorities(jwtProvider.getRoles(jwtToken))
                 .password("") //token does not have password but field may not be empty
                 .accountExpired(false)
@@ -71,19 +74,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build());
         }
         return Optional.empty();
-    }
-
-    /**
-     * Extract the username from the JWT then lookup the user in the database.
-     *
-     * @param jwtToken
-     * @return
-     */
-    public Optional<UserDetails> loadUserByJwtTokenAndDatabase(String jwtToken) {
-        if (jwtProvider.isValidToken(jwtToken)) {
-            return Optional.of(loadUserByUsername(jwtProvider.getUsername(jwtToken)));
-        } else {
-            return Optional.empty();
-        }
     }
 }

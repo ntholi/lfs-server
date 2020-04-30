@@ -1,10 +1,7 @@
-package com.breakoutms.lfs.server.user.dto;
+package com.breakoutms.lfs.server.user.model;
 
 import java.util.stream.Collectors;
 
-import com.breakoutms.lfs.server.user.Privilege;
-import com.breakoutms.lfs.server.user.PrivilegeType;
-import com.breakoutms.lfs.server.user.Role;
 import com.breakoutms.lfs.server.user.Domain;
 
 import lombok.Data;

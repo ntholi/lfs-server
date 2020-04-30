@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.user;
+package com.breakoutms.lfs.server.user.model;
 
 public enum PrivilegeType {
 	READ, 

@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
-import com.breakoutms.lfs.server.user.dto.LoginResponseDto;
-import com.breakoutms.lfs.server.user.dto.UserDto;
+import com.breakoutms.lfs.server.user.model.LoginResponseDto;
+import com.breakoutms.lfs.server.user.model.Privilege;
+import com.breakoutms.lfs.server.user.model.Role;
+import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.repo.PrivilegeRepository;
 import com.breakoutms.lfs.server.user.repo.RoleRepository;
 import com.breakoutms.lfs.server.user.repo.UserRepository;
@@ -50,7 +52,7 @@ public class UserService {
 		}
 		User user = userOp.get();
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		String token = jwtProvider.createToken(username, user.getRoles());
+		String token = jwtProvider.createToken(user);
 		return LoginResponseDto.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)
@@ -58,33 +60,26 @@ public class UserService {
 	}
 
 	@Transactional
-	public User register(UserDto userDto) {
-		log.info("Registering new user with username: "+userDto.getUsername());
+	public User register(User user) {
+		log.info("Registering new user with username: "+user.getUsername());
 
-		if(userRepo.findByUsername(userDto.getUsername()).isPresent()) {
-			throw new UserAlreadyExistsException("Username '"+userDto.getUsername()+"' already exists");
+		if(userRepo.findByUsername(user.getUsername()).isPresent()) {
+			throw new UserAlreadyExistsException("Username '"+user.getUsername()+"' already exists");
 		}
+		String password = user.getPassword();
+		user.setPassword(passwordEncoder.encode(password));
+		user.setRoles(getRoles(user));
 		
-		User.UserBuilder user = User.builder();
-		
-		List<Role> roles = getRoles(userDto);
-		
-		user.username(userDto.getUsername())
-			.password(passwordEncoder.encode(userDto.getPassword()))
-			.firstName(userDto.getFirstName())
-			.lastName(userDto.getLastName())
-			.roles(roles);
-		
-		return userRepo.save(user.build());
+		return userRepo.save(user);
 	}
 	
-	protected List<Role> getRoles(UserDto userDto) {
+	protected List<Role> getRoles(User user) {
 		List<Role> roles = new ArrayList<>();
 	
 		List<Role> savedRoles = roleRepo.findAll();
 		List<Privilege> savedPrivileges = privilegeRepo.findAll();
 		
-		List<Role> requestedRoles = userDto.getRoles();
+		List<Role> requestedRoles = user.getRoles();
 		for (int i = 0; i < requestedRoles.size(); i++) {
 			Role requestedRole = requestedRoles.get(i);
 			Role role = roleFromDb(savedRoles, requestedRole);

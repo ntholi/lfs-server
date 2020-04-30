@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 
+import org.hibernate.envers.Audited;
+
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.sales.items.ItemType;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.ToString;
 
 
 @Entity
+@Audited
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor

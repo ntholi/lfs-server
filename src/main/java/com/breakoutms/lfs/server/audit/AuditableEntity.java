@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -37,6 +38,10 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	@CreatedDate
 	@Column(nullable=true, updatable=false)
 	private LocalDateTime createdAt;
+	
+	@CreatedBy
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	private Integer createdBy;
 	
 	private boolean deleted;
 	

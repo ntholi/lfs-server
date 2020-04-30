@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.user;
 
+import com.breakoutms.lfs.server.user.model.PrivilegeType;
+
 public enum Domain {
 	MORTUARY(Const.MORTUARY), 
 	UNDERTAKER(Const.UNDERTAKER), 

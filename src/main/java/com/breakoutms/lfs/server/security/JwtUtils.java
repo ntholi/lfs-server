@@ -13,8 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.breakoutms.lfs.server.user.Role;
-import com.breakoutms.lfs.server.user.dto.RoleDto;
+import com.breakoutms.lfs.server.user.model.RoleDto;
+import com.breakoutms.lfs.server.user.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -27,6 +27,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtils {
 
+	private static final String NAMES = "names";
 	public static final String ROLE_PREFIX = "ROLE_";
 	public static final String BEARER = "Bearer";
     private static final String ROLES_KEY = "roles";
@@ -49,10 +50,10 @@ public class JwtUtils {
      * @param roles
      * @return jwt string
      */
-    public String createToken(String username, List<Role> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLES_KEY, 
-        		roles.stream()
+    public String createToken(User user) {
+        Claims claims = Jwts.claims().setSubject(user.getId().toString());
+        claims.put(NAMES, user.getFullnames());
+        claims.put(ROLES_KEY, user.getRoles().stream()
         		.map(RoleDto::new)
         		.collect(Collectors.toList())
         );
@@ -87,7 +88,7 @@ public class JwtUtils {
      * @param token jwt
      * @return username
      */
-    public String getUsername(String token) {
+    public String getUserId(String token) {
         return Jwts.parser().setSigningKey(secretKey)
                 .parseClaimsJws(token).getBody().getSubject();
     }

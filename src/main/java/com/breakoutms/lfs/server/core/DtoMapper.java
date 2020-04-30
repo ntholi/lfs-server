@@ -5,8 +5,8 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.Corpse;
 import com.breakoutms.lfs.server.mortuary.CorpseResponseDTO;
-import com.breakoutms.lfs.server.user.User;
-import com.breakoutms.lfs.server.user.dto.UserDto;
+import com.breakoutms.lfs.server.user.model.User;
+import com.breakoutms.lfs.server.user.model.UserDTO;
 
 @Mapper(componentModel="spring")
 public abstract class DtoMapper {
@@ -14,5 +14,5 @@ public abstract class DtoMapper {
 	public static final DtoMapper INSTANCE = Mappers.getMapper(DtoMapper.class);
 	
 	public abstract CorpseResponseDTO map(Corpse corpse);
-	public abstract User map(UserDto userDto);
+	public abstract User map(UserDTO userDto);
 }

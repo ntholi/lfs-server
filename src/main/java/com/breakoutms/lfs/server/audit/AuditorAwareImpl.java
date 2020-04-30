@@ -3,14 +3,19 @@ package com.breakoutms.lfs.server.audit;
 import java.util.Optional;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.breakoutms.lfs.server.user.User;
-
-public class AuditorAwareImpl implements AuditorAware<User>{
+public class AuditorAwareImpl implements AuditorAware<Integer>{
 
 	@Override
-	public Optional<User> getCurrentAuditor() {
-		return Optional.ofNullable(null);
+	public Optional<Integer> getCurrentAuditor() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			String userId = ((UserDetails)principal).getUsername();
+			return Optional.of(Integer.valueOf(userId));
+		}
+		return Optional.empty();
 	}
 
 }

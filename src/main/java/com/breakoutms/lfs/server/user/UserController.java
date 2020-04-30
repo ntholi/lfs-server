@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.breakoutms.lfs.server.user.dto.LoginDto;
-import com.breakoutms.lfs.server.user.dto.LoginResponseDto;
-import com.breakoutms.lfs.server.user.dto.UserDto;
+import com.breakoutms.lfs.server.user.model.LoginDto;
+import com.breakoutms.lfs.server.user.model.LoginResponseDto;
+import com.breakoutms.lfs.server.user.model.User;
+import com.breakoutms.lfs.server.user.model.UserDTO;
 
 @RestController
 @RequestMapping("/users")
@@ -31,8 +32,9 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody @Valid UserDto userDto){
-        return userService.register(userDto);
+    public User register(@RequestBody @Valid UserDTO userDto){
+    	User user = UserMapper.INSTANCE.map(userDto);
+        return userService.register(user);
     }
 
     @GetMapping

@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.user.dto;
+package com.breakoutms.lfs.server.user.model;
 
 import javax.validation.constraints.NotNull;
 

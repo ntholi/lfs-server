@@ -6,14 +6,13 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.breakoutms.lfs.server.audit.AuditorAwareImpl;
-import com.breakoutms.lfs.server.user.User;
 
 @Configuration
 @EnableJpaAuditing
 public class AuditConfiguration {
 
     @Bean
-    public AuditorAware<User> auditorAware() {
+    public AuditorAware<Integer> auditorAware() {
         return new AuditorAwareImpl();
     }
 }
