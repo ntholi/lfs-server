@@ -66,6 +66,7 @@ public class Expectations {
 		System.out.println("Validating the following fields: ");
 	    for (var item : values.entrySet()) {
 	    	if(item.getKey().equals("createdAt")
+	    			|| item.getKey().equals("createdBy")
 	    			|| item.getKey().equals(FieldUtils.getIdField(object.getClass()).getName())) {
 	    		//skip createdAt, and id field because with integration tests, their value will be assigned after
 	    		//the object is saved in the database, while the expected value will still be null because 
