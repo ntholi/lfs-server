@@ -54,10 +54,10 @@ public class Expectations {
 				return 0;
 		});
 		System.err.println("After Sort: "+ list);
-//		for (int i = 0; i < list.size(); i++) {
-//			T t = list.get(i);
-//			result = forEntity(result, t, "_embedded."+listName+"["+i+"]");
-//		}
+		for (int i = 0; i < list.size(); i++) {
+			T t = list.get(i);
+			result = forEntity(result, t, "_embedded."+listName+"["+i+"]");
+		}
 		return result;
 	}
 	
@@ -76,9 +76,10 @@ public class Expectations {
 	    	}
 	    	System.out.println(item);
 	    	if(item.getValue() != null) {
-	    		var value = item.getValue();
+	    		Object value = item.getValue();
 	    		if(value instanceof Temporal) {
-	    			value = value.toString();
+	    			String strVal = value.toString();
+	    			value = removeTrailingZeros(strVal);
 	    		}
 	    		result.andExpect(jsonPath(path+item.getKey()).value(value));
 	    	}
@@ -148,5 +149,21 @@ public class Expectations {
 		}
 		
 		return map;
+	}
+	
+	protected String removeTrailingZeros(String strVal) {
+		var chArray = strVal.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		boolean endOfTailingZeros = false;
+		for(int i = chArray.length-1; i >= 0; i--) {
+			if(chArray[i] != '0') {
+				endOfTailingZeros = true;
+			}
+			if(chArray[i] == '0' && endOfTailingZeros == false) {
+				continue;
+			}
+			sb.append(chArray[i]);
+		}
+		return sb.reverse().toString();
 	}
 }

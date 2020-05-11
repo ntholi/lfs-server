@@ -68,9 +68,9 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	private boolean markedAsPaid;
 	
 	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
-		setType(type);
-		setAmount(amount);
-		setPeriod(period);
+		this.type = type;
+		this.amount = amount;
+		this.period = period;
 	}
 
 	public boolean hasSamePeriod(PolicyPaymentDetails info) {

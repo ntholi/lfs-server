@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.hateoas.RepresentationModel;
-
-import com.breakoutms.lfs.server.preneed.model.Policy;
+import org.springframework.hateoas.server.core.Relation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +17,10 @@ import lombok.NoArgsConstructor;
 @Data @Builder
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor @NoArgsConstructor
+@Relation(collectionRelation = "policyPayments")
 public class PolicyPaymentViewModel extends RepresentationModel<PolicyPaymentViewModel> {
 	
 	private Long id;
-	private Policy policy;
 	private LocalDateTime paymentDate;
 	private BigDecimal amountTendered;
 	private BigDecimal change;

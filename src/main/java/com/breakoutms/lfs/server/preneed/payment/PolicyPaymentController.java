@@ -1,5 +1,8 @@
 package com.breakoutms.lfs.server.preneed.payment;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,7 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PolicyController;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
@@ -30,7 +34,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.PRENEED+"/policies/payments")
+@RequestMapping("/"+Domain.Const.PRENEED+"/policies")
 @AllArgsConstructor
 public class PolicyPaymentController implements ViewModelController<PolicyPayment, PolicyPaymentViewModel> {
 
@@ -38,22 +42,24 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	private final PagedResourcesAssembler<PolicyPaymentViewModel> pagedAssembler;
 	
 
-	@GetMapping("/{id}")
-	public ResponseEntity<PolicyPaymentViewModel> get(@PathVariable Long id) {
+	@GetMapping("{policyNumber}/payments/{id}")
+	public ResponseEntity<PolicyPaymentViewModel> get(@PathVariable String policyNumber, @PathVariable Long id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
-				ExceptionSupplier.notFound("Funeral Scheme", id));
+				ExceptionSupplier.notFound("Policy Payment", id));
 	}
 	
-	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(Pageable pageable) {
+	@GetMapping("{policyNumber}/payments")
+	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(@PathVariable String policyNumber, 
+			Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 
-	@PostMapping
-	public ResponseEntity<PolicyPaymentViewModel> save(@Valid @RequestBody PolicyPaymentDTO dto) {
+	@PostMapping("{policyNumber}/payments")
+	public ResponseEntity<PolicyPaymentViewModel> save(@PathVariable String policyNumber,
+			@Valid @RequestBody PolicyPaymentDTO dto) {
 		PolicyPayment entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -61,8 +67,9 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 		);
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<PolicyPaymentViewModel> update(@PathVariable Long id, 
+	@PutMapping("{policyNumber}/payments/{id}")
+	public ResponseEntity<PolicyPaymentViewModel> update(@PathVariable String policyNumber,
+			@PathVariable Long id, 
 			@Valid @RequestBody PolicyPaymentDTO dto) {
 		PolicyPayment entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -73,10 +80,15 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 
 	@Override
 	public PolicyPaymentViewModel toViewModel(PolicyPayment entity) {
-		PolicyPaymentViewModel dto = PreneedMapper.INSTANCE.map(entity);
+		PolicyPaymentViewModel viewModel = PreneedMapper.INSTANCE.map(entity);
 		val id = entity.getId();
-		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
-		return dto;
+		val policyNumber = entity.getPolicy() != null ? entity.getPolicy().getPolicyNumber() : "";
+		viewModel.add(linkTo(methodOn(getClass()).get(policyNumber, id)).withSelfRel());
+		viewModel.add(linkTo(getClass()).slash(policyNumber).slash("payments").withRel("all"));
+		viewModel.add(CommonLinks.branch(entity.getBranch()));
+		String policyId = entity.getPolicy() != null? entity.getPolicy().getId(): null;
+		viewModel.add(linkTo(methodOn(PolicyController.class).get(policyId)).withRel("policy"));
+		return viewModel;
 	}
 
 }

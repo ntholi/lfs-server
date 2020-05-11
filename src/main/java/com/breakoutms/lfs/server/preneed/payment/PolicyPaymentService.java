@@ -34,10 +34,10 @@ public class PolicyPaymentService {
 	@Transactional
 	public PolicyPayment update(Long id, PolicyPayment entity) {
 		if(entity == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Funeral Scheme").get();
+			throw ExceptionSupplier.notFoundOnUpdate("Policy Payment").get();
 		}
 		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Funeral Scheme", id).get();
+			throw ExceptionSupplier.notFound("Policy Payment", id).get();
 		}
 		entity.setId(id);
 		return repo.save(entity);
