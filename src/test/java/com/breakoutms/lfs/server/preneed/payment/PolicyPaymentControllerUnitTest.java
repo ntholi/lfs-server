@@ -12,8 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,9 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -72,11 +76,11 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_by_id() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
-	    ResultActions result = mockMvc.perform(get(URL+ID));
-	    result.andExpect(status().isOk());
-	    result.andExpect(jsonPath("_links.policy.href", 
-	    		endsWith("/preneed/policies/"+entity.getPolicy().getId())));
-	    result.andDo(print());
+	    ResultActions result = mockMvc.perform(get(URL+ID))
+	    		.andExpect(status().isOk())
+	    		.andExpect(jsonPath("policyPaymentDetails").doesNotHaveJsonPath())
+	    		.andExpect(jsonPath("_links.policy.href", endsWith("/preneed/policies/"+entity.getPolicy().getId())))
+	    		.andDo(print());
 	    expect.forEntity(result, entity);
 	    
 	    verify(service).get(ID);
@@ -187,6 +191,29 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 		Expectations.forInvalidFields(result, exMsg);
 
 		verify(service, times(0)).update(anyLong(), any(PolicyPayment.class));
+	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_policyPaymentInfo() throws Exception {
+		BigDecimal premium = entity.getPolicy().getPremiumAmount();
+		List<PolicyPaymentDetails> value = List.of(
+			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
+					Period.of(LocalDate.now()), premium, entity, false),
+			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
+					Period.of(LocalDate.now().minusMonths(1)), premium, entity, false)
+		);
+		when(repo.getPaymentDetails(anyLong())).thenReturn(value);
+		
+		mockMvc.perform(get(URL+"/"+ID+"/payment-details"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("_embedded.policyPaymentDetails[0].amount").value(value.get(0).getAmount()))
+			.andExpect(jsonPath("_embedded.policyPaymentDetails[1].period").value(value.get(1).getPeriod()))
+			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/payment-details")))
+			.andExpect(jsonPath("_embedded.policyPaymentDetails[0].policyPayment").doesNotHaveJsonPath());
+
+		verify(service).getPaymentDetails(ID); 
 	}
 	
 	private PolicyPayment createEntity() throws Exception {

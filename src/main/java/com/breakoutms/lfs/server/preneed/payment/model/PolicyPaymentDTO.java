@@ -36,5 +36,5 @@ public class PolicyPaymentDTO {
 	@Digits(integer = 5, fraction = 2)
 	private BigDecimal change;
 
-	private List<PolicyPaymentDetails> policyPaymentInfo;
+	private List<PolicyPaymentDetails> policyPaymentDetails;
 }

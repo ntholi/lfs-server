@@ -9,6 +9,8 @@ import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
@@ -40,4 +42,5 @@ public abstract class PreneedMapper {
 	
 	public abstract PolicyPayment map(PolicyPaymentDTO dto);
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
+	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
 }

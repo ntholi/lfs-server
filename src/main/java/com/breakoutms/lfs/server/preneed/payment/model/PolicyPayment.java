@@ -66,6 +66,7 @@ public class PolicyPayment extends AuditableEntity<Long> {
 	private BigDecimal change;
 
 	@OneToMany(mappedBy="policyPayment", 
-			cascade=CascadeType.ALL)
-	private List<PolicyPaymentDetails> policyPaymentInfo;
+			cascade=CascadeType.ALL, 
+			fetch = FetchType.LAZY)
+	private List<PolicyPaymentDetails> policyPaymentDetails;
 }

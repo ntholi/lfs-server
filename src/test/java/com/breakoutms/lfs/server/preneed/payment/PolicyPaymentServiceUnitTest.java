@@ -116,7 +116,7 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 		entity.setId(5L);
 		entity.setPaymentDate(LocalDateTime.now());
 		entity.setPolicy(policy);
-		entity.setPolicyPaymentInfo(policyPaymentInfoList(policy));
+		entity.setPolicyPaymentDetails(policyPaymentInfoList(policy));
 		return entity;
 	}
 	

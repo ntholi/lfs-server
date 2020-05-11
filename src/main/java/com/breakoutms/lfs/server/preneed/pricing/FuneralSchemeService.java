@@ -77,19 +77,19 @@ public class FuneralSchemeService {
 		}
 	}
 
-	public List<PenaltyDeductible> getPenaltyDeductibles(Integer id) {
-		return repo.getPenaltyDeductibles(id);
+	public List<PenaltyDeductible> getPenaltyDeductibles(Integer funeralSchemeId) {
+		return repo.getPenaltyDeductibles(funeralSchemeId);
 	}
 
-	public List<FuneralSchemeBenefit> getFuneralSchemeBenefits(Integer id) {
-		return repo.getFuneralSchemeBenefits(id);
+	public List<FuneralSchemeBenefit> getFuneralSchemeBenefits(Integer funeralSchemeId) {
+		return repo.getFuneralSchemeBenefits(funeralSchemeId);
 	}
 
-	public List<DependentBenefit> getDependentBenefits(Integer id) {
-		return repo.getDependentBenefits(id);
+	public List<DependentBenefit> getDependentBenefits(Integer funeralSchemeId) {
+		return repo.getDependentBenefits(funeralSchemeId);
 	}
 
-	public List<Premium> getPremiums(Integer id) {
-		return repo.getPremiums(id);
+	public List<Premium> getPremiums(Integer funeralSchemeId) {
+		return repo.getPremiums(funeralSchemeId);
 	}
 }

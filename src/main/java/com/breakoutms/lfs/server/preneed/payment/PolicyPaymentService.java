@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.preneed.payment;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 
 import lombok.AllArgsConstructor;
 
@@ -45,5 +47,9 @@ public class PolicyPaymentService {
 
 	public void delete(Long id) {
 		repo.deleteById(id);
+	}
+
+	public List<PolicyPaymentDetails> getPaymentDetails(Long policyPaymentId) {
+		return repo.getPaymentDetails(policyPaymentId);
 	}
 }

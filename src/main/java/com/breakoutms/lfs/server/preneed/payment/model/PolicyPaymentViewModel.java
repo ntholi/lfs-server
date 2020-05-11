@@ -2,7 +2,6 @@ package com.breakoutms.lfs.server.preneed.payment.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
@@ -24,5 +23,4 @@ public class PolicyPaymentViewModel extends RepresentationModel<PolicyPaymentVie
 	private LocalDateTime paymentDate;
 	private BigDecimal amountTendered;
 	private BigDecimal change;
-	private List<PolicyPaymentDetails> policyPaymentInfo;
 }
