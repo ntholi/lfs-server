@@ -7,7 +7,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,6 +20,8 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,23 +35,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "policy_payment_details_id",          
+        name = "unpaid_policy_payment_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
 })
-public class PolicyPaymentDetails extends AuditableEntity<Long> {
-
-	public enum Type{
-		PREMIUM, PENALTY, REGISTRATION, UPGRADE_FEE
-	}
+public class UnpaidPolicyPayment extends AuditableEntity<Long>{
 	
 	@Id
-	@GeneratedValue(generator = "policy_payment_details_id")
+	@GeneratedValue(generator = "unpaid_policy_payment_id")
 	private Long id;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "CHAR(15)")
 	private Type type;
 	
 	@Embedded
@@ -61,31 +57,17 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@Column(nullable=false, precision = 8, scale = 2)
 	private BigDecimal amount;
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="policyPayment")
-	private PolicyPayment policyPayment;
+	@ManyToOne @JoinColumn(name="policy")
+	private Policy policy;
 	
-	private boolean markedAsPaid;
-	
-	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
-		this.type = type;
-		this.amount = amount;
-		this.period = period;
+	public UnpaidPolicyPayment(PolicyPaymentDetails payment, Policy policy) {
+		this.type = payment.getType();
+		this.period = payment.getPeriod();
+		this.amount = payment.getAmount();
+		this.policy = policy;
 	}
 	
-	public static PolicyPaymentDetails premiumOf(Period period, BigDecimal amount) {
-		return new PolicyPaymentDetails(Type.PREMIUM, amount, period);
-	}
-	
-	public static PolicyPaymentDetails penaltyOf(BigDecimal amount) {
-		return new PolicyPaymentDetails(Type.PENALTY, amount, null);
-	}
-
-	public boolean hasSamePeriod(PolicyPaymentDetails info) {
-		if(info.getPeriod() != null && info.getPeriod() != null) {
-			Period period = info.getPeriod();
-			return this.period.equals(period);
-		}
-		return false;
+	public PolicyPaymentDetails getPolicyPaymentDetails() {
+		return new PolicyPaymentDetails(type, amount, period);
 	}
 }

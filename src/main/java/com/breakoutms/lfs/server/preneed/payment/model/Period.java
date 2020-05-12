@@ -7,9 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@Data
+@EqualsAndHashCode
+@ToString
 @Embeddable
 public class Period {
 	
@@ -20,6 +22,18 @@ public class Period {
 	@NotNull
 	@Column(nullable=false, columnDefinition = "SMALLINT UNSIGNED")
 	private Integer year;
+	
+	public Month month() {
+		return month;
+	}
+	
+	public Integer year() {
+		return year();
+	}
+	
+	public static Period now() {
+		return Period.of(LocalDate.now());
+	}
 	
 	public static Period of(LocalDate date) {
 		return Period.of(date.getYear(), date.getMonth());
@@ -64,6 +78,19 @@ public class Period {
 				&& (month.getValue() > period.month.getValue()))
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Calculate difference "minus" in months between two periods
+	 * @param p1
+	 * @param p2
+	 * @return **/
+	public static int differenceInMonths(Period p1, Period p2) {
+		int years = p1.year - p2.year;
+		int p1Months = (12 * years) + p1.month.getValue();
+		int p2Months = p2.month.getValue();
+		
+		return p1Months - p2Months;
 	}
 
 	public String name() {
