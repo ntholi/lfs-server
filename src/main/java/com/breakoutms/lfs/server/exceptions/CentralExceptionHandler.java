@@ -34,6 +34,12 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final String MESSAGE = "message";
 	
 
+    @ExceptionHandler(PaymentAlreadyMadeException.class)
+    public ResponseEntity<Object> handlePaymentAlreadyMadeException(PaymentAlreadyMadeException ex, WebRequest request) {
+        return response(HttpStatus.NOT_ACCEPTABLE, 
+        		ErrorCode.PAYMENT_ALREADY_MADE, ex);
+    }
+    
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request) {
         return response(HttpStatus.CONFLICT, 

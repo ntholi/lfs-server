@@ -2,7 +2,7 @@ package com.breakoutms.lfs.server.preneed.payment.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -62,11 +63,12 @@ public class PolicyPayment extends AuditableEntity<Long> {
 
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 5, fraction = 2)
-	@Column(nullable=false, precision = 7, scale = 2)
+	@Column(name = "change_amount", precision = 7, scale = 2)
 	private BigDecimal change;
 
 	@OneToMany(mappedBy="policyPayment", 
 			cascade=CascadeType.ALL, 
 			fetch = FetchType.LAZY)
-	private List<PolicyPaymentDetails> policyPaymentDetails;
+	@NotEmpty
+	private Set<PolicyPaymentDetails> policyPaymentDetails;
 }

@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -77,10 +79,10 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 	@Test
 	void save() throws Exception {
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
-		PolicyPayment response = service.save(new PolicyPayment());
+		PolicyPayment response = service.save(entity, Set.of());
 		assertThat(response)
 			.isNotNull()
-			.isEqualTo(response);
+			.isEqualTo(entity);
 	}
 	
 	@Test
@@ -89,10 +91,10 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 		when(repo.existsById(id)).thenReturn(true);
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
-		PolicyPayment response = service.update(id, new PolicyPayment());
+		PolicyPayment response = service.update(id, entity);
 		assertThat(response)
 			.isNotNull()
-			.isEqualTo(response);
+			.isEqualTo(entity);
 	}
 	
 	@Test
@@ -116,12 +118,43 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 		verify(repo).deleteById(id);
 	}
 	
+//	@Test //TODO
+//	void should_not_pay_same_premium_twice() throws Exception{
+//		when(repo.alreadyPaid(any(Policy.class), any(Period.class))).thenReturn(true);
+//		
+//		Throwable thrown = catchThrowable(() -> {
+//			service.save(entity, List.of());
+//		});
+//		
+//		assertThat(thrown).isInstanceOf(PaymentAlreadyMadeException.class);
+//		assertThat(thrown).hasMessageContaining("already paid for period:");
+//	}
+//	
+	@Test
+	void should_save_unpaid_payments() throws Exception{
+		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
+		
+		PolicyPaymentDetails payment = PolicyPaymentDetails
+				.premiumOf(Period.now(), new BigDecimal(10));
+		Set<UnpaidPolicyPayment> unpaids = Set.of(
+			new UnpaidPolicyPayment(payment, entity.getPolicy())
+		);
+		
+		PolicyPayment response = service.save(entity, unpaids);
+		
+		
+		assertThat(response)
+			.isNotNull()
+			.isEqualTo(entity);
+	}
+	
 	@Test
 	void veryfy_the_correct_amount_of_owed_premiums_is_returned() throws Exception {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
 		
-		when(repo.getLastPayedPeriod(policyNumber)).thenReturn(Period.of(2020, Month.JANUARY));
+		Optional<Period> period = Optional.of(Period.of(2020, Month.JANUARY));
+		when(repo.getLastPayedPeriod(policy)).thenReturn(period);
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
 		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
 		
@@ -145,7 +178,7 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 		Period period = Period.of(2020, Month.JANUARY);
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
-		when(repo.getLastPayedPeriod(policyNumber)).thenReturn(period);
+		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
 		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
 		
@@ -165,7 +198,7 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 				policy.getPremiumAmount());
 		List<UnpaidPolicyPayment> unpaidList = List.of(new UnpaidPolicyPayment(paimentDetails, policy));
 		
-		when(repo.getLastPayedPeriod(policyNumber)).thenReturn(period);
+		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
 		when(repo.getUnpaidPolicyPayment(policyNumber)).thenReturn(unpaidList);
 		
@@ -186,10 +219,10 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 		return entity;
 	}
 	
-	private static List<PolicyPaymentDetails> policyPaymentInfoList(Policy policy) {
+	public static Set<PolicyPaymentDetails> policyPaymentInfoList(Policy policy) {
 		Objects.requireNonNull(policy.getPremiumAmount());
 		val stdAmount = policy.getPremiumAmount();
-		return Arrays.asList(
+		return Set.of(
 				new PolicyPaymentDetails(Type.PREMIUM, stdAmount, Period.of(LocalDate.now()))
 		);
 	}

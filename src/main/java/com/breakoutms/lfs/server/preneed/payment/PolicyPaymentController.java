@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -33,6 +34,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
+import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
@@ -66,8 +68,11 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	public ResponseEntity<PolicyPaymentViewModel> save(@PathVariable String policyNumber,
 			@Valid @RequestBody PolicyPaymentDTO dto) {
 		PolicyPayment entity = PreneedMapper.INSTANCE.map(dto);
+		
+		Set<UnpaidPolicyPayment> unpaidList = Set.of();
+		
 		return new ResponseEntity<>(
-				toViewModel(service.save(entity)), 
+				toViewModel(service.save(entity, unpaidList)), 
 				HttpStatus.CREATED
 		);
 	}

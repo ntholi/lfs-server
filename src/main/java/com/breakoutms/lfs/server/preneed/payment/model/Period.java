@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
 @Embeddable
 public class Period {
 	
@@ -28,7 +28,7 @@ public class Period {
 	}
 	
 	public Integer year() {
-		return year();
+		return year;
 	}
 	
 	public static Period now() {
@@ -95,5 +95,13 @@ public class Period {
 
 	public String name() {
 		return month+ " "+ year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public void setMonth(Month month) {
+		this.month = month;
 	}
 }

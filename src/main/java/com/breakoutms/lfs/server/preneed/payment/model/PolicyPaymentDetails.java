@@ -10,8 +10,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 
@@ -38,6 +40,9 @@ import lombok.NoArgsConstructor;
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
+})
+@Table(indexes = {
+        @Index(columnList = "premiumPaymentId", name = "unique_premium_payment", unique=true)
 })
 public class PolicyPaymentDetails extends AuditableEntity<Long> {
 
@@ -66,6 +71,9 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	private PolicyPayment policyPayment;
 	
 	private boolean markedAsPaid;
+	
+	@Column(columnDefinition = "CHAR(14)")
+	private String premiumPaymentId;
 	
 	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
 		this.type = type;

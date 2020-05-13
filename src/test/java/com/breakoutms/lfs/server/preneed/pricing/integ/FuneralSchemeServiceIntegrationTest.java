@@ -32,10 +32,10 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
 class FuneralSchemeServiceIntegrationTest {
 
 	@Autowired FuneralSchemeRepository repo;

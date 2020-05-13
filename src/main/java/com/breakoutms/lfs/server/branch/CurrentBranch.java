@@ -9,12 +9,14 @@ import com.breakoutms.lfs.server.exceptions.ConfigFileException;
 @Component
 public class CurrentBranch {
 
+	//TODO: TEST HOW THIS CLASS WORKS, MAYBE IF YOU NEED Initialization-on-demand holder idiom MAYBE NOT?
 	private CurrentBranch() {}
 	
 	@Autowired
 	private BranchRepository repo;
 	private Branch branch;
 	
+	//TODO: CONSIDERE CONCURRENCY CONTROL OVERE HERE
 	public Branch get() {
 		String name = null;
 		if(branch == null) {

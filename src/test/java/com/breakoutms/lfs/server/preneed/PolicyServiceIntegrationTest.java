@@ -35,7 +35,7 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class PolicyServiceIntegrationTest {
+public class PolicyServiceIntegrationTest {
 
 	@Autowired private FuneralSchemeService funeralSchemeService;
 	@Autowired private FuneralSchemeRepository funeralSchemeRepo;
@@ -51,7 +51,7 @@ class PolicyServiceIntegrationTest {
 		entity = createEntity();
 	}
 	
-	private Policy createEntity() throws Exception {
+	public Policy createEntity() throws Exception {
 		FuneralScheme funeralScheme = FuneralSchemesJSON.withDependanciesButNoIds();
 		funeralSchemeService.save(funeralScheme);
 		funeralSchemeName = funeralScheme.getName();

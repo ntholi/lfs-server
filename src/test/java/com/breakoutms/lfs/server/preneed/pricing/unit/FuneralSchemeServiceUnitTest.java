@@ -58,7 +58,7 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 		FuneralScheme response = service.save(new FuneralScheme());
 		assertThat(response)
 			.isNotNull()
-			.isEqualTo(response);
+			.isEqualTo(entity);
 	}
 	
 	@Test
@@ -70,7 +70,7 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 		FuneralScheme response = service.update(id, new FuneralScheme());
 		assertThat(response)
 			.isNotNull()
-			.isEqualTo(response);
+			.isEqualTo(entity);
 	}
 	
 	@Test

@@ -3,8 +3,11 @@ package com.breakoutms.lfs.server.preneed.payment;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
+import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
@@ -31,6 +35,7 @@ public class PolicyPaymentService {
 
 	private final PolicyPaymentRepository repo;
 	private final PolicyRepository policyRepo;
+	private final PolicyPaymentDetailsRepository detailsRepo;
 	
 	public Optional<PolicyPayment> get(Long id) {
 		return repo.findById(id);
@@ -41,10 +46,28 @@ public class PolicyPaymentService {
 	}
 	
 	@Transactional
-	public PolicyPayment save(final PolicyPayment entity) {
+	public PolicyPayment save(final PolicyPayment entity, Set<UnpaidPolicyPayment> unpaids) {
+		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
+		Set<String> premiumIds = new HashSet<>();
+		String policyNumber = entity.getPolicy().getPolicyNumber();
+		for (PolicyPaymentDetails it : payments) {
+			if(it.getType() == Type.PREMIUM) {
+				final String premiumId = generatePremiumId(policyNumber, it);
+				it.setPremiumPaymentId(premiumId);
+				premiumIds.add(premiumId);
+			}
+		}
+		var premiums = detailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(premiumIds);
+		if(!premiums.isEmpty()) {
+			var period = premiums.stream()
+					.map(PolicyPaymentDetails::getPeriod)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+			throw new PaymentAlreadyMadeException(period);
+		}
 		return repo.save(entity);
 	}
-	
+
 	@Transactional
 	public PolicyPayment update(Long id, PolicyPayment entity) {
 		if(entity == null) {
@@ -64,7 +87,7 @@ public class PolicyPaymentService {
 	public List<PolicyPaymentDetails> getPaymentDetails(Long policyPaymentId) {
 		return repo.getPaymentDetails(policyPaymentId);
 	}
-
+	
 	@Transactional
 	public List<PolicyPaymentDetails> getOwedPayments(Period currentPeriod, String policyNumber) {
 		Policy policy = policyRepo.findById(policyNumber)
@@ -72,9 +95,8 @@ public class PolicyPaymentService {
 						"Unable to determine owed premiums for unknown policy number '"
 						+ policyNumber+"'"));
 		
-		Period lastPaid = repo.getLastPayedPeriod(policy.getPolicyNumber());
+		Period lastPaid = getLastPayedPeriod(policy);
 		List<PolicyPaymentDetails> list = new ArrayList<>();
-		
 
 		for (UnpaidPolicyPayment item : repo.getUnpaidPolicyPayment(policy.getPolicyNumber())) {
 			list.add(item.getPolicyPaymentDetails());
@@ -88,6 +110,40 @@ public class PolicyPaymentService {
 		}
 		
 		return list;
+	}
+
+	private String generatePremiumId(String policyNumber, PolicyPaymentDetails premium) {
+		if(premium.getType() != Type.PREMIUM) {
+			throw new IllegalArgumentException("PolicyPaymentDetails: '"+premium
+					+" should be of type "+Type.PREMIUM);
+		}
+		Period period = premium.getPeriod();
+		Objects.requireNonNull(period, "Period for PREMIUM cannot be null");
+		
+		String year = String.valueOf(period.year()).substring(2);
+		Integer month = period.month().getValue();
+		return policyNumber+year+month;
+	}
+	
+	private Period getLastPayedPeriod(Policy policy) {
+		Optional<Period> periodOpt = repo.getLastPayedPeriod(policy);
+		Period period = null;
+		if(periodOpt.isPresent()){
+			period = periodOpt.get();
+		}
+		else {
+			LocalDate regDate = policy.getRegistrationDate();
+			period = new Period();
+			period.setYear(regDate.getYear());
+			FuneralScheme scheme = policy.getFuneralScheme();
+			if(scheme.isIncludesFirstPremium()) {
+				period.setMonth(regDate.getMonth().plus(1));
+			}
+			else {
+				period.setMonth(regDate.getMonth());
+			}
+		}
+		return period;
 	}
 
 	private List<PolicyPaymentDetails> getOwedPremiums(Policy policy, Period currentPeriod, Period lastPaid) {
