@@ -118,26 +118,26 @@ public class ValidatePolicy extends ValidationTest<Policy>{
 	}
 	
 	@Test
-	void nationalIdNnumber() {
-		assertThat(validate(withRequired().nationalIdNnumber("12").build()))
-			.containsKey("nationalIdNnumber")
+	void nationalIdNumber() {
+		assertThat(validate(withRequired().nationalIdNumber("12").build()))
+			.containsKey("nationalIdNumber")
 			.containsValue(size)
 			.size().isEqualTo(1);
 		
-		assertThat(validate(withRequired().nationalIdNnumber("").build()))
-			.containsKey("nationalIdNnumber")
+		assertThat(validate(withRequired().nationalIdNumber("").build()))
+			.containsKey("nationalIdNumber")
 			.containsValue(size)
 			.size().isEqualTo(1);
 		
-		assertThat(validate(withRequired().nationalIdNnumber(string(41)).build()))
-			.containsKey("nationalIdNnumber")
+		assertThat(validate(withRequired().nationalIdNumber(string(41)).build()))
+			.containsKey("nationalIdNumber")
 			.containsValue(size)
 			.size().isEqualTo(1);
 	
 
-		assertThat(validate(withRequired().nationalIdNnumber("236612345678").build()))
+		assertThat(validate(withRequired().nationalIdNumber("236612345678").build()))
 			.isEmpty();
-		assertThat(validate(withRequired().nationalIdNnumber(string(40)).build()))
+		assertThat(validate(withRequired().nationalIdNumber(string(40)).build()))
 			.isEmpty();	
 	}
 	

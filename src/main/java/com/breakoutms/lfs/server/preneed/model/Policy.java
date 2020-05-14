@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -66,6 +68,7 @@ public class Policy extends AuditableEntity<String> {
 	@Column(length = 50)
 	private String surname;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition="ENUM('MALE','FEMALE')")
 	private Gender gender;
 	
@@ -86,7 +89,7 @@ public class Policy extends AuditableEntity<String> {
 	@Nullable
 	@Size(min = 3, max = 40)
 	@Column(length = 40)
-	private String nationalIdNnumber;
+	private String nationalIdNumber;
 	
 	@Nullable
 	@Column(length = 150)
@@ -108,7 +111,6 @@ public class Policy extends AuditableEntity<String> {
 	private LocalDate registrationDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="funeralScheme")
 	private FuneralScheme funeralScheme;
 
 	@NotNull

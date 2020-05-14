@@ -1,6 +1,8 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,7 +62,12 @@ public class Premium extends AuditableEntity<Integer> {
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;
 
-	public boolean isInRage(int age) {
+	public boolean isInAgeRange(int age) {
 		return age >= minmumAge && age <= maximumAge;
+	}
+	
+	public boolean isInAgeRange(LocalDate dateOfBirth) {
+		long age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+		return isInAgeRange((int) age);
 	}
 }

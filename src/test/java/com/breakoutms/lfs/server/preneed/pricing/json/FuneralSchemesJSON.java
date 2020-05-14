@@ -43,6 +43,14 @@ public class FuneralSchemesJSON {
 		return addDependancies(fs);
 	}
 	
+	public static List<FuneralScheme> allWithDependancies() throws IOException {
+		List<FuneralScheme> list = new ArrayList<>();
+		for (FuneralScheme it : all()) {
+			list.add(addDependancies(it));
+		}
+		return list;
+	}
+	
 	public static FuneralScheme withDependancies() throws IOException {
 		return addDependancies(any());
 	}
