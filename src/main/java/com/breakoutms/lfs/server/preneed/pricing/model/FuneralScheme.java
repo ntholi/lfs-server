@@ -43,8 +43,8 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private Integer id;
 	
 	@NotBlank
-	@Size(min = 1, max = 25)
-	@Column(nullable=false, length = 25)
+	@Size(min = 1, max = 35)
+	@Column(nullable=false, length = 35)
 	private String name;
 	
 	@Min(value = 0L, message = "{validation.number.negative}")

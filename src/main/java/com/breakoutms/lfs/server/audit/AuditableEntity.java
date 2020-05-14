@@ -43,6 +43,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer createdBy;
 	
+	@Column(columnDefinition = "BIT(1) default 0")
 	private boolean deleted;
 	
 	@PrePersist

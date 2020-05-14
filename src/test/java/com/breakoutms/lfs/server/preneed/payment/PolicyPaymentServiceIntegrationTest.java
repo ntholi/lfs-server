@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.preneed.payment;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,27 +9,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.DBUnitExtension;
 
 @ExtendWith(DBUnitExtension.class)
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
+@DataSet("branch.xml")
 public class PolicyPaymentServiceIntegrationTest {
 
 
 	@Autowired BranchRepository branchRepo;
-
-//	@BeforeEach
-//	void init() throws Exception {
-//		entity = createPolicyPayment();
-//	}
+	@Autowired FuneralSchemeRepository funeralSchemeRepo;
 
 	@Test
-	@DataSet("branch.xml")
+	@DataSet({"funeral_scheme.xml"})
 	void test() {
+		
 		branchRepo.findAll().spliterator().forEachRemaining(it ->{
-			System.err.println("xxxxxxxxxxxxxxxxxxx: "+ it);
+			System.err.println("xxxxxxxxxxxxxxxxxxx: "+it.getName());
+//			System.err.println(it.getPenaltyDeductibles());
 		});
 	}
 	

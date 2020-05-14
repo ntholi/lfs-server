@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <funeral_scheme id="5" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="1" months_before_active="6" months_before_penalty="2" name="PLAN A" penalty_fee="20.0" registration_fee="200.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="6" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="1" months_before_active="6" months_before_penalty="2" name="PLAN B" penalty_fee="20.0" registration_fee="200.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="7" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="6" months_before_penalty="2" name="PLAN C" penalty_fee="10.0" registration_fee="50.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="8" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="6" months_before_penalty="2" name="PLAN D+" penalty_fee="10.0" registration_fee="50.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="9" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="6" months_before_penalty="2" name="PLAN D" penalty_fee="10.0" registration_fee="50.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="10" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="1" months_before_active="6" months_before_penalty="2" name="PLAN A+" penalty_fee="20.0" registration_fee="300.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="11" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="6" months_before_penalty="2" name="FACTORY WORKERS" penalty_fee="10.0" registration_fee="0.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="12" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="0" months_before_penalty="2" name="SECURITY WORKERS" penalty_fee="10.0" registration_fee="0.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="15" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="0" months_before_penalty="2" name="ARMED FORCES FUNERAL COVER" penalty_fee="20.0" registration_fee="0.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="16" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="0" months_before_penalty="0" name="AMERICAN STYLE" penalty_fee="0.0" registration_fee="0.0" branch_id="1" created_by="2"/>
+    <funeral_scheme id="17" created_at="2019-03-12 19:44:12" deleted="0" includes_first_premium="0" months_before_active="0" months_before_penalty="0" name="LFS" penalty_fee="0.0" registration_fee="0.0" branch_id="1" created_by="2"/>
+
+<!-- premium -->
+
+    <premium id="1" cover_amount="10000.0" maximum_age="40" minmum_age="10" premium_amount="100.0" funeral_scheme_id="5"/>
+    <premium id="2" cover_amount="10000.0" maximum_age="65" minmum_age="41" premium_amount="120.0" funeral_scheme_id="5"/>
+    <premium id="3" cover_amount="10000.0" maximum_age="75" minmum_age="66" premium_amount="200.0" funeral_scheme_id="5"/>
+    <premium id="4" cover_amount="15000.0" maximum_age="40" minmum_age="10" premium_amount="200.0" funeral_scheme_id="10"/>
+    <premium id="5" cover_amount="15000.0" maximum_age="65" minmum_age="41" premium_amount="220.0" funeral_scheme_id="10"/>
+    <premium id="6" cover_amount="2500.0" maximum_age="50" minmum_age="10" premium_amount="15.0" funeral_scheme_id="9"/>
+    <premium id="7" cover_amount="2500.0" maximum_age="65" minmum_age="51" premium_amount="20.0" funeral_scheme_id="9"/>
+    <premium id="8" cover_amount="2500.0" maximum_age="75" minmum_age="66" premium_amount="25.0" funeral_scheme_id="9"/>
+    <premium id="9" cover_amount="2500.0" maximum_age="80" minmum_age="76" premium_amount="50.0" funeral_scheme_id="9"/>
+    <premium id="10" cover_amount="3500.0" maximum_age="50" minmum_age="10" premium_amount="25.0" funeral_scheme_id="8"/>
+    <premium id="11" cover_amount="3500.0" maximum_age="65" minmum_age="51" premium_amount="30.0" funeral_scheme_id="8"/>
+    <premium id="12" cover_amount="3500.0" maximum_age="75" minmum_age="66" premium_amount="35.0" funeral_scheme_id="8"/>
+    <premium id="13" cover_amount="3500.0" maximum_age="80" minmum_age="76" premium_amount="65.0" funeral_scheme_id="8"/>
+    <premium id="14" cover_amount="5000.0" maximum_age="40" minmum_age="10" premium_amount="30.0" funeral_scheme_id="7"/>
+    <premium id="15" cover_amount="5000.0" maximum_age="65" minmum_age="41" premium_amount="40.0" funeral_scheme_id="7"/>
+    <premium id="16" cover_amount="5000.0" maximum_age="75" minmum_age="66" premium_amount="120.0" funeral_scheme_id="7"/>
+    <premium id="17" cover_amount="7500.0" maximum_age="40" minmum_age="10" premium_amount="50.0" funeral_scheme_id="6"/>
+    <premium id="18" cover_amount="7500.0" maximum_age="65" minmum_age="41" premium_amount="70.0" funeral_scheme_id="6"/>
+    <premium id="19" cover_amount="7500.0" maximum_age="75" minmum_age="66" premium_amount="160.0" funeral_scheme_id="6"/>
+    <premium id="20" cover_amount="4000.0" maximum_age="80" minmum_age="18" premium_amount="13.5" funeral_scheme_id="11"/>
+    <premium id="21" cover_amount="4000.0" maximum_age="80" minmum_age="18" premium_amount="20.0" funeral_scheme_id="12"/>
+    <premium id="22" cover_amount="15000.0" maximum_age="100" minmum_age="18" premium_amount="80.0" funeral_scheme_id="15"/>
+
+<!-- dependent_benefit-->
+
+    <dependent_benefit id="1" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="1000.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="5"/>
+    <dependent_benefit id="2" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2500.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="5"/>
+    <dependent_benefit id="3" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="4000.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="5"/>
+    <dependent_benefit id="4" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2000.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="10"/>
+    <dependent_benefit id="5" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="5000.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="10"/>
+    <dependent_benefit id="6" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="7500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="10"/>
+    <dependent_benefit id="7" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="500.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="9"/>
+    <dependent_benefit id="8" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="750.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="9"/>
+    <dependent_benefit id="9" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="9"/>
+    <dependent_benefit id="10" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="650.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="8"/>
+    <dependent_benefit id="11" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="1000.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="8"/>
+    <dependent_benefit id="12" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="8"/>
+    <dependent_benefit id="13" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="750.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="7"/>
+    <dependent_benefit id="14" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="1500.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="7"/>
+    <dependent_benefit id="15" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="3000.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="7"/>
+    <dependent_benefit id="16" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="850.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="6"/>
+    <dependent_benefit id="17" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2000.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="6"/>
+    <dependent_benefit id="18" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="3500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="6"/>
+    <dependent_benefit id="19" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="650.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="11"/>
+    <dependent_benefit id="20" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="1000.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="11"/>
+    <dependent_benefit id="21" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="11"/>
+    <dependent_benefit id="22" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="650.0" maximum_age="5" minmum_age="0" branch_id="1" created_by="2" funeral_scheme_id="12"/>
+    <dependent_benefit id="23" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="1000.0" maximum_age="13" minmum_age="6" branch_id="1" created_by="2" funeral_scheme_id="12"/>
+    <dependent_benefit id="24" created_at="2019-03-12 19:44:12" deleted="0" cover_amount="2500.0" maximum_age="18" minmum_age="14" branch_id="1" created_by="2" funeral_scheme_id="12"/>
+
+
+<!-- funeral_scheme_benefit-->
+
+    <funeral_scheme_benefit id="13" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="15" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="16" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="17" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="18" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="20" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="21" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="22" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="23" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="25" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="26" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="27" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="28" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="30" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="31" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="32" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="33" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="35" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="36" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="37" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="38" deductable="Deductable" discount="0.0" item_type="0" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="40" deductable="Free" discount="0.0" item_type="5" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="41" deductable="Deductable" discount="0.0" item_type="7" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="42" deductable="Deductable" discount="0.0" item_type="9" funeral_scheme_id="6"/>
+    
+<!-- penalty_deductible-->
+
+    <penalty_deductible id="1" amount="2000.0" months="1" funeral_scheme_id="5"/>
+    <penalty_deductible id="2" amount="3000.0" months="2" funeral_scheme_id="5"/>
+    <penalty_deductible id="3" amount="4000.0" months="3" funeral_scheme_id="5"/>
+    <penalty_deductible id="4" amount="500.0" months="1" funeral_scheme_id="9"/>
+    <penalty_deductible id="5" amount="1000.0" months="2" funeral_scheme_id="9"/>
+    <penalty_deductible id="6" amount="1500.0" months="3" funeral_scheme_id="9"/>
+    <penalty_deductible id="7" amount="3000.0" months="1" funeral_scheme_id="10"/>
+    <penalty_deductible id="8" amount="4000.0" months="2" funeral_scheme_id="10"/>
+    <penalty_deductible id="9" amount="5000.0" months="3" funeral_scheme_id="10"/>
+    <penalty_deductible id="10" amount="750.0" months="1" funeral_scheme_id="8"/>
+    <penalty_deductible id="11" amount="1000.0" months="2" funeral_scheme_id="8"/>
+    <penalty_deductible id="12" amount="1500.0" months="3" funeral_scheme_id="8"/>
+    <penalty_deductible id="13" amount="1000.0" months="1" funeral_scheme_id="7"/>
+    <penalty_deductible id="14" amount="2000.0" months="2" funeral_scheme_id="7"/>
+    <penalty_deductible id="15" amount="3000.0" months="3" funeral_scheme_id="7"/>
+    <penalty_deductible id="16" amount="1500.0" months="1" funeral_scheme_id="6"/>
+    <penalty_deductible id="17" amount="2500.0" months="2" funeral_scheme_id="6"/>
+    <penalty_deductible id="18" amount="3500.0" months="3" funeral_scheme_id="6"/>
+
+
+</dataset>
