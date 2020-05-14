@@ -14,7 +14,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Digits;
@@ -141,7 +140,7 @@ public class Policy extends AuditableEntity<String> {
 		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
 	}
 	
-	protected int getAgeAtRegistration() {
+	public int getAgeAtRegistration() {
 		LocalDate regDate = registrationDate;
 		if(regDate == null) {
 			regDate = getCreatedAt().toLocalDate();

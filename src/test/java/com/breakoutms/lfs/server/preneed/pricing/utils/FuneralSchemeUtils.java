@@ -5,6 +5,7 @@ import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 public class FuneralSchemeUtils {
 
+	//TODO DELETE THIS CLASS
 	public static Premium getPremium(FuneralScheme funeralScheme, int age) {
 		return funeralScheme.getPremiums()
 			.stream()

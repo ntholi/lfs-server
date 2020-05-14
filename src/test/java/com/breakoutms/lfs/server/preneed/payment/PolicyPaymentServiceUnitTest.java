@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.UnitTest;
+import com.breakoutms.lfs.server.common.beans.preeneed.PolicyFake;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
@@ -40,8 +40,6 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
-import com.breakoutms.lfs.server.preneed.pricing.utils.FuneralSchemeUtils;
 
 import lombok.val;
 
@@ -228,17 +226,9 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 	}
 
 	private static Policy createPolicy() throws Exception {
-		val age = 43;
-		FuneralScheme funeralScheme = FuneralSchemesJSON.byName("PLAN C");
-		Premium premium = FuneralSchemeUtils.getPremium(funeralScheme, age);
-		Policy policy = new Policy();
-		policy.setPolicyNumber("101");
-		policy.setNames("Thabo");
-		policy.setSurname("Lebese");
-		policy.setDateOfBirth(LocalDate.now().minusYears(age));
-		policy.setFuneralScheme(funeralScheme);
-		policy.setCoverAmount(premium.getCoverAmount());
-		policy.setPremiumAmount(premium.getPremiumAmount());
-		return policy;
+		PolicyFake policy = new PolicyFake();
+		policy.dateOfBirth(LocalDate.now().minusYears(43));
+		policy.funeralScheme(FuneralSchemesJSON.byName("PLAN C"));
+		return policy.build();
 	}
 }
