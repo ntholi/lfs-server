@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <branch id="1" district="1" name="Maseru" sync_number="256"/>
+    <branch id="2" district="1" name="R/W Station" sync_number="260"/>
+    <branch id="3" district="1" name="Thetsane" sync_number="261"/>
+    <branch id="4" district="1" name="Maseru Mall" sync_number="262"/>
+</dataset>

@@ -37,7 +37,7 @@ public class Branch {
 	
 	@Column(nullable = false, unique = true,
 			columnDefinition = "SMALLINT")
-	@Digits(integer = 3, fraction = 0)
+	@Digits(integer = 4, fraction = 0)
 	private short syncNumber;
     
 	public static Branch current() {
