@@ -28,7 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.UnitTest;
-import com.breakoutms.lfs.server.common.beans.preeneed.PolicyFake;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
@@ -226,7 +226,7 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 	}
 
 	private static Policy createPolicy() throws Exception {
-		PolicyFake policy = new PolicyFake();
+		PolicyMother policy = new PolicyMother();
 		policy.dateOfBirth(LocalDate.now().minusYears(43));
 		policy.funeralScheme(FuneralSchemesJSON.byName("PLAN C"));
 		return policy.build();

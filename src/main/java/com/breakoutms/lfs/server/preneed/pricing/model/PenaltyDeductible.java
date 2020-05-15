@@ -27,7 +27,7 @@ import lombok.ToString;
 @Entity
 @Audited
 @Data @Builder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "funeralScheme")
 @AllArgsConstructor @NoArgsConstructor
 public class PenaltyDeductible extends AuditableEntity<Integer> {
 

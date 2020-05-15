@@ -1,28 +1,28 @@
-package com.breakoutms.lfs.server.common.beans.preeneed;
+package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.time.LocalDate;
 
-import com.breakoutms.lfs.server.common.beans.Fake;
+import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 import lombok.val;
 
-public class PolicyFake extends Fake<Policy> {
+public class PolicyMother extends BaseMother<Policy> {
 
-	public PolicyFake age(int age) {
+	public PolicyMother age(int age) {
 		dateOfBirth(LocalDate.now().minusYears(age));
 		return this;
 	}
 	
-	public PolicyFake dateOfBirth(LocalDate dateOfBirth) {
+	public PolicyMother dateOfBirth(LocalDate dateOfBirth) {
 		entity.setDateOfBirth(dateOfBirth);
 		updatePremiumAmount();
 		return this;
 	}
 
-	public PolicyFake funeralScheme(FuneralScheme funeralScheme) {
+	public PolicyMother funeralScheme(FuneralScheme funeralScheme) {
 		entity.setFuneralScheme(funeralScheme);
 		updatePremiumAmount();
 		return this;

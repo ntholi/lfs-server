@@ -34,6 +34,7 @@ import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
@@ -58,8 +59,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private BranchRepository branchRepo;
 	
-	private final FuneralScheme entity = createEntity();
 	private final Integer ID = 5;
+	private final FuneralScheme entity = createEntity();
 	private final String URL = "/preneed/funeral-schemes/";
 
 	private Expectations expect;
@@ -284,6 +285,9 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	private FuneralScheme createEntity() {
-		return FuneralSchemesJSON.all().get(0);
+		return new FuneralSchemeMother()
+				.id(ID)
+				.name("Plan C")
+				.build();
 	}
 }

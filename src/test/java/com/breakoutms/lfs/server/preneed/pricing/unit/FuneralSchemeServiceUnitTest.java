@@ -19,20 +19,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import com.breakoutms.lfs.server.common.UnitTest;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(MockitoExtension.class)
-public class FuneralSchemeServiceUnitTest implements UnitTest {
+public class FuneralSchemeServiceUnitTest {
 
 	@Mock private FuneralSchemeRepository repo;
 	@InjectMocks private FuneralSchemeService service;
-	private final FuneralScheme entity = FuneralSchemesJSON.any();
+	private final FuneralScheme entity = createEntity();
 
 	@Test
 	void get_by_id() throws Exception {
@@ -40,7 +39,7 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 		FuneralScheme response = service.get(entity.getId()).orElse(null);
 		assertThat(response).isEqualTo(entity);
 	}
-	
+
 	@Test
 	void all() {
 		PageRequest pagable = PageRequest.of(0, 1);
@@ -92,5 +91,10 @@ public class FuneralSchemeServiceUnitTest implements UnitTest {
 		var id = entity.getId();
 		service.delete(id);
 		verify(repo).deleteById(id);
+	}
+	
+	private FuneralScheme createEntity() {
+		return new FuneralSchemeMother()
+				.build();
 	}
 }

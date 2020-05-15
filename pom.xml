@@ -157,11 +157,17 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Easy Random -->
 		<dependency>
 			<groupId>org.jeasy</groupId>
 			<artifactId>easy-random-core</artifactId>
 			<version>4.2.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jeasy</groupId>
+			<artifactId>easy-random-bean-validation</artifactId>
+			<version>4.2.0</version>
 		</dependency>
 
 		<dependency>

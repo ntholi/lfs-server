@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Expectations {
 	    	System.out.println(item);
 	    	if(item.getValue() != null) {
 	    		Object value = item.getValue();
-	    		if(value instanceof Temporal) {
+	    		if(value instanceof Temporal || value instanceof BigDecimal) {
 	    			String strVal = value.toString();
 	    			value = removeTrailingZeros(strVal);
 	    		}

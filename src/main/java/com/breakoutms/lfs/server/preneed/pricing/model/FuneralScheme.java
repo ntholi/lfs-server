@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Audited
 @Data @Builder
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_funeral_scheme_name", unique=true)
