@@ -38,7 +38,6 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.val;
@@ -228,7 +227,7 @@ public class PolicyPaymentServiceUnitTest implements UnitTest {
 	private static Policy createPolicy() throws Exception {
 		PolicyMother policy = new PolicyMother();
 		policy.dateOfBirth(LocalDate.now().minusYears(43));
-		policy.funeralScheme(FuneralSchemesJSON.byName("PLAN C"));
+//		policy.funeralScheme(FuneralSchemesJSON.byName("PLAN C")); TODO
 		return policy.build();
 	}
 }

@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing.integ;
+package com.breakoutms.lfs.server.preneed.pricing;
 
 import static com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable.DEDUCTABLE;
 import static com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable.FREE;
@@ -21,11 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.common.copy.DeepCopy;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
@@ -48,7 +46,9 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@BeforeEach
 	void init() throws IOException {
-		entity = FuneralSchemesJSON.withDependanciesButNoIds();
+		entity = new FuneralSchemeMother()
+				.noIds()
+				.build();
 	}
 	
 	@Test

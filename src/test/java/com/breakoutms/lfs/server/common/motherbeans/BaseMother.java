@@ -23,7 +23,7 @@ public class BaseMother<T> {
 				.randomizationDepth(3)
 				.charset(Charset.forName("UTF-8"))
 				.stringLengthRange(3, 8)
-				.collectionSizeRange(1, 3)
+				.collectionSizeRange(3, 3)
 				.scanClasspathForConcreteTypes(true)
 				.overrideDefaultInitialization(false)
 				.ignoreRandomizationErrors(true)
@@ -32,7 +32,7 @@ public class BaseMother<T> {
 						.or(named("createdBy"))
 				)
 				.randomize(named("deleted"), () -> false)
-				.randomize(BigDecimal.class, () -> new BigDecimal("10.20"));
+				.randomize(BigDecimal.class, () -> new BigDecimal("80.20"));
 		
 		easyRandom = new EasyRandom(parameters);
 		this.persistentClass = (Class<T>) ((ParameterizedType) getClass()

@@ -78,7 +78,7 @@ public class Expectations {
 	    	System.out.println(item);
 	    	if(item.getValue() != null) {
 	    		Object value = item.getValue();
-	    		if(value instanceof Temporal || value instanceof BigDecimal) {
+	    		if(value instanceof Temporal) {
 	    			String strVal = value.toString();
 	    			value = removeTrailingZeros(strVal);
 	    		}

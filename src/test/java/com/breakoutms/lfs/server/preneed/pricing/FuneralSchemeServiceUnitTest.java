@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing.unit;
+package com.breakoutms.lfs.server.preneed.pricing;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

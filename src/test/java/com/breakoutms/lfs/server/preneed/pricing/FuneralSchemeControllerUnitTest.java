@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.pricing.unit;
+package com.breakoutms.lfs.server.preneed.pricing;
 
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,11 +36,8 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
+import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
-import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
-import com.breakoutms.lfs.server.preneed.pricing.json.FuneralSchemesJSON;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
@@ -49,6 +47,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(FuneralSchemeController.class)
+@Import(GeneralConfigurations.class)
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
@@ -199,8 +198,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_premiums() throws Exception {
-		List<Premium> value = FuneralSchemesJSON
-				.getPemiums()
+		List<Premium> value = new FuneralSchemeMother().build()
+				.getPremiums()
 				.stream()
 				.limit(3)
 				.collect(Collectors.toList());
@@ -221,8 +220,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_dependentBenefit() throws Exception {
-		List<DependentBenefit> value = FuneralSchemesJSON
-				.getDependentBenefit()
+		List<DependentBenefit> value = new FuneralSchemeMother().build()
+				.getDependentBenefits()
 				.stream()
 				.limit(3)
 				.collect(Collectors.toList());
@@ -243,8 +242,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_funeralSchemeBenefits() throws Exception {
-		List<FuneralSchemeBenefit> value = FuneralSchemesJSON
-				.getFuneralSchemeBenefit()
+		List<FuneralSchemeBenefit> value = new FuneralSchemeMother().build()
+				.getBenefits()
 				.stream()
 				.limit(3)
 				.collect(Collectors.toList());
@@ -265,8 +264,8 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_penaltyDeductibles() throws Exception {
-		List<PenaltyDeductible> value = FuneralSchemesJSON
-				.getPenaltyDeductable()
+		List<PenaltyDeductible> value = new FuneralSchemeMother().build()
+				.getPenaltyDeductibles()
 				.stream()
 				.limit(3)
 				.collect(Collectors.toList());
