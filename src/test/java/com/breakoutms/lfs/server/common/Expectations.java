@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.time.temporal.Temporal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class Expectations {
 	}
 	
 	public <T> ResultActions forEntity(final ResultActions result, final T object, String path) throws Exception {
-		var values = getValues(object);
+		Map<String, Object> values = getValues(object);
 		System.out.println("Validating the following fields: ");
 	    for (var item : values.entrySet()) {
 	    	if(item.getKey().equals("createdAt")
@@ -136,7 +136,8 @@ public class Expectations {
 		Map<String, Object> map = new HashMap<>();
 		var list = FieldUtils.getFields(object.getClass());
 		for (Field field : list) {
-			if(Serializable.class.isAssignableFrom(field.getType())) {
+			if(Serializable.class.isAssignableFrom(field.getType())
+					&& !Collection.class.isAssignableFrom(field.getType())) {
 				field.setAccessible(true);
 				String key = field.getName();
 				try {

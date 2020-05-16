@@ -1,16 +1,18 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
-import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.sales.items.ItemType;
+import com.google.common.collect.Sets;
 
 public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 
@@ -47,7 +49,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 					.name("PLAN C")
 					.penaltyFee(new BigDecimal(10))
 					.registrationFee(new BigDecimal(50)).build();
-			entity.setPremiums(Set.of(
+			entity.setPremiums(Arrays.asList(
 					Premium.builder()
 						.id(1)
 						.coverAmount(new BigDecimal(500))
@@ -70,7 +72,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.premiumAmount(new BigDecimal(120))
 						.funeralScheme(entity).build()
 			));
-			entity.setDependentBenefits(Set.of(
+			entity.setDependentBenefits(Arrays.asList(
 					DependentBenefit.builder()
 						.id(1)
 						.coverAmount(new BigDecimal(750))
@@ -90,7 +92,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.minmumAge(14)
 						.funeralScheme(entity).build()
 			));
-			entity.setBenefits(Set.of(
+			entity.setBenefits(Arrays.asList(
 					FuneralSchemeBenefit.builder()
 						.id(1)
 						.deductable(Deductable.values()[1])
@@ -116,7 +118,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.itemType(ItemType.values()[9])
 						.funeralScheme(entity).build()
 			));
-			entity.setPenaltyDeductibles(Set.of(
+			entity.setPenaltyDeductibles(Arrays.asList(
 					PenaltyDeductible.builder()
 						.id(1)
 						.amount(new BigDecimal(1000)).months(1)

@@ -133,7 +133,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
-	void succesfull_save() throws Exception {
+	void save() throws Exception {
 		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
 
 		var result = post(mockMvc, URL, entity);
@@ -166,7 +166,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
-	void succesfull_update() throws Exception {
+	void update() throws Exception {
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
 
@@ -286,7 +286,6 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	private FuneralScheme createEntity() {
 		return new FuneralSchemeMother()
 				.id(ID)
-				.name("Plan C")
 				.build();
 	}
 }

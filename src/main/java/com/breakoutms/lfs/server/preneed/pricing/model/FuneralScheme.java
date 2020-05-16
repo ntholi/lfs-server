@@ -1,7 +1,7 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -71,20 +71,21 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	private int monthsBeforePenalty;
 	
 	@OneToMany(mappedBy="funeralScheme", 
-			cascade=CascadeType.ALL) 
-	private Set<Premium> premiums;
+			cascade=CascadeType.ALL)
+	//TODO: CONSIDER CHANGING THIS TO SET, BUT Mockito.verify doesn't like it
+	private List<Premium> premiums;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private Set<DependentBenefit> dependentBenefits;
+	private List<DependentBenefit> dependentBenefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private Set<FuneralSchemeBenefit> benefits;
+	private List<FuneralSchemeBenefit> benefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private Set<PenaltyDeductible> penaltyDeductibles;
+	private List<PenaltyDeductible> penaltyDeductibles;
 	
 	public FuneralScheme(String name) {
 		this.name = name;

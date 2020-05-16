@@ -18,7 +18,7 @@ public class FuneralSchemeDTO {
 	private Integer id;
 	
 	@NotBlank
-	@Size(min = 1, max = 25)
+	@Size(min = 1, max = 35)
 	private String name;
 	
 	@Min(value = 0L, message = "{validation.number.negative}")
