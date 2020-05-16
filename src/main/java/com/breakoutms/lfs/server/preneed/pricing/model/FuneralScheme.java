@@ -1,7 +1,6 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;

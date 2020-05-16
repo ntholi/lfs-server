@@ -13,12 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.sales.items.ItemType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,7 +43,6 @@ public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 	private Integer id;
 	
 	@Enumerated(EnumType.STRING)
-	@Size(min = 1, max = 30)
 	@Column(length = 30)
 	private ItemType itemType;
 	
