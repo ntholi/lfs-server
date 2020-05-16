@@ -132,7 +132,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
-	void succesfull_save() throws Exception {
+	void save() throws Exception {
 		val funeralSchem = entity.getFuneralScheme();
 		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(entity.getFuneralScheme()));
 		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
@@ -178,7 +178,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
-	void succesfull_update() throws Exception {
+	void update() throws Exception {
 		val funeralSchem = entity.getFuneralScheme();
 		
 		when(repo.existsById(ID)).thenReturn(true);

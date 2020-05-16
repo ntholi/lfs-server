@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
 import com.breakoutms.lfs.server.preneed.model.Policy;
@@ -31,13 +32,14 @@ public class PolicyMother extends BaseMother<Policy> {
 	private void updatePremiumAmount() {
 		val funeralScheme = entity.getFuneralScheme();
 		int age = entity.getAgeAtRegistration();
-		Premium premium = funeralScheme.getPremiums()
-				.stream()
-				.filter(fs -> age >= fs.getMinmumAge() && age <= fs.getMaximumAge())
-				.findFirst()
-				.get();
-		entity.setPremiumAmount(premium.getPremiumAmount());
-		entity.setCoverAmount(premium.getCoverAmount());
+		funeralScheme.getPremiums()
+			.stream()
+			.filter(fs -> age >= fs.getMinmumAge() && age <= fs.getMaximumAge())
+			.findFirst()
+			.ifPresent(it ->{
+				entity.setPremiumAmount(it.getPremiumAmount());
+				entity.setCoverAmount(it.getCoverAmount());
+			});
 	}
 
 }

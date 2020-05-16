@@ -1,13 +1,14 @@
 package com.breakoutms.lfs.server.common.motherbeans;
 
+import static org.jeasy.random.FieldPredicates.named;
+
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import static org.jeasy.random.FieldPredicates.*;
-import org.jeasy.random.api.Randomizer;
 
 public class BaseMother<T> {
 
@@ -17,8 +18,10 @@ public class BaseMother<T> {
 
 	@SuppressWarnings("unchecked")
 	public BaseMother() {
+		long seed = new Date().getTime();
+		//TODO: SET INTEGER BOUNDS AND GENERATE BIG DECIMAL BASED ON validation annotations
 		EasyRandomParameters parameters = new EasyRandomParameters()
-				.seed(123L)
+				.seed(seed)
 				.objectPoolSize(100)
 				.randomizationDepth(3)
 				.charset(Charset.forName("UTF-8"))
@@ -42,6 +45,10 @@ public class BaseMother<T> {
 	
 	public T build() {
 		return entity;
+	}
+	
+	public BigDecimal money(int amount) {
+		return new BigDecimal(amount);
 	}
 
 }

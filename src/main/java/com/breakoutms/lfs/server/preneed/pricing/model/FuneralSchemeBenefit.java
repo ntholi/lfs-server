@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 
 import org.hibernate.envers.Audited;
 
@@ -41,7 +42,9 @@ public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
-	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Enumerated(EnumType.STRING)
+	@Size(min = 1, max = 30)
+	@Column(length = 30)
 	private ItemType itemType;
 	
 	@Enumerated(EnumType.STRING)

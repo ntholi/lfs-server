@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -72,19 +73,19 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL) 
-	private List<Premium> premiums;
+	private Set<Premium> premiums;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private List<DependentBenefit> dependentBenefits;
+	private Set<DependentBenefit> dependentBenefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private List<FuneralSchemeBenefit> benefits;
+	private Set<FuneralSchemeBenefit> benefits;
 	
 	@OneToMany(mappedBy="funeralScheme", 
 			cascade=CascadeType.ALL)
-	private List<PenaltyDeductible> penaltyDeductibles;
+	private Set<PenaltyDeductible> penaltyDeductibles;
 	
 	public FuneralScheme(String name) {
 		this.name = name;
