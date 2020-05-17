@@ -27,7 +27,7 @@ public class BaseMother<T> {
 	}
 
 	protected EasyRandomParameters getRandomParameters() {
-		long seed = 323;//new Date().getTime();
+		long seed = new Date().getTime();
 		
 		//TODO: SET INTEGER BOUNDS AND GENERATE BIG DECIMAL BASED ON validation annotations
 		EasyRandomParameters parameters = new EasyRandomParameters()

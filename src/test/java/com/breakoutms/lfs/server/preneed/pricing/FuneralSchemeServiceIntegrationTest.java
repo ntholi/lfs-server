@@ -47,6 +47,7 @@ class FuneralSchemeServiceIntegrationTest {
 	@BeforeEach
 	void init() throws IOException {
 		entity = new FuneralSchemeMother()
+				.ofPlanC()
 				.removeIDs()
 				.build();
 	}
