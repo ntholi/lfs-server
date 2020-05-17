@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private BranchRepository branchRepo;
 	
-	private final Integer ID = 5;
+	private final Integer ID = 7;
 	private final FuneralScheme entity = createEntity();
 	private final String URL = "/preneed/funeral-schemes/";
 
@@ -198,11 +199,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_premiums() throws Exception {
-		List<Premium> value = new FuneralSchemeMother().build()
-				.getPremiums()
-				.stream()
-				.limit(3)
-				.collect(Collectors.toList());
+		List<Premium> value = List.copyOf(entity.getPremiums());
 		
 		when(repo.getPremiums(anyInt())).thenReturn(value);
 		
@@ -220,11 +217,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_dependentBenefit() throws Exception {
-		List<DependentBenefit> value = new FuneralSchemeMother().build()
-				.getDependentBenefits()
-				.stream()
-				.limit(3)
-				.collect(Collectors.toList());
+		List<DependentBenefit> value = List.copyOf(entity.getDependentBenefits());
 		
 		when(repo.getDependentBenefits(anyInt())).thenReturn(value);
 		
@@ -242,11 +235,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_funeralSchemeBenefits() throws Exception {
-		List<FuneralSchemeBenefit> value = new FuneralSchemeMother().build()
-				.getBenefits()
-				.stream()
-				.limit(3)
-				.collect(Collectors.toList());
+		List<FuneralSchemeBenefit> value = List.copyOf(entity.getBenefits());
 		
 		when(repo.getFuneralSchemeBenefits(anyInt())).thenReturn(value);
 		
@@ -264,28 +253,24 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_penaltyDeductibles() throws Exception {
-		List<PenaltyDeductible> value = new FuneralSchemeMother().build()
-				.getPenaltyDeductibles()
-				.stream()
-				.limit(3)
-				.collect(Collectors.toList());
+		List<PenaltyDeductible> value = List.copyOf(entity.getPenaltyDeductibles());
 		
 		when(repo.getPenaltyDeductibles(anyInt())).thenReturn(value);
 		
 		mockMvc.perform(get(URL+"/"+ID+"/penalty-deductibles"))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("_embedded.penaltyDeductibles[0].months").value(value.get(0).getMonths()))
-		.andExpect(jsonPath("_embedded.penaltyDeductibles[2].amount").value(value.get(2).getAmount()))
-		.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
-		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].months").value(value.get(0).getMonths()))
+			.andExpect(jsonPath("_embedded.penaltyDeductibles[2].amount").value(value.get(2).getAmount()))
+			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
+			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
 		
 		verify(service).getPenaltyDeductibles(ID); 
 	}
 	
 	private FuneralScheme createEntity() {
 		return new FuneralSchemeMother()
-				.id(ID)
+				.ofPlanC()
 				.build();
 	}
 }

@@ -1,8 +1,7 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
@@ -12,7 +11,6 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Dedu
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 import com.breakoutms.lfs.server.sales.items.ItemType;
-import com.google.common.collect.Sets;
 
 public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 
@@ -49,7 +47,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 					.name("PLAN C")
 					.penaltyFee(new BigDecimal(10))
 					.registrationFee(new BigDecimal(50)).build();
-			entity.setPremiums(Arrays.asList(
+			entity.setPremiums(Set.of(
 					Premium.builder()
 						.id(1)
 						.coverAmount(new BigDecimal(500))
@@ -72,7 +70,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.premiumAmount(new BigDecimal(120))
 						.funeralScheme(entity).build()
 			));
-			entity.setDependentBenefits(Arrays.asList(
+			entity.setDependentBenefits(Set.of(
 					DependentBenefit.builder()
 						.id(1)
 						.coverAmount(new BigDecimal(750))
@@ -92,7 +90,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.minmumAge(14)
 						.funeralScheme(entity).build()
 			));
-			entity.setBenefits(Arrays.asList(
+			entity.setBenefits(Set.of(
 					FuneralSchemeBenefit.builder()
 						.id(1)
 						.deductable(Deductable.values()[1])
@@ -118,7 +116,7 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 						.itemType(ItemType.values()[9])
 						.funeralScheme(entity).build()
 			));
-			entity.setPenaltyDeductibles(Arrays.asList(
+			entity.setPenaltyDeductibles(Set.of(
 					PenaltyDeductible.builder()
 						.id(1)
 						.amount(new BigDecimal(1000)).months(1)

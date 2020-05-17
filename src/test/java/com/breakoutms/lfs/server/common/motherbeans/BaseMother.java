@@ -18,12 +18,22 @@ public class BaseMother<T> {
 
 	@SuppressWarnings("unchecked")
 	public BaseMother() {
-		long seed = new Date().getTime();
+		EasyRandomParameters parameters = getRandomParameters();
+		
+		easyRandom = new EasyRandom(parameters);
+		this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
+				.getGenericSuperclass()).getActualTypeArguments()[0];
+		entity = easyRandom.nextObject(persistentClass);
+	}
+
+	protected EasyRandomParameters getRandomParameters() {
+		long seed = 323;//new Date().getTime();
+		
 		//TODO: SET INTEGER BOUNDS AND GENERATE BIG DECIMAL BASED ON validation annotations
 		EasyRandomParameters parameters = new EasyRandomParameters()
 				.seed(seed)
 				.objectPoolSize(100)
-				.randomizationDepth(3)
+				.randomizationDepth(15)
 				.charset(Charset.forName("UTF-8"))
 				.stringLengthRange(3, 8)
 				.collectionSizeRange(3, 3)
@@ -36,11 +46,7 @@ public class BaseMother<T> {
 				)
 				.randomize(named("deleted"), () -> false)
 				.randomize(BigDecimal.class, () -> new BigDecimal("80.20"));
-		
-		easyRandom = new EasyRandom(parameters);
-		this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
-				.getGenericSuperclass()).getActualTypeArguments()[0];
-		entity = easyRandom.nextObject(persistentClass);
+		return parameters;
 	}
 	
 	public T build() {

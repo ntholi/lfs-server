@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,13 @@ public class Expectations {
 	    	else {
 	    		result.andExpect(jsonPath(path+item.getKey()).isEmpty());
 	    	}
+	    	fieldsThatShouldNotHaveAPath(object).forEach(it ->{
+	    		try {
+					result.andExpect(jsonPath(it).doesNotExist());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	    	});
 	    }
 	    forCommonLinks(result, getId(object), path);
 		return result;
@@ -151,6 +159,16 @@ public class Expectations {
 		}
 		
 		return map;
+	}
+	
+	private <T> List<String> fieldsThatShouldNotHaveAPath(T object) {
+		List<String> result = new ArrayList<>();
+		for (Field field : FieldUtils.getFields(object.getClass())) {
+			if(Collection.class.isAssignableFrom(field.getType())) {
+				result.add(field.getName());
+			}	
+		}
+		return result;
 	}
 	
 	protected String removeTrailingZeros(String strVal) {
