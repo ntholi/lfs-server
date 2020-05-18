@@ -40,7 +40,7 @@ public abstract class PreneedMapper {
 	@Mapping(target = "funeralScheme", ignore = true)
 	protected abstract Policy map(PolicyDTO dto);
 	@Mapping(source = "funeralScheme.name", target = "funeralScheme")
-	protected abstract PolicyDTO policyToDTO(Policy policy);
+	public abstract PolicyDTO policyToDTO(Policy policy);
 	
 	public abstract PolicyPayment map(PolicyPaymentDTO dto);
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);

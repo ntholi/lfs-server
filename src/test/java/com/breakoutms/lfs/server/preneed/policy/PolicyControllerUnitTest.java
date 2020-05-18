@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed;
+package com.breakoutms.lfs.server.preneed.policy;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.endsWith;
@@ -40,6 +40,10 @@ import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PolicyController;
+import com.breakoutms.lfs.server.preneed.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.PolicyService;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
@@ -70,7 +74,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	
 	@BeforeEach
 	public void setup() {
-		expect = new Expectations(URL, getBranch());
+		expect = new Expectations(URL, entity.getBranch());
 	}
 	
 

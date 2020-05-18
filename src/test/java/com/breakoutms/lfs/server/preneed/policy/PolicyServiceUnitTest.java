@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed;
+package com.breakoutms.lfs.server.preneed.policy;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,19 +23,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import com.breakoutms.lfs.server.common.UnitTest;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
-import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.preneed.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.PolicyService;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 
 @ExtendWith(MockitoExtension.class)
-public class PolicyServiceUnitTest implements UnitTest {
+public class PolicyServiceUnitTest {
 
 	@Mock private PolicyRepository repo;
 	@Mock private FuneralSchemeRepository funeralSchemeRepo;
@@ -139,7 +139,7 @@ public class PolicyServiceUnitTest implements UnitTest {
 	@Test
 	void failt_to_update_with_unknownId() {
 		var unknownId = "123456";
-		String exMsg = ExceptionSupplier.notFound(Policy.class, unknownId).get().getMessage();
+		String exMsg = String.format(PolicyService.NO_POLICY_ERROR, unknownId);
 		
 		when(repo.existsById(unknownId)).thenReturn(false);
 

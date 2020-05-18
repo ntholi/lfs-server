@@ -6,11 +6,11 @@ import java.time.LocalDate;
 
 import org.jeasy.random.EasyRandomParameters;
 
-import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
+import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
-public class PolicyMother extends BaseMother<Policy> {
+public class PolicyMother extends AuditableMother<Policy, String> {
 
 	public PolicyMother age(int age) {
 		dateOfBirth(LocalDate.now().minusYears(age));

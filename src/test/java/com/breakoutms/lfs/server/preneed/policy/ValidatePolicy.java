@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed;
+package com.breakoutms.lfs.server.preneed.policy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

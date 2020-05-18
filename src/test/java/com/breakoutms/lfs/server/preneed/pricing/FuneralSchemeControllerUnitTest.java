@@ -67,7 +67,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	
 	@BeforeEach
 	public void setup() {
-		expect = new Expectations(URL, getBranch());
+		expect = new Expectations(URL, entity.getBranch());
 	}
 
 	@Test

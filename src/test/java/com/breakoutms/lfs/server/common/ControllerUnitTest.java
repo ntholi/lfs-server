@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-public interface ControllerUnitTest extends UnitTest {
+public interface ControllerUnitTest {
 	
 	String READ = "READ";
 	String WRITE = "WRITE";

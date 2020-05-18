@@ -9,14 +9,14 @@ import java.nio.charset.Charset;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 
-public class BaseMother<T> {
+public class ObjectMother<T> {
 
 	private EasyRandom easyRandom;
 	private Class<T> persistentClass;
 	protected T entity;
 
 	@SuppressWarnings("unchecked")
-	public BaseMother() {
+	public ObjectMother() {
 		EasyRandomParameters parameters = getRandomParameters();
 		
 		easyRandom = new EasyRandom(parameters);
@@ -39,10 +39,6 @@ public class BaseMother<T> {
 				.scanClasspathForConcreteTypes(true)
 				.overrideDefaultInitialization(false)
 				.ignoreRandomizationErrors(true)
-				.excludeField(named("branch")
-						.or(named("createdAt"))
-						.or(named("createdBy"))
-				)
 				.randomize(named("deleted"), () -> false)
 				.randomize(BigDecimal.class, () -> new BigDecimal("80.20"));
 		return parameters;
@@ -55,5 +51,4 @@ public class BaseMother<T> {
 	public BigDecimal money(int amount) {
 		return new BigDecimal(String.valueOf(amount)+".0");
 	}
-
 }

@@ -56,7 +56,7 @@ class CorpseControllerIntegrationTest implements ControllerUnitTest {
 	@BeforeEach
 	public void setup() {
 		createCorpse();
-		expect = new Expectations(URL, getBranch());
+		expect = new Expectations(URL, corpse.getBranch());
 	}
 
 	@Test
@@ -198,12 +198,10 @@ class CorpseControllerIntegrationTest implements ControllerUnitTest {
 		corpse.setSurname("Lebese");
 		OtherMortuary om = new OtherMortuary("MKM");
 		corpse.setTransferredFrom(om);
-		corpse.setBranch(getBranch());
 
 		Corpse corpse2 = new Corpse();
 		corpse2.setNames("Nthabiseng");
 		corpse2.setSurname("Lebese");
-		corpse2.setBranch(getBranch());
 
 		corpseList = Arrays.asList(corpse, corpse2);
 		repo.saveAll(corpseList);

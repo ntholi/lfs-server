@@ -62,7 +62,7 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 	@BeforeEach
 	public void setup() {
 		createCorpse();
-		expect = new Expectations(URL, getBranch());
+		expect = new Expectations(URL, corpse.getBranch());
 	}
 
 	@Test
@@ -228,12 +228,10 @@ class CorpseControllerUnitTest implements ControllerUnitTest {
 		corpse.setSurname("Lebese");
 		OtherMortuary om = new OtherMortuary("MKM");
 		corpse.setTransferredFrom(om);
-		corpse.setBranch(getBranch());
 		
 		Corpse corpse2 = new Corpse();
 		corpse2.setNames("Nthabiseng");
 		corpse2.setSurname("Lebese");
-		corpse2.setBranch(getBranch());
 		
 		//set IDs
 		corpse.setTagNo(TAG_NO);

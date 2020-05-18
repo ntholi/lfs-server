@@ -30,6 +30,7 @@ public class Expectations {
 
 	public Expectations(String url, Branch branch) {
 		this.baseUrl = url;
+		this.branch = branch;
 	}
 
 	public <T> ResultActions forPage(ResultActions result, List<T> list, String listName, String url) throws Exception {
