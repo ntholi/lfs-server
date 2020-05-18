@@ -40,7 +40,7 @@ public class FuneralSchemeService {
 	@Transactional
 	public FuneralScheme update(Integer id, FuneralScheme entity) {
 		if(entity == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Funeral Scheme").get();
+			throw ExceptionSupplier.nullUpdate("Funeral Scheme").get();
 		}
 		if(!repo.existsById(id)) {
 			throw ExceptionSupplier.notFound("Funeral Scheme", id).get();

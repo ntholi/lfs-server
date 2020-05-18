@@ -136,18 +136,28 @@ public class Policy extends AuditableEntity<String> {
 		return policyNumber;
 	}
 	
+	public void setAge(int age) {
+		this.dateOfBirth = LocalDate.now().minusYears(age);
+	}
 	public int getAge() {
-		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+		return dateOfBirth != null? (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()) : null;
 	}
 	
-	public int getAgeAtRegistration() {
+	public Integer getAgeAtRegistration() {
+		Integer age = null;
 		LocalDate regDate = registrationDate;
 		if(regDate == null) {
-			regDate = getCreatedAt().toLocalDate();
+			if(getCreatedAt() != null) {
+				regDate = getCreatedAt().toLocalDate();
+			}
 		}
 		if(regDate == null) {
 			regDate = LocalDate.now();
 		}
-		return (int) ChronoUnit.YEARS.between(dateOfBirth, regDate);
+		
+		if(dateOfBirth != null) {
+			age = (int) ChronoUnit.YEARS.between(dateOfBirth, regDate);
+		}
+		return age;
 	}
 }

@@ -1,14 +1,14 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
+import static org.jeasy.random.FieldPredicates.named;
+
 import java.time.LocalDate;
-import java.util.Optional;
+
+import org.jeasy.random.EasyRandomParameters;
 
 import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
-
-import lombok.val;
 
 public class PolicyMother extends BaseMother<Policy> {
 
@@ -30,16 +30,25 @@ public class PolicyMother extends BaseMother<Policy> {
 	}
 
 	private void updatePremiumAmount() {
-		val funeralScheme = entity.getFuneralScheme();
+		var funeralScheme = entity.getFuneralScheme();
 		int age = entity.getAgeAtRegistration();
-		funeralScheme.getPremiums()
-			.stream()
-			.filter(fs -> age >= fs.getMinmumAge() && age <= fs.getMaximumAge())
-			.findFirst()
-			.ifPresent(it ->{
-				entity.setPremiumAmount(it.getPremiumAmount());
-				entity.setCoverAmount(it.getCoverAmount());
-			});
+		FuneralSchemeMother.getPremium(funeralScheme, age).ifPresent(it ->{
+			entity.setPremiumAmount(it.getPremiumAmount());
+			entity.setCoverAmount(it.getCoverAmount());
+		});
+	}
+	
+	@Override
+	protected EasyRandomParameters getRandomParameters() {
+		var params = super.getRandomParameters();
+		params.randomize(named("policy"), () -> null);
+		return params;
+	}
+
+	public PolicyMother removeIDs() {
+		entity.setPolicyNumber(null);
+		entity.getDependents().forEach(it -> it.setId(null));
+		return this;
 	}
 
 }

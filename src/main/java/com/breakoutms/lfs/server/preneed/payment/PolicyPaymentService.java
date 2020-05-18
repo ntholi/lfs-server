@@ -71,7 +71,7 @@ public class PolicyPaymentService {
 	@Transactional
 	public PolicyPayment update(Long id, PolicyPayment entity) {
 		if(entity == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Policy Payment").get();
+			throw ExceptionSupplier.nullUpdate("Policy Payment").get();
 		}
 		if(!repo.existsById(id)) {
 			throw ExceptionSupplier.notFound("Policy Payment", id).get();

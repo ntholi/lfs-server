@@ -45,7 +45,7 @@ public class CorpseService {
 	@Transactional
 	public Corpse update(String id, Corpse corpse) {
 		if(corpse == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Corpse").get();
+			throw ExceptionSupplier.nullUpdate("Corpse").get();
 		}
 		if(!repo.existsById(id)) {
 			throw ExceptionSupplier.notFound("Corpse", id).get();

@@ -65,7 +65,7 @@ public class Expectations {
 	
 	public <T> ResultActions forEntity(final ResultActions result, final T object, String path) throws Exception {
 		Map<String, Object> values = getValues(object);
-		System.out.println("Validating the following fields: ");
+		System.out.println("Checking values for the following fields: ");
 	    for (var item : values.entrySet()) {
 	    	if(item.getKey().equals("createdAt")
 	    			|| item.getKey().equals("createdBy")
@@ -82,6 +82,9 @@ public class Expectations {
 	    		if(value instanceof Temporal) {
 	    			String strVal = value.toString();
 	    			value = removeTrailingZeros(strVal);
+	    		}
+	    		else if(!(value instanceof Number)) {
+	    			value = value.toString();
 	    		}
 	    		result.andExpect(jsonPath(path+item.getKey()).value(value));
 	    	}

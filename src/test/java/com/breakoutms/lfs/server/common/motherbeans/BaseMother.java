@@ -5,7 +5,6 @@ import static org.jeasy.random.FieldPredicates.named;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -27,13 +26,13 @@ public class BaseMother<T> {
 	}
 
 	protected EasyRandomParameters getRandomParameters() {
-		long seed = new Date().getTime();
+		long seed = 123L;//new Date().getTime();
 		
 		//TODO: SET INTEGER BOUNDS AND GENERATE BIG DECIMAL BASED ON validation annotations
 		EasyRandomParameters parameters = new EasyRandomParameters()
 				.seed(seed)
 				.objectPoolSize(100)
-				.randomizationDepth(15)
+				.randomizationDepth(3)
 				.charset(Charset.forName("UTF-8"))
 				.stringLengthRange(3, 8)
 				.collectionSizeRange(3, 3)
@@ -54,7 +53,7 @@ public class BaseMother<T> {
 	}
 	
 	public BigDecimal money(int amount) {
-		return new BigDecimal(amount);
+		return new BigDecimal(String.valueOf(amount)+".0");
 	}
 
 }

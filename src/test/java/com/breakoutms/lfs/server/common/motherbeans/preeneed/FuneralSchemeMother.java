@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.Set;
 
 import com.breakoutms.lfs.server.common.motherbeans.BaseMother;
@@ -16,12 +16,17 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 
 	public FuneralSchemeMother() {
 		entity.getBenefits().forEach(it ->{
-			it.setDiscount(new BigDecimal("0.0"));
+			it.setDiscount(money(0));
 		});
 	}
 	
 	public FuneralSchemeMother name(String name) {
 		entity.setName(name);
+		return this;
+	}
+	
+	public FuneralSchemeMother nameOnly(String name) {
+		entity = new FuneralScheme(name);
 		return this;
 	}
 	
@@ -45,47 +50,47 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 					.monthsBeforeActive(6)
 					.monthsBeforePenalty(2)
 					.name("PLAN C")
-					.penaltyFee(new BigDecimal(10))
-					.registrationFee(new BigDecimal(50)).build();
+					.penaltyFee(money(10))
+					.registrationFee(money(50)).build();
 			entity.setPremiums(Set.of(
 					Premium.builder()
 						.id(1)
-						.coverAmount(new BigDecimal(500))
+						.coverAmount(money(5000))
 						.maximumAge(40)
 						.minmumAge(10)
-						.premiumAmount(new BigDecimal(30))
+						.premiumAmount(money(30))
 						.funeralScheme(entity).build(),
 					Premium.builder()
 						.id(2)
-						.coverAmount(new BigDecimal(500))
+						.coverAmount(money(5000))
 						.maximumAge(65)
 						.minmumAge(41)
-						.premiumAmount(new BigDecimal(40))
+						.premiumAmount(money(40))
 						.funeralScheme(entity).build(),
 					Premium.builder()
 						.id(3)
-						.coverAmount(new BigDecimal(500))
+						.coverAmount(money(5000))
 						.maximumAge(75)
 						.minmumAge(66)
-						.premiumAmount(new BigDecimal(120))
+						.premiumAmount(money(120))
 						.funeralScheme(entity).build()
 			));
 			entity.setDependentBenefits(Set.of(
 					DependentBenefit.builder()
 						.id(1)
-						.coverAmount(new BigDecimal(750))
+						.coverAmount(money(750))
 						.maximumAge(5)
 						.minmumAge(0)
 						.funeralScheme(entity).build(),
 					DependentBenefit.builder()
 						.id(2)
-						.coverAmount(new BigDecimal(1500))
+						.coverAmount(money(1500))
 						.maximumAge(13)
 						.minmumAge(6)
 						.funeralScheme(entity).build(),
 					DependentBenefit.builder()
 						.id(3)
-						.coverAmount(new BigDecimal(3000))
+						.coverAmount(money(3000))
 						.maximumAge(18)
 						.minmumAge(14)
 						.funeralScheme(entity).build()
@@ -94,42 +99,140 @@ public class FuneralSchemeMother extends BaseMother<FuneralScheme>{
 					FuneralSchemeBenefit.builder()
 						.id(1)
 						.deductable(Deductable.values()[1])
-						.discount(new BigDecimal(0))
+						.discount(money(0))
 						.itemType(ItemType.values()[0])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(2)
 						.deductable(Deductable.values()[0])
-						.discount(new BigDecimal(0))
+						.discount(money(0))
 						.itemType(ItemType.values()[5])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(3)
 						.deductable(Deductable.values()[1])
-						.discount(new BigDecimal(0))
+						.discount(money(0))
 						.itemType(ItemType.values()[7])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(4)
 						.deductable(Deductable.values()[1])
-						.discount(new BigDecimal(0))
+						.discount(money(0))
 						.itemType(ItemType.values()[9])
 						.funeralScheme(entity).build()
 			));
 			entity.setPenaltyDeductibles(Set.of(
 					PenaltyDeductible.builder()
 						.id(1)
-						.amount(new BigDecimal(1000)).months(1)
+						.amount(money(1000)).months(1)
 						.funeralScheme(entity).build(),
 					PenaltyDeductible.builder()
 						.id(2)
-						.amount(new BigDecimal(2000)).months(2)
+						.amount(money(2000)).months(2)
 						.funeralScheme(entity).build(),
 					PenaltyDeductible.builder()
 						.id(3)
-						.amount(new BigDecimal(3000)).months(3)
+						.amount(money(3000)).months(3)
 						.funeralScheme(entity).build()
 			));
 		return this;
+	}
+	
+	public FuneralSchemeMother planAPlus() {
+		entity = FuneralScheme.builder()
+				.id(10)
+				.includesFirstPremium(true)
+				.monthsBeforeActive(6)
+				.monthsBeforePenalty(2)
+				.name("PLAN A+")
+				.penaltyFee(money(20))
+				.registrationFee(money(300)).build();
+		entity.setPremiums(Set.of(
+				Premium.builder()
+					.id(4)
+					.coverAmount(money(15000))
+					.maximumAge(40)
+					.minmumAge(10)
+					.premiumAmount(money(200))
+					.funeralScheme(entity).build(),
+				Premium.builder()
+					.id(5)
+					.coverAmount(money(15000))
+					.maximumAge(65)
+					.minmumAge(41)
+					.premiumAmount(money(220))
+					.funeralScheme(entity).build()
+		));
+		entity.setDependentBenefits(Set.of(
+				DependentBenefit.builder()
+					.id(4)
+					.coverAmount(money(2000))
+					.maximumAge(5)
+					.minmumAge(0)
+					.funeralScheme(entity).build(),
+				DependentBenefit.builder()
+					.id(5)
+					.coverAmount(money(5000))
+					.maximumAge(13)
+					.minmumAge(6)
+					.funeralScheme(entity).build(),
+				DependentBenefit.builder()
+					.id(6)
+					.coverAmount(money(7500))
+					.maximumAge(18)
+					.minmumAge(14)
+					.funeralScheme(entity).build()
+		));
+		entity.setBenefits(Set.of(
+				FuneralSchemeBenefit.builder()
+					.id(5)
+					.deductable(Deductable.values()[1])
+					.discount(money(0))
+					.itemType(ItemType.values()[0])
+					.funeralScheme(entity).build(),
+				FuneralSchemeBenefit.builder()
+					.id(6)
+					.deductable(Deductable.values()[0])
+					.discount(money(0))
+					.itemType(ItemType.values()[5])
+					.funeralScheme(entity).build(),
+				FuneralSchemeBenefit.builder()
+					.id(7)
+					.deductable(Deductable.values()[1])
+					.discount(money(0))
+					.itemType(ItemType.values()[7])
+					.funeralScheme(entity).build(),
+				FuneralSchemeBenefit.builder()
+					.id(8)
+					.deductable(Deductable.values()[1])
+					.discount(money(0))
+					.itemType(ItemType.values()[9])
+					.funeralScheme(entity).build()
+		));
+		entity.setPenaltyDeductibles(Set.of(
+				PenaltyDeductible.builder()
+					.id(1)
+					.amount(money(3000)).months(1)
+					.funeralScheme(entity).build(),
+				PenaltyDeductible.builder()
+					.id(2)
+					.amount(money(4000)).months(2)
+					.funeralScheme(entity).build(),
+				PenaltyDeductible.builder()
+					.id(3)
+					.amount(money(5000)).months(3)
+					.funeralScheme(entity).build()
+		));
+	return this;
+	}
+
+	public static Optional<Premium> getPremium(FuneralScheme funeralScheme, int age) {
+		if(funeralScheme != null && funeralScheme.getPremiums() != null) {
+			return funeralScheme.getPremiums()
+				.stream()
+				.filter(fs -> age >= fs.getMinmumAge() && age <= fs.getMaximumAge())
+				.findFirst();	
+		}
+		return Optional.empty();
 	}
 }

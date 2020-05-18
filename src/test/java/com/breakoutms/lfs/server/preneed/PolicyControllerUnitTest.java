@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,10 +37,9 @@ import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.preneed.PolicyController;
-import com.breakoutms.lfs.server.preneed.PolicyRepository;
-import com.breakoutms.lfs.server.preneed.PolicyService;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
@@ -63,6 +63,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	
 	private final Policy entity = createEntity();
 	private static final String ID = "5";
+	private static final int AGE = 20;
 	private static final String URL = "/preneed/policies/";
 
 	private Expectations expect;
@@ -113,7 +114,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 		
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
-	    expect.forPage(result, list, "funeralSchemes", url);
+	    expect.forPage(result, list, "policies", url);
 	    verify(service).all(pageRequest);
 	}
 	
@@ -154,7 +155,8 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 			.andExpect(jsonPath("_links.funeralScheme.href", 
 				endsWith("/funeral-schemes/"+entity.getFuneralScheme().getId())));
 		
-		verify(service).save(any(Policy.class), anyString());
+		
+		verify(service).save(any(Policy.class), eq(funeralSchem.getName()));
 	}
 
 
@@ -179,27 +181,18 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		val funeralSchem = entity.getFuneralScheme();
-		
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(entity.getFuneralScheme()));
 
-		PolicyDTO policyDTO = PolicyDTO.builder()
-				.policyNumber(entity.getPolicyNumber())
-				.names(entity.getNames())
-				.surname(entity.getSurname())
-				.funeralScheme(funeralSchem.getName())
-				.registrationDate(entity.getRegistrationDate())
-				.dateOfBirth(entity.getDateOfBirth())
-				.build();
+		PolicyDTO policyDTO = PreneedMapper.INSTANCE.policyToDTO(entity);
 		
 		var result = put(mockMvc, URL+ID, policyDTO);
 		
 		result.andExpect(status().isOk());
 		expect.forEntity(result, entity);
 		
-		verify(service).update(ID, entity, funeralSchem.getName());
+		verify(service).update(eq(ID), any(Policy.class), eq(entity.getFuneralScheme().getName()));
 	}
 	
 	@Test
@@ -213,30 +206,23 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 		entity.setNames(" ");
 
 		put(mockMvc, URL+ID, entity)
-		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath(Expectations.STATUS).value(400))
-		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Registration Date")))
-		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Funeral Scheme")))
-		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Surname")))
-		.andExpect(jsonPath(Expectations.MESSAGE, containsString("Names")));
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath(Expectations.STATUS).value(400))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Registration Date")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Funeral Scheme")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Surname")))
+			.andExpect(jsonPath(Expectations.MESSAGE, containsString("Names")));
 
 		verify(service, times(0)).update(anyString(), any(Policy.class), anyString());
 	}
 	
 	private Policy createEntity() {
-		Policy entity = new Policy();
-		entity.setPolicyNumber(ID);
-		entity.setNames("Thabo");
-		entity.setSurname("Lebese");
-		entity.setFuneralScheme(createFuneralScheme());
-		entity.setRegistrationDate(LocalDate.now());
-		entity.setDateOfBirth(LocalDate.now().minusYears(20));
+		Policy entity = new PolicyMother()
+				.funeralScheme(new FuneralSchemeMother()
+						.nameOnly("Some Name")
+						.id(20).build())
+				.age(AGE)
+				.build();
 		return entity;
-	}
-	
-	private FuneralScheme createFuneralScheme() {
-		FuneralScheme funeralScheme = new FuneralScheme("Plan A");
-		funeralScheme.setId(3);
-		return funeralScheme;
 	}
 }

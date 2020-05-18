@@ -24,11 +24,11 @@ public final class ExceptionSupplier {
 	}
 	
 	public static Supplier<RuntimeException> notFoundOnUpdate(Class<?> entityClass) {
-		return notFoundOnUpdate(WordUtils.humenize(entityClass.getSimpleName()));
+		return nullUpdate(WordUtils.humenize(entityClass.getSimpleName()));
 	}
 	
-	public static Supplier<RuntimeException> notFoundOnUpdate(String objectName){
+	public static Supplier<RuntimeException> nullUpdate(String objectName){
 		return () ->
-			new ObjectNotFoundException(objectName+" object provide is null, cannot update a null object");
+			new ObjectNotFoundException(objectName+" object provided is null, cannot update a null object");
 	}
 }

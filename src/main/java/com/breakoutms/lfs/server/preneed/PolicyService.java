@@ -23,6 +23,7 @@ public class PolicyService {
 	
 	private final PolicyRepository repo;
 	private final FuneralSchemeRepository funeralSchemeRepo;
+	public static final String NO_POLICY_ERROR = "Policy Number '%s' not found";
 	
 	public Optional<Policy> get(String id) {
 		return repo.findById(id);
@@ -48,10 +49,10 @@ public class PolicyService {
 	@Transactional
 	public Policy update(String id, Policy entity, String funeralSchemeName) {
 		if(entity == null) {
-			throw ExceptionSupplier.notFoundOnUpdate("Policy").get();
+			throw ExceptionSupplier.nullUpdate("Policy").get();
 		}
 		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Policy", id).get();
+			throw ExceptionSupplier.notFound(String.format(NO_POLICY_ERROR, id)).get();
 		}
 		entity.setFuneralScheme(getFuneralScheme(funeralSchemeName));
 		return repo.save(entity);
@@ -62,6 +63,7 @@ public class PolicyService {
 				.orElseThrow(() -> new ObjectNotFoundException(
 						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
 	}
+	
 	public void delete(String id) {
 		repo.deleteById(id);
 	}
