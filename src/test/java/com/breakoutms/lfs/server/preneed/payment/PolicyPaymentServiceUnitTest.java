@@ -76,7 +76,7 @@ public class PolicyPaymentServiceUnitTest {
 	void save() throws Exception {
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 		when(paymentDetailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(anySet())).thenReturn(List.of());
-		PolicyPayment response = service.save(entity, Set.of());
+		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(entity);
@@ -137,7 +137,7 @@ public class PolicyPaymentServiceUnitTest {
 			new UnpaidPolicyPayment(payment, entity.getPolicy())
 		);
 		
-		PolicyPayment response = service.save(entity, unpaids);
+		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
 		
 		
 		assertThat(response)

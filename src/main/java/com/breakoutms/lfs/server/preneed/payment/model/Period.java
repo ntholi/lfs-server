@@ -23,11 +23,19 @@ public class Period {
 	@Column(nullable=false, columnDefinition = "SMALLINT UNSIGNED")
 	private Integer year;
 	
-	public Month month() {
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public void setMonth(Month month) {
+		this.month = month;
+	}
+	
+	public Month getMonth() {
 		return month;
 	}
 	
-	public Integer year() {
+	public Integer getYear() {
 		return year;
 	}
 	
@@ -95,13 +103,5 @@ public class Period {
 
 	public String name() {
 		return month+ " "+ year;
-	}
-
-	public void setYear(int year) {
-		this.year = year;
-	}
-
-	public void setMonth(Month month) {
-		this.month = month;
 	}
 }

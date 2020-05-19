@@ -10,6 +10,7 @@ import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
@@ -41,6 +42,9 @@ public abstract class PreneedMapper {
 	protected abstract Policy map(PolicyDTO dto);
 	
 	public abstract PolicyPayment map(PolicyPaymentDTO dto);
+	@Mapping(source = "month", target = "period.month")
+	@Mapping(source = "year", target = "period.year")
+	public abstract PolicyPaymentDetails map(PolicyPaymentDetailsDTO dto);
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
 	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
 }

@@ -68,11 +68,11 @@ public class PolicyPaymentServiceIntegrationTest {
 				+ String.valueOf(today.getYear()).substring(2)
 				+ today.getMonthValue();
 
-		var savedEntity = service.save(entity, Collections.emptySet());
+		var savedEntity = service.save(entity, entity.getPolicy().getId());
 
 		var payment = createPolicyPayment();
 		payment.setPolicyPaymentDetails(Set.of(premium));
-		service.save(entity, Collections.emptySet());
+		service.save(entity, entity.getPolicy().getId());
 
 		assertThat(savedEntity).isNotNull();
 		assertThat(savedEntity.getId()).isNotNull();

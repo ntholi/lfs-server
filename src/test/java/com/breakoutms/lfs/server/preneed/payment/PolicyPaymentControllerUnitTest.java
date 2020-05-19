@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.preneed.payment;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -37,8 +39,9 @@ import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.MappersForTests;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
-import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
+import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
@@ -49,6 +52,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PolicyPaymentController.class)
+@Import(GeneralConfigurations.class)
 public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
@@ -172,7 +176,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
-	void succesfull_update() throws Exception {
+	void update() throws Exception {
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
@@ -182,7 +186,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 		result.andExpect(status().isOk());
 		expect.forEntity(result, entity);
 		
-		verify(service).update(ID, entity);
+		verify(service).update(eq(ID), any(PolicyPayment.class));
 	}
 	
 	@Test
@@ -194,7 +198,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 		
 		entity.setAmountTendered(new BigDecimal("-2"));
 
-		var result = put(mockMvc, URL+ID, entity);
+		var result = put(mockMvc, URL+ID, MappersForTests.INSTANCE.map(entity));
 		Expectations.forInvalidFields(result, exMsg);
 
 		verify(service, times(0)).update(anyLong(), any(PolicyPayment.class));
@@ -216,7 +220,8 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.policyPaymentDetails[0].amount").value(value.get(0).getAmount()))
-			.andExpect(jsonPath("_embedded.policyPaymentDetails[1].period").value(value.get(1).getPeriod()))
+			.andExpect(jsonPath("_embedded.policyPaymentDetails[1].period.month").value(value.get(1).getPeriod().getMonth().name()))
+			.andExpect(jsonPath("_embedded.policyPaymentDetails[1].period.year").value(value.get(1).getPeriod().getYear()))
 			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/payment-details")))
 			.andExpect(jsonPath("_embedded.policyPaymentDetails[0].policyPayment").doesNotHaveJsonPath());
 

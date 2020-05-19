@@ -46,10 +46,11 @@ public class PolicyPaymentService {
 	}
 	
 	@Transactional
-	public PolicyPayment save(final PolicyPayment entity, Set<UnpaidPolicyPayment> unpaids) {
+	public PolicyPayment save(final PolicyPayment entity, String policyNumber) {
+		//TODO: Set<UnpaidPolicyPayment> unpaidList = Set.of();
+		
 		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
 		Set<String> premiumIds = new HashSet<>();
-		String policyNumber = entity.getPolicy().getPolicyNumber();
 		for (PolicyPaymentDetails it : payments) {
 			if(it.getType() == Type.PREMIUM) {
 				final String premiumId = generatePremiumId(policyNumber, it);
@@ -120,8 +121,8 @@ public class PolicyPaymentService {
 		Period period = premium.getPeriod();
 		Objects.requireNonNull(period, "Period for PREMIUM cannot be null");
 		
-		String year = String.valueOf(period.year()).substring(2);
-		Integer month = period.month().getValue();
+		String year = String.valueOf(period.getYear()).substring(2);
+		Integer month = period.getMonth().getValue();
 		return policyNumber+year+month;
 	}
 	
