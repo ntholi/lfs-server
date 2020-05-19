@@ -270,7 +270,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	
 	private FuneralScheme createEntity() {
 		return new FuneralSchemeMother()
-				.ofPlanC()
+				.planC()
 				.build();
 	}
 }

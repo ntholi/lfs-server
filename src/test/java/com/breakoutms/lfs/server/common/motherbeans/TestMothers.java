@@ -14,7 +14,7 @@ class TestMothers {
 	@Test
 	void funeralSchemeFake() {
 		val mother = new FuneralSchemeMother()
-				.ofPlanC()
+				.planC()
 				.build();
 		System.out.println("Mother: "+ mother);
 	}

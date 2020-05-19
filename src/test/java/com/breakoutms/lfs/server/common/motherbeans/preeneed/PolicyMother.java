@@ -12,6 +12,24 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 public class PolicyMother extends AuditableMother<Policy, String> {
 
+	public enum PlanType {
+		Plan_C,
+		Plan_A_Plus
+	}
+	
+	public static Policy of(PlanType planType, int age) {
+		FuneralSchemeMother fs = new FuneralSchemeMother();
+		if(planType == PlanType.Plan_C) {
+			fs = fs.planC();
+		}
+		else fs = fs.planAPlus();
+		
+		return new PolicyMother()
+				.funeralScheme(fs.build())
+				.age(age)
+				.build();
+	}
+	
 	public PolicyMother age(int age) {
 		dateOfBirth(LocalDate.now().minusYears(age));
 		return this;
@@ -38,17 +56,16 @@ public class PolicyMother extends AuditableMother<Policy, String> {
 		});
 	}
 	
+	public PolicyMother removeIDs() {
+		entity.setPolicyNumber(null);
+		entity.getDependents().forEach(it -> it.setId(null));
+		return this;
+	}
+	
 	@Override
 	protected EasyRandomParameters getRandomParameters() {
 		var params = super.getRandomParameters();
 		params.randomize(named("policy"), () -> null);
 		return params;
 	}
-
-	public PolicyMother removeIDs() {
-		entity.setPolicyNumber(null);
-		entity.getDependents().forEach(it -> it.setId(null));
-		return this;
-	}
-
 }

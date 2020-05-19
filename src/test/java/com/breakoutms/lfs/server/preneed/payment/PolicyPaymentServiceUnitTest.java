@@ -4,13 +4,12 @@ package com.breakoutms.lfs.server.preneed.payment;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +27,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
@@ -35,19 +36,18 @@ import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-
-import lombok.val;
 
 @ExtendWith(MockitoExtension.class)
 public class PolicyPaymentServiceUnitTest {
 
 	@Mock private PolicyPaymentRepository repo;
+	@Mock private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	@Mock private PolicyRepository policyRepo;
 	@InjectMocks private PolicyPaymentService service;
 	private final PolicyPayment entity;
+	private final long ID = 5L;
 
 	PolicyPaymentServiceUnitTest() throws Exception{
 		entity = createEntity();
@@ -75,6 +75,7 @@ public class PolicyPaymentServiceUnitTest {
 	@Test
 	void save() throws Exception {
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
+		when(paymentDetailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(anySet())).thenReturn(List.of());
 		PolicyPayment response = service.save(entity, Set.of());
 		assertThat(response)
 			.isNotNull()
@@ -151,7 +152,7 @@ public class PolicyPaymentServiceUnitTest {
 		
 		Optional<Period> period = Optional.of(Period.of(2020, Month.JANUARY));
 		when(repo.getLastPayedPeriod(policy)).thenReturn(period);
-		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(entity.getPolicy()));
 		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
@@ -175,18 +176,18 @@ public class PolicyPaymentServiceUnitTest {
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
 		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
-		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
 				Period.of(2020, Month.MARCH), policyNumber);
 		
-		assertThat(detailsList).hasSize(3);
+		assertThat(detailsList).hasSize(3); //[2 periods from Fab to March] + [penalty]
 		assertThat(detailsList).contains(PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee()));
 	}
 	
 	@Test
-	void veryfy_that_unpaid_payments_are_edded_when_calling_getOwedPayments() throws Exception {
+	void veryfy_that_UnpaidPolicyPayments_are_added_when_calling_getOwedPayments() throws Exception {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
 		Period period = Period.of(2020, Month.JANUARY);
@@ -195,38 +196,20 @@ public class PolicyPaymentServiceUnitTest {
 		List<UnpaidPolicyPayment> unpaidList = List.of(new UnpaidPolicyPayment(paimentDetails, policy));
 		
 		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
-		when(policyRepo.findById(anyString())).thenReturn(Optional.of(createPolicy()));
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(repo.getUnpaidPolicyPayment(policyNumber)).thenReturn(unpaidList);
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
 				Period.of(2020, Month.MARCH), policyNumber);
 		
-		assertThat(detailsList).hasSize(4);
+		assertThat(detailsList).hasSize(4); // [2 periods from Fab to March] + [1 unpaid payment] + [penalty]
 		assertThat(detailsList).contains(unpaidList.get(0).getPolicyPaymentDetails());
 	}
 	
-	public static PolicyPayment createEntity() throws Exception {
-		PolicyPayment entity = new PolicyPayment();
-		Policy policy = createPolicy();
-		entity.setId(5L);
-		entity.setPaymentDate(LocalDateTime.now());
-		entity.setPolicy(policy);
-		entity.setPolicyPaymentDetails(policyPaymentInfoList(policy));
-		return entity;
-	}
-	
-	public static Set<PolicyPaymentDetails> policyPaymentInfoList(Policy policy) {
-		Objects.requireNonNull(policy.getPremiumAmount());
-		val stdAmount = policy.getPremiumAmount();
-		return Set.of(
-				new PolicyPaymentDetails(Type.PREMIUM, stdAmount, Period.of(LocalDate.now()))
-		);
-	}
-
-	private static Policy createPolicy() throws Exception {
-		PolicyMother policy = new PolicyMother();
-		policy.dateOfBirth(LocalDate.now().minusYears(43));
-//		policy.funeralScheme(FuneralSchemesJSON.byName("PLAN C")); TODO
-		return policy.build();
+	private PolicyPayment createEntity() {
+		return new PolicyPaymentMother(PolicyMother.of(PlanType.Plan_C, 43))
+				.id(ID)
+				.withPremiumForCurrentMonth()
+				.build();
 	}
 }

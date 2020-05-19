@@ -160,7 +160,7 @@ public class PolicyServiceUnitTest {
 	private Policy createEntity() {
 		Policy entity = new PolicyMother()
 				.funeralScheme(new FuneralSchemeMother()
-						.ofPlanC()
+						.planC()
 						.id(20).build())
 				.build();
 		return entity;

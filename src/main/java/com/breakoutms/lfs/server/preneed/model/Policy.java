@@ -32,6 +32,7 @@ import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,41 +46,41 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "policy_id",          
-        strategy = IdGenerator.STRATEGY,
-        parameters = {
-	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
-})
+		name = "policy_id",          
+		strategy = IdGenerator.STRATEGY,
+		parameters = {
+				@Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
+		})
 public class Policy extends AuditableEntity<String> {
-	
+
 	@Id
 	@GeneratedValue(generator = "policy_id")
 	@Column(columnDefinition = "CHAR(10)")
 	private String policyNumber;
-	
+
 	@NotBlank
 	@Size(min = 2, max = 60)
 	@Column(length = 60)
 	private String names;
-	
+
 	@NotBlank
 	@Size(min = 2, max = 50)
 	@Column(length = 50)
 	private String surname;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition="ENUM('MALE','FEMALE')")
 	private Gender gender;
-	
+
 	@PastOrPresent
 	@NotNull
 	private LocalDate dateOfBirth;
-	
+
 	@Nullable
 	@Size(min = 3, max = 50)
 	@Column(length = 50)
 	private String phoneNumber;
-	
+
 	@Nullable
 	@Size(min = 3, max = 50)
 	@Column(length = 50)
@@ -89,26 +90,26 @@ public class Policy extends AuditableEntity<String> {
 	@Size(min = 3, max = 40)
 	@Column(length = 40)
 	private String nationalIdNumber;
-	
+
 	@Nullable
 	@Column(length = 150)
 	@Size(min = 2, max = 150)
 	private String residentialArea;
-	
+
 	@Column(columnDefinition = "TINYINT UNSIGNED")
 	private District district;
-	
+
 	@Nullable
 	@Column(length = 50)
 	@Size(min = 3, max = 50)
 	private String country;
-	
+
 	private boolean deceased;
-	
+
 	@NotNull
 	@Column(nullable=false)
 	private LocalDate registrationDate;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private FuneralScheme funeralScheme;
 
@@ -117,44 +118,49 @@ public class Policy extends AuditableEntity<String> {
 	@Digits(integer = 6, fraction = 2)
 	@Column(nullable=false, precision = 8, scale = 2)
 	private BigDecimal premiumAmount;
-	
+
 	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 8, fraction = 2)
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
-	
+
 	private boolean active;
-	
+
 	@OneToMany(mappedBy="policy", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
 	private List<Dependent> dependents;
-	
+
 	@Override
 	public String getId(){
 		return policyNumber;
 	}
-	
+
 	public void setAge(int age) {
 		this.dateOfBirth = LocalDate.now().minusYears(age);
 	}
+	
+	@JsonIgnore
 	public int getAge() {
-		return dateOfBirth != null? (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now()) : null;
+		Integer age = null;
+		if(dateOfBirth != null) {
+			age = (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+		}
+		return age;
 	}
 	
+	@JsonIgnore
 	public Integer getAgeAtRegistration() {
 		Integer age = null;
 		LocalDate regDate = registrationDate;
-		if(regDate == null) {
-			if(getCreatedAt() != null) {
-				regDate = getCreatedAt().toLocalDate();
-			}
+		if(regDate == null && createdAt != null) {
+			regDate = createdAt.toLocalDate();
 		}
 		if(regDate == null) {
 			regDate = LocalDate.now();
 		}
-		
+
 		if(dateOfBirth != null) {
 			age = (int) ChronoUnit.YEARS.between(dateOfBirth, regDate);
 		}

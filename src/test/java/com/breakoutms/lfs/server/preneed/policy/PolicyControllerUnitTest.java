@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
+import com.breakoutms.lfs.server.common.MappersForTests;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
@@ -189,7 +190,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(entity.getFuneralScheme()));
 
-		PolicyDTO policyDTO = PreneedMapper.INSTANCE.policyToDTO(entity);
+		PolicyDTO policyDTO = MappersForTests.INSTANCE.map(entity);
 		
 		var result = put(mockMvc, URL+ID, policyDTO);
 		

@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -54,10 +55,12 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@GeneratedValue(generator = "policy_payment_details_id")
 	private Long id;
 	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition = "CHAR(15)")
 	private Type type;
 	
+	@NotNull
 	@Embedded
 	private Period period;
 	

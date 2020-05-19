@@ -44,7 +44,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 		return this;
 	}
 	
-	public FuneralSchemeMother ofPlanC() {
+	public FuneralSchemeMother planC() {
 		entity = FuneralScheme.builder()
 					.id(7)
 					.monthsBeforeActive(6)

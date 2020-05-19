@@ -88,7 +88,7 @@ public class PolicyServiceIntegrationTest {
 		deleteAllFuneralSchemes();
 		int age1 = 55;
 		int age2 = 18;
-		FuneralScheme f1 = new FuneralSchemeMother().ofPlanC().build();
+		FuneralScheme f1 = new FuneralSchemeMother().planC().build();
 		FuneralScheme f2 = new FuneralSchemeMother().planAPlus().build();
 		funeralSchemeService.save(f1);
 		funeralSchemeService.save(f2);

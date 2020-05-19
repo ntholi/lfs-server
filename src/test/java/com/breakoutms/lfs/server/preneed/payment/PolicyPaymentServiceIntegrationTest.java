@@ -17,6 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
@@ -80,12 +83,9 @@ public class PolicyPaymentServiceIntegrationTest {
 	}
 
 	protected PolicyPayment createPolicyPayment() throws Exception {
-		PolicyPayment entity = new PolicyPayment();
 		Policy policy = policyRepository.findById("256070816").get();
-		entity.setPolicy(policy);
-		entity.setAmountTendered(new BigDecimal("30"));
-		entity.setPaymentDate(LocalDateTime.now());
-		entity.setPolicyPaymentDetails(PolicyPaymentServiceUnitTest.policyPaymentInfoList(policy));
-		return entity;
+		return new PolicyPaymentMother(policy)
+				.withPremiumForCurrentMonth()
+				.build();
 	}
 }

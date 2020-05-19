@@ -34,10 +34,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.Expectations;
+import com.breakoutms.lfs.server.common.MappersForTests;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
+import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
@@ -50,19 +56,19 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@Autowired private MockMvc mockMvc;
 	@MockBean private PolicyPaymentRepository repo;
 	@SpyBean private PolicyPaymentService service;
+	@MockBean private PolicyPaymentDetailsRepository paymentDetailsRepo;
+	@MockBean private PolicyRepository policyRepo;
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private BranchRepository branchRepo;
 	
-	private final PolicyPayment entity;
-	private final Long ID;
+	private final PolicyPayment entity = createEntity();
+	private final long ID = 5L;
 	private String policyNumber;
 	private final String URL;
 
 	private Expectations expect;
 	
 	public PolicyPaymentControllerUnitTest() throws Exception {
-		entity = createEntity();
-		ID = entity.getId();
 		policyNumber = entity.getPolicy().getPolicyNumber();
 		URL = "/preneed/policies/"+policyNumber+"/payments/";
 	}
@@ -135,10 +141,11 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
-	void succesfull_save() throws Exception {
+	void save() throws Exception {
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
-		var result = post(mockMvc, URL, entity);
+		PolicyPaymentDTO dto = MappersForTests.INSTANCE.map(entity);
+		var result = post(mockMvc, URL, dto);
 		result.andDo(print());
 		result.andExpect(status().isCreated());
 		expect.forEntity(result, entity)
@@ -217,6 +224,9 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	private PolicyPayment createEntity() throws Exception {
-		return PolicyPaymentServiceUnitTest.createEntity();
+		return new PolicyPaymentMother(PolicyMother.of(PlanType.Plan_C, 43))
+				.id(ID)
+				.withPremiumForCurrentMonth()
+				.build();
 	}
 }

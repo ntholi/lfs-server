@@ -37,7 +37,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	
 	@CreatedDate
 	@Column(nullable=true, updatable=false)
-	private LocalDateTime createdAt;
+	protected LocalDateTime createdAt;
 	
 	@CreatedBy
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
