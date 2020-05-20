@@ -93,7 +93,7 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	public FuneralScheme(String name) {
 		this.name = name;
 	}
-	
+
 //	public FuneralSchemeBenefit getBenefit(ItemType itemType) {
 //		
 //		for(FuneralSchemeBenefit f : PolicyDAO.getFuneralSchemeBenefit(this)) {

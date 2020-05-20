@@ -26,12 +26,14 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.preneed.model.Policy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Audited
@@ -73,14 +75,23 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@Column(nullable=false, precision = 8, scale = 2)
 	private BigDecimal amount;
     
+	@NotNull
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="policyPayment")
+	@JoinColumn(nullable = false)
 	private PolicyPayment policyPayment;
 	
 	private boolean markedAsPaid;
 	
 	@Column(columnDefinition = "CHAR(14)")
 	private String premiumPaymentId;
+	
+	// Has been added for faster lookup, allowing lookup by policy 
+	// without having to join PolicyPayment table
+	@NotNull
+	@Column(columnDefinition = "CHAR(10)")
+	private String policyNumber;
 	
 	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
 		this.type = type;
@@ -94,6 +105,14 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	
 	public static PolicyPaymentDetails penaltyOf(BigDecimal amount) {
 		return new PolicyPaymentDetails(Type.PENALTY, amount, null);
+	}
+	
+	public static PolicyPaymentDetails premiumFor(Policy policy, Period period) {
+		return premiumOf(period, policy.getPremiumAmount());
+	}
+	
+	public static PolicyPaymentDetails premiumFor(Policy policy) {
+		return premiumOf(Period.now(), policy.getPremiumAmount());
 	}
 
 	public boolean hasSamePeriod(PolicyPaymentDetails info) {

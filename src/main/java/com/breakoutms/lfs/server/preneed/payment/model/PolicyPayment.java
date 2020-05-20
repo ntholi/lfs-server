@@ -60,6 +60,7 @@ public class PolicyPayment extends AuditableEntity<Long> {
 	@NotNull
 	private LocalDateTime paymentDate;
 	
+	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 6, fraction = 2)
 	@Column(nullable=false, precision = 8, scale = 2)

@@ -29,4 +29,10 @@ public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Lo
 
 	@Query("FROM UnpaidPolicyPayment e WHERE e.policy.policyNumber = :policyNumber AND e.deleted=false")
 	List<UnpaidPolicyPayment> getUnpaidPolicyPayment(String policyNumber);
+	
+	@Query(value = "SELECT premium_payment_id FROM policy_payment_details "
+			+ "WHERE policy_number = :policyNumber "
+			+ "ORDER BY premium_payment_id DESC "
+			+ "LIMIT 1", nativeQuery = true)
+	Optional<String> findLastPremiumId(String policyNumber);
 }

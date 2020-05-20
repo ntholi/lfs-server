@@ -35,7 +35,6 @@ public class PolicyPaymentService {
 
 	private final PolicyPaymentRepository repo;
 	private final PolicyRepository policyRepo;
-	private final PolicyPaymentDetailsRepository detailsRepo;
 	
 	public Optional<PolicyPayment> get(Long id) {
 		return repo.findById(id);
@@ -58,14 +57,25 @@ public class PolicyPaymentService {
 				premiumIds.add(premiumId);
 			}
 		}
-		var premiums = detailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(premiumIds);
-		if(!premiums.isEmpty()) {
-			var period = premiums.stream()
-					.map(PolicyPaymentDetails::getPeriod)
-					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
-			throw new PaymentAlreadyMadeException(period);
-		}
+		
+//		int premiumId = detailsRepo.findLastPremiumId(policyNumber)
+//				.map(it -> {
+//					String id = it.getPremiumPaymentId();
+//					id = id.replace(policyNumber, "");
+//					return Integer.valueOf(id);
+//				})
+//				.orElse(null);
+//		
+//		
+//		
+//		var premiums = detailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(premiumIds);
+//		if(!premiums.isEmpty()) {
+//			var period = premiums.stream()
+//					.map(PolicyPaymentDetails::getPeriod)
+//					.filter(Objects::nonNull)
+//					.collect(Collectors.toList());
+//			throw new PaymentAlreadyMadeException(period);
+//		}
 		return repo.save(entity);
 	}
 

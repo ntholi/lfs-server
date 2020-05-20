@@ -60,7 +60,6 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@Autowired private MockMvc mockMvc;
 	@MockBean private PolicyPaymentRepository repo;
 	@SpyBean private PolicyPaymentService service;
-	@MockBean private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	@MockBean private PolicyRepository policyRepo;
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private BranchRepository branchRepo;
@@ -210,9 +209,9 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 		BigDecimal premium = entity.getPolicy().getPremiumAmount();
 		List<PolicyPaymentDetails> value = List.of(
 			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
-					Period.of(LocalDate.now()), premium, entity, false, null),
+					Period.of(LocalDate.now()), premium, entity, false, null, null),
 			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
-					Period.of(LocalDate.now().minusMonths(1)), premium, entity, false, null)
+					Period.of(LocalDate.now().minusMonths(1)), premium, entity, false, null, null)
 		);
 		when(repo.getPaymentDetails(anyLong())).thenReturn(value);
 		

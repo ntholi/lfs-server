@@ -57,7 +57,7 @@ public class PolicyPaymentServiceIntegrationTest {
 	}
 	
 	@Test
-	void sometest() throws Exception {
+	void test() throws Exception {
 		BigDecimal amount = entity.getPolicy().getPremiumAmount();
 		LocalDate today = LocalDate.now();
 		var premium = PolicyPaymentDetails.premiumOf(Period.of(today), amount);
