@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -45,6 +47,8 @@ import lombok.NoArgsConstructor;
 @Table(indexes = {
         @Index(columnList = "premiumPaymentId", name = "unique_premium_payment", unique=true)
 })
+@SQLDelete(sql = "UPDATE policy_payment_details SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class PolicyPaymentDetails extends AuditableEntity<Long> {
 
 	public enum Type{

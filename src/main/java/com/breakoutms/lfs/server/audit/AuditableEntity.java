@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.core.Entity;
+
 import lombok.Data;
 
 /**
@@ -30,6 +31,8 @@ import lombok.Data;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity<ID> implements Entity<ID> {
+	
+	public static final String CLAUSE = "deleted = false";
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true, updatable=false)

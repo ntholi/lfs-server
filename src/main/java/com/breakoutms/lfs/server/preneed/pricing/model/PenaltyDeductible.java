@@ -14,6 +14,8 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -31,6 +33,8 @@ import lombok.ToString;
 @Data @Builder
 @EqualsAndHashCode(callSuper = true, exclude = "funeralScheme")
 @AllArgsConstructor @NoArgsConstructor
+@SQLDelete(sql = "UPDATE penalty_deductible SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class PenaltyDeductible extends AuditableEntity<Integer> {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -25,6 +25,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -50,7 +52,9 @@ import lombok.NoArgsConstructor;
 		strategy = IdGenerator.STRATEGY,
 		parameters = {
 				@Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
-		})
+})
+@SQLDelete(sql = "UPDATE policy SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class Policy extends AuditableEntity<String> {
 
 	@Id

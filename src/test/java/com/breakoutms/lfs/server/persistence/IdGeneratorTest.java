@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -15,19 +16,15 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
-import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.google.common.base.CaseFormat;
 
 class IdGeneratorTest {
 
 	@Test
 	void checkIf_IdsAregeneratedCorrectly() throws Exception {
-		Reflections reflections = new Reflections(
-				new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.forJavaClassPath()));
+		
+		Reflections reflections = new Reflections("com.breakoutms.lfs.server");
 		List<Class<?>> types = reflections
 				.getTypesAnnotatedWith(GenericGenerator.class)
 				.stream().collect(Collectors.toList());

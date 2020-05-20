@@ -1,7 +1,6 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,6 +18,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -37,6 +38,8 @@ import lombok.NoArgsConstructor;
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_funeral_scheme_name", unique=true)
 })
+@SQLDelete(sql = "UPDATE funeral_scheme SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class FuneralScheme extends AuditableEntity<Integer> {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

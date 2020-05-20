@@ -23,6 +23,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.core.entity.District;
@@ -51,6 +53,8 @@ import lombok.NoArgsConstructor;
         @Index(columnList = "names", name = "index_corpse_names"),
         @Index(columnList = "surname", name = "index_corpse_surname")
 })
+@SQLDelete(sql = "UPDATE corpse SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class Corpse extends AuditableEntity<String> {
 	
 	@Id

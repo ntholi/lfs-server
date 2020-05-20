@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -33,6 +35,8 @@ import lombok.ToString;
 @Data @Builder
 @EqualsAndHashCode(callSuper = true, exclude = "funeralScheme")
 @AllArgsConstructor @NoArgsConstructor
+@SQLDelete(sql = "UPDATE funeral_scheme_benefit SET deleted=true WHERE id=?")
+@Where(clause = AuditableEntity.CLAUSE)
 public class FuneralSchemeBenefit extends AuditableEntity<Integer> {
 
 	public enum Deductable {
