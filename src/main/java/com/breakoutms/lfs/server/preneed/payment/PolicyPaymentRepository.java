@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.preneed.payment;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +36,7 @@ public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Lo
 			+ "ORDER BY premium_payment_id DESC "
 			+ "LIMIT 1", nativeQuery = true)
 	Optional<String> findLastPremiumId(String policyNumber);
+
+	@Query("select period FROM PolicyPaymentDetails d WHERE d.premiumPaymentId IN :premiumIds")
+	List<Period> findPeriodsByPaymentIds(Set<String> premiumIds);
 }

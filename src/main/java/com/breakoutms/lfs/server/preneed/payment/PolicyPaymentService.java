@@ -46,8 +46,17 @@ public class PolicyPaymentService {
 	
 	@Transactional
 	public PolicyPayment save(final PolicyPayment entity, String policyNumber) {
-		//TODO: Set<UnpaidPolicyPayment> unpaidList = Set.of();
-		
+		var premiums = getAlreadyPaidPremiums(entity, policyNumber);
+		if(!premiums.isEmpty()) {
+			var period = premiums.stream()
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+			throw new PaymentAlreadyMadeException(period);
+		}
+		return repo.save(entity);
+	}
+
+	protected List<Period> getAlreadyPaidPremiums(final PolicyPayment entity, String policyNumber) {
 		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
 		Set<String> premiumIds = new HashSet<>();
 		for (PolicyPaymentDetails it : payments) {
@@ -57,26 +66,12 @@ public class PolicyPaymentService {
 				premiumIds.add(premiumId);
 			}
 		}
-		
-//		int premiumId = detailsRepo.findLastPremiumId(policyNumber)
-//				.map(it -> {
-//					String id = it.getPremiumPaymentId();
-//					id = id.replace(policyNumber, "");
-//					return Integer.valueOf(id);
-//				})
-//				.orElse(null);
-//		
-//		
-//		
-//		var premiums = detailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(premiumIds);
-//		if(!premiums.isEmpty()) {
-//			var period = premiums.stream()
-//					.map(PolicyPaymentDetails::getPeriod)
-//					.filter(Objects::nonNull)
-//					.collect(Collectors.toList());
-//			throw new PaymentAlreadyMadeException(period);
-//		}
-		return repo.save(entity);
+		return repo.findPeriodsByPaymentIds(premiumIds);
+	}
+
+	private int periodAtInt(PolicyPaymentDetails paymentDetails) {
+		Period period = paymentDetails.getPeriod();
+		return period.getYear() + period.getMonth().getValue();
 	}
 
 	@Transactional
@@ -123,7 +118,7 @@ public class PolicyPaymentService {
 		return list;
 	}
 
-	private String generatePremiumId(String policyNumber, PolicyPaymentDetails premium) {
+	protected String generatePremiumId(String policyNumber, PolicyPaymentDetails premium) {
 		if(premium.getType() != Type.PREMIUM) {
 			throw new IllegalArgumentException("PolicyPaymentDetails: '"+premium
 					+" should be of type "+Type.PREMIUM);

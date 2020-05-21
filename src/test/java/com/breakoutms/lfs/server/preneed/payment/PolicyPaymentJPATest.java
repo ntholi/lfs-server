@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,5 +64,37 @@ public class PolicyPaymentJPATest {
 		Optional<String> res = repo.findLastPremiumId(policy.getId());
 		
 		assertThat(res).contains(premiumId);
+	}
+	
+	@Test
+	void test_findPolicyPaymentDetailsByPaymentIds() {
+		Policy policy = policyRepo.findById("256070796").get();
+		PolicyPayment payment = new PolicyPayment();
+		payment.setPolicy(policy);
+		payment.setPaymentDate(LocalDateTime.now());
+		payment.setAmountTendered(new BigDecimal(500));
+		var details = Set.of(PolicyPaymentDetails.premiumFor(policy, Period.of(2020, Month.JANUARY)), 
+				PolicyPaymentDetails.premiumFor(policy, Period.of(2020, Month.FEBRUARY)),
+				PolicyPaymentDetails.premiumFor(policy, Period.of(2019, Month.DECEMBER)));
+		details.forEach(it -> {
+			it.setPolicyPayment(payment);
+			it.setPolicyNumber(policy.getPolicyNumber());
+		});
+		payment.setPolicyPaymentDetails(details);
+		service.save(payment, policy.getPolicyNumber());
+		
+		Set<String> premiumIds = details.stream()
+				.filter(it -> it.getPeriod().getMonth() == Month.JANUARY 
+					|| it.getPeriod().getMonth() == Month.DECEMBER)
+				.map(it -> service.generatePremiumId(policy.getId(), it))
+				.collect(Collectors.toSet());
+		
+		List<Month> paidMonths = repo.findPeriodsByPaymentIds(premiumIds)
+				.stream()
+				.map(it -> it.getMonth())
+				.collect(Collectors.toList());
+		
+		assertThat(paidMonths).hasSize(2);
+		assertThat(paidMonths).contains(Month.JANUARY, Month.DECEMBER);
 	}
 }

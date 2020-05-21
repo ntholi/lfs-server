@@ -4,6 +4,7 @@ package com.breakoutms.lfs.server.preneed.payment;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanTy
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
@@ -70,15 +72,14 @@ public class PolicyPaymentServiceUnitTest {
 		assertThat(page.get()).first().isEqualTo(entity);
 	}
 
-//	@Test TODO
-//	void save() throws Exception {
-//		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
-//		when(paymentDetailsRepo.findPolicyPaymentDetailsByPremiumPaymentIdIn(anySet())).thenReturn(List.of());
-//		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
-//		assertThat(response)
-//			.isNotNull()
-//			.isEqualTo(entity);
-//	}
+	@Test
+	void save() throws Exception {
+		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
+		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
+		assertThat(response)
+			.isNotNull()
+			.isEqualTo(entity);
+	}
 	
 	@Test
 	void update() throws Exception {
@@ -113,30 +114,51 @@ public class PolicyPaymentServiceUnitTest {
 		verify(repo).deleteById(id);
 	}
 	
-//	@Test //TODO
-//	void should_not_pay_same_premium_twice() throws Exception{
-//		when(repo.alreadyPaid(any(Policy.class), any(Period.class))).thenReturn(true);
-//		
-//		Throwable thrown = catchThrowable(() -> {
-//			service.save(entity, List.of());
-//		});
-//		
-//		assertThat(thrown).isInstanceOf(PaymentAlreadyMadeException.class);
-//		assertThat(thrown).hasMessageContaining("already paid for period:");
-//	}
-//	
 	@Test
-	void should_save_unpaid_payments() throws Exception{
+	void should_not_make_payment_for_deactivated_policy() {
+		Policy policy = new Policy();
+		policy.setActive(false);
+		
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+	}
+	
+	@Test
+	void should_not_pay_same_premium_twice() throws Exception{
+		String policyNumber = "hello";
+		Period p1 = Period.of(2020, Month.JANUARY);
+		Period p2 = Period.of(2020, Month.MARCH);
+		when(repo.findPeriodsByPaymentIds(anySet())).thenReturn(List.of(p1, p2));
+		
+		var details = Set.of(PolicyPaymentDetails.premiumOf(p1, new BigDecimal(30)), 
+				PolicyPaymentDetails.premiumOf(Period.of(2020, Month.FEBRUARY), new BigDecimal(30)),
+				PolicyPaymentDetails.premiumOf(p2, new BigDecimal(30)));
+		details.forEach(it -> {
+			it.setPolicyNumber(policyNumber);
+		});
+		PolicyPayment payment = new PolicyPayment();
+		payment.setPolicyPaymentDetails(details);
+		
+		Throwable thrown = catchThrowable(() -> {
+			service.save(payment, policyNumber);
+		});
+		
+		assertThat(thrown).isInstanceOf(PaymentAlreadyMadeException.class);
+		assertThat(thrown).hasMessageContaining("already paid for period:")
+			.hasMessageContaining(p1.name())
+			.hasMessageContaining(p2.name());
+	}
+	
+	@Test 
+	void should_save_unpaid_payments() throws Exception{ //TODO is this test really doing what it has to do?
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 		
 		PolicyPaymentDetails payment = PolicyPaymentDetails
 				.premiumOf(Period.now(), new BigDecimal(10));
-		Set<UnpaidPolicyPayment> unpaids = Set.of(
+		Set<UnpaidPolicyPayment> unpaids = Set.of( 
 			new UnpaidPolicyPayment(payment, entity.getPolicy())
 		);
 		
 		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
-		
 		
 		assertThat(response)
 			.isNotNull()

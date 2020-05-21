@@ -17,6 +17,11 @@ public class PolicyMother extends AuditableMother<Policy, String> {
 		Plan_A_Plus
 	}
 	
+	public PolicyMother id(String id) {
+		entity.setPolicyNumber(id);
+		return this;
+	}
+	
 	public static Policy of(PlanType planType, int age) {
 		FuneralSchemeMother fs = new FuneralSchemeMother();
 		if(planType == PlanType.Plan_C) {
