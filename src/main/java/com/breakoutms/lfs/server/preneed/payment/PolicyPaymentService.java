@@ -46,6 +46,7 @@ public class PolicyPaymentService {
 	
 	@Transactional
 	public PolicyPayment save(final PolicyPayment entity, String policyNumber) {
+		verifyPolicyStatus(entity, policyNumber);
 		var premiums = getAlreadyPaidPremiums(entity, policyNumber);
 		if(!premiums.isEmpty()) {
 			var period = premiums.stream()
@@ -54,6 +55,10 @@ public class PolicyPaymentService {
 			throw new PaymentAlreadyMadeException(period);
 		}
 		return repo.save(entity);
+	}
+
+	private void verifyPolicyStatus(PolicyPayment entity, String policyNumber) {
+		Policy policy = policyRepo.getPolicyStatus(policyNumber);
 	}
 
 	protected List<Period> getAlreadyPaidPremiums(final PolicyPayment entity, String policyNumber) {

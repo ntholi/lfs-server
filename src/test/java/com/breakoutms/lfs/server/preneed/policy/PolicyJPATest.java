@@ -1,0 +1,40 @@
+package com.breakoutms.lfs.server.preneed.policy;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.breakoutms.lfs.server.preneed.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyStatus;
+import com.github.database.rider.core.api.configuration.DBUnit;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.DBUnitExtension;
+
+@ExtendWith(DBUnitExtension.class)
+@SpringBootTest
+@Transactional
+@ActiveProfiles("test")
+@DBUnit(allowEmptyFields = true) 
+@DataSet({"policy.xml"})
+public class PolicyJPATest {
+
+	@Autowired PolicyRepository repo;
+	
+	@Test
+	void test_getPolicyStatus() {
+		String policyNumber = "256070796";
+		
+		Policy policy = repo.getPolicyStatus(policyNumber);
+		
+		assertThat(policy.getId()).isEqualTo(policyNumber);
+		assertThat(policy.getStatus()).isEqualTo(PolicyStatus.ACTIVE);
+		assertThat(policy.getNames()).isNull();
+		assertThat(policy.getRegistrationDate()).isNull();
+	}
+}

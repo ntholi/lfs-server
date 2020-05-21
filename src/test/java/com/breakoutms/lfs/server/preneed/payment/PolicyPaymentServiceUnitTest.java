@@ -34,6 +34,7 @@ import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
@@ -117,7 +118,7 @@ public class PolicyPaymentServiceUnitTest {
 	@Test
 	void should_not_make_payment_for_deactivated_policy() {
 		Policy policy = new Policy();
-		policy.setActive(false);
+		policy.setStatus(PolicyStatus.DEACTIVATED);
 		
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 	}

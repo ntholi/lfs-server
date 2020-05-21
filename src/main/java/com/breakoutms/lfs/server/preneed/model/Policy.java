@@ -129,13 +129,20 @@ public class Policy extends AuditableEntity<String> {
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
 
-	private boolean active;
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition="ENUM('ACTIVE','WAITING_PERIOD','DEACTIVATED') DEFAULT 'ACTIVE'")
+	private PolicyStatus status;
 
 	@OneToMany(mappedBy="policy", 
 			cascade=CascadeType.ALL, 
 			orphanRemoval=true)
 	private List<Dependent> dependents;
 
+	public Policy(String policyNumber, PolicyStatus status) {
+		this.policyNumber = policyNumber;
+		this.status = status;
+	}
+	
 	@Override
 	public String getId(){
 		return policyNumber;
