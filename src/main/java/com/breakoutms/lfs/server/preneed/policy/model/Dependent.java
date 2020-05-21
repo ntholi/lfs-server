@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.model;
+package com.breakoutms.lfs.server.preneed.policy.model;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

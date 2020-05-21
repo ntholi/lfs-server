@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
-import com.breakoutms.lfs.server.preneed.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 
 import lombok.val;
 

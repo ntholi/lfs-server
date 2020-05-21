@@ -1,12 +1,12 @@
-package com.breakoutms.lfs.server.preneed;
+package com.breakoutms.lfs.server.preneed.policy;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import com.breakoutms.lfs.server.preneed.model.Policy;
-import com.breakoutms.lfs.server.preneed.model.PolicyDTO;
-import com.breakoutms.lfs.server.preneed.model.PolicyViewModel;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;

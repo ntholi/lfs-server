@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.model;
+package com.breakoutms.lfs.server.preneed.policy.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

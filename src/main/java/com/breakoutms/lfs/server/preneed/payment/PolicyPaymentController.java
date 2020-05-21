@@ -27,12 +27,12 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.preneed.PolicyController;
-import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
+import com.breakoutms.lfs.server.preneed.policy.PolicyController;
+import com.breakoutms.lfs.server.preneed.policy.PreneedMapper;
 import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;

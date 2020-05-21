@@ -32,13 +32,13 @@ import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
-import com.breakoutms.lfs.server.preneed.PolicyRepository;
-import com.breakoutms.lfs.server.preneed.model.Policy;
-import com.breakoutms.lfs.server.preneed.model.PolicyStatus;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
+import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(MockitoExtension.class)
