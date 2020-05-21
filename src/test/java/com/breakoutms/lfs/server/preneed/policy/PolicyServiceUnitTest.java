@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
@@ -137,7 +138,7 @@ public class PolicyServiceUnitTest {
 	@Test
 	void failt_to_update_with_unknownId() {
 		var unknownId = "123456";
-		String exMsg = String.format(PolicyService.NO_POLICY_ERROR, unknownId);
+		String exMsg = ExceptionSupplier.policyNotFound(unknownId).get().getMessage();
 		
 		when(repo.existsById(unknownId)).thenReturn(false);
 

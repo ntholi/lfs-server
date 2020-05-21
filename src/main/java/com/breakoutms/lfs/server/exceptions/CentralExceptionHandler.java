@@ -34,6 +34,12 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final String MESSAGE = "message";
 	
 
+    @ExceptionHandler(AccountNotActiveException.class)
+    public ResponseEntity<Object> handleAccountNotActiveException(AccountNotActiveException ex, WebRequest request) {
+        return response(HttpStatus.NOT_ACCEPTABLE, 
+        		ErrorCode.ACCOUNT_NOT_ACTIVE, ex);
+    }
+    
     @ExceptionHandler(PaymentAlreadyMadeException.class)
     public ResponseEntity<Object> handlePaymentAlreadyMadeException(PaymentAlreadyMadeException ex, WebRequest request) {
         return response(HttpStatus.NOT_ACCEPTABLE, 

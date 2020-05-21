@@ -10,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.DBUnitExtension;
@@ -29,11 +28,12 @@ public class PolicyJPATest {
 	void test_getPolicyStatus() {
 		String policyNumber = "256070796";
 		
-		Policy policy = repo.getPolicyStatus(policyNumber);
+		Policy policy = repo.getPolicyStatus(policyNumber).get();
 		
 		assertThat(policy.getId()).isEqualTo(policyNumber);
-		assertThat(policy.getStatus()).isEqualTo(PolicyStatus.ACTIVE);
+		assertThat(policy.getStatus()).isEqualTo(policy.getStatus());
+		assertThat(policy.getRegistrationDate()).isEqualTo(policy.getRegistrationDate());
 		assertThat(policy.getNames()).isNull();
-		assertThat(policy.getRegistrationDate()).isNull();
+		assertThat(policy.getPremiumAmount()).isNull();
 	}
 }

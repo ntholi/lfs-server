@@ -15,16 +15,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
-import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
-import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
+import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
@@ -46,19 +48,24 @@ public class PolicyPaymentService {
 	
 	@Transactional
 	public PolicyPayment save(final PolicyPayment entity, String policyNumber) {
-		verifyPolicyStatus(entity, policyNumber);
-		var premiums = getAlreadyPaidPremiums(entity, policyNumber);
-		if(!premiums.isEmpty()) {
-			var period = premiums.stream()
-					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
-			throw new PaymentAlreadyMadeException(period);
+		Policy policy = policyRepo.findById(policyNumber)
+				.orElseThrow(ExceptionSupplier.policyNotFound(policyNumber));
+		
+		if(policy.getStatus() == PolicyStatus.DEACTIVATED) {
+			Period period = getLastPayedPeriod(policy);
+			String msg = "Account has been deactivated, "
+					+ "last premium payment was for period "+period;
+			throw new AccountNotActiveException(msg);
+		}
+		
+		entity.setPolicy(policy);
+		entity.getPolicyPaymentDetails().forEach(it -> it.setPolicyNumber(policyNumber));
+		
+		var periods = getAlreadyPaidPremiums(entity, policyNumber);
+		if(!periods.isEmpty()) {
+			throw new PaymentAlreadyMadeException(periods);
 		}
 		return repo.save(entity);
-	}
-
-	private void verifyPolicyStatus(PolicyPayment entity, String policyNumber) {
-		Policy policy = policyRepo.getPolicyStatus(policyNumber);
 	}
 
 	protected List<Period> getAlreadyPaidPremiums(final PolicyPayment entity, String policyNumber) {

@@ -7,11 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Data;
 
-@ToString
-@EqualsAndHashCode
+@Data
 @Embeddable
 public class Period {
 	
@@ -22,22 +20,6 @@ public class Period {
 	@NotNull
 	@Column(nullable=false, columnDefinition = "SMALLINT UNSIGNED")
 	private Integer year;
-	
-	public void setYear(int year) {
-		this.year = year;
-	}
-
-	public void setMonth(Month month) {
-		this.month = month;
-	}
-	
-	public Month getMonth() {
-		return month;
-	}
-	
-	public Integer getYear() {
-		return year;
-	}
 	
 	public static Period now() {
 		return Period.of(LocalDate.now());
@@ -103,5 +85,10 @@ public class Period {
 
 	public String name() {
 		return month+ " "+ year;
+	}
+	
+	@Override
+	public String toString() {
+		return name();
 	}
 }

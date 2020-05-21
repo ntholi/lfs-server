@@ -29,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
+import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
@@ -118,9 +119,21 @@ public class PolicyPaymentServiceUnitTest {
 	@Test
 	void should_not_make_payment_for_deactivated_policy() {
 		Policy policy = new Policy();
+		policy.setPolicyNumber("101");
 		policy.setStatus(PolicyStatus.DEACTIVATED);
+		entity.setPolicy(policy);
+		Period period = Period.now();
 		
+		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+		
+		Throwable thrown = catchThrowable(() -> {
+			service.save(entity, policy.getId());
+		});
+		
+		assertThat(thrown).isInstanceOf(AccountNotActiveException.class);
+		assertThat(thrown).hasMessageContaining(PolicyStatus.DEACTIVATED.name().toLowerCase());
+		assertThat(thrown).hasMessageContaining(period.name());
 	}
 	
 	@Test

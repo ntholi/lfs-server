@@ -138,8 +138,9 @@ public class Policy extends AuditableEntity<String> {
 			orphanRemoval=true)
 	private List<Dependent> dependents;
 
-	public Policy(String policyNumber, PolicyStatus status) {
+	public Policy(String policyNumber, LocalDate registrationDate, PolicyStatus status) {
 		this.policyNumber = policyNumber;
+		this.registrationDate = registrationDate;
 		this.status = status;
 	}
 	
