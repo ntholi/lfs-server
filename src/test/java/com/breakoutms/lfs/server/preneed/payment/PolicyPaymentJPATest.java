@@ -52,7 +52,7 @@ public class PolicyPaymentJPATest {
 				PolicyPaymentDetails.premiumFor(policy, Period.of(2019, Month.DECEMBER)));
 		details.forEach(it -> {
 			it.setPolicyPayment(payment);
-			it.setPolicyNumber(policy.getPolicyNumber());
+			it.setPolicy(policy);
 		});
 		payment.setPolicyPaymentDetails(details);
 		String premiumId = payment.getPolicy().getPolicyNumber()
@@ -78,7 +78,7 @@ public class PolicyPaymentJPATest {
 				PolicyPaymentDetails.premiumFor(policy, Period.of(2019, Month.DECEMBER)));
 		details.forEach(it -> {
 			it.setPolicyPayment(payment);
-			it.setPolicyNumber(policy.getPolicyNumber());
+			it.setPolicy(policy);
 		});
 		payment.setPolicyPaymentDetails(details);
 		service.save(payment, policy.getPolicyNumber());

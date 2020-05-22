@@ -8,6 +8,7 @@ import org.jeasy.random.EasyRandomParameters;
 
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 public class PolicyMother extends AuditableMother<Policy, String> {
@@ -32,9 +33,15 @@ public class PolicyMother extends AuditableMother<Policy, String> {
 		return new PolicyMother()
 				.funeralScheme(fs.build())
 				.age(age)
+				.status(PolicyStatus.ACTIVE)
 				.build();
 	}
 	
+	private PolicyMother status(PolicyStatus status) {
+		entity.setStatus(status);
+		return this;
+	}
+
 	public PolicyMother age(int age) {
 		dateOfBirth(LocalDate.now().minusYears(age));
 		return this;

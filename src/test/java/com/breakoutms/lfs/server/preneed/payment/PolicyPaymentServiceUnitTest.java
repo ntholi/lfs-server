@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +48,7 @@ public class PolicyPaymentServiceUnitTest {
 
 	@Mock private PolicyPaymentRepository repo;
 	@Mock private PolicyRepository policyRepo;
+	@Mock private UnpaidPolicyPaymentRepository owedRepo;
 	@InjectMocks private PolicyPaymentService service;
 	private final PolicyPayment entity;
 	private final long ID = 5L;
@@ -76,8 +78,12 @@ public class PolicyPaymentServiceUnitTest {
 
 	@Test
 	void save() throws Exception {
+		String policyNumber = entity.getPolicy().getPolicyNumber();
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
+		when(policyRepo.findById(policyNumber)).thenReturn(Optional.of(entity.getPolicy()));
+		
 		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
+		
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(entity);
@@ -118,14 +124,13 @@ public class PolicyPaymentServiceUnitTest {
 	
 	@Test
 	void should_not_make_payment_for_deactivated_policy() {
-		Policy policy = new Policy();
-		policy.setPolicyNumber("101");
+		Policy policy = entity.getPolicy();
 		policy.setStatus(PolicyStatus.DEACTIVATED);
-		entity.setPolicy(policy);
 		Period period = Period.now();
 		
 		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
 		
 		Throwable thrown = catchThrowable(() -> {
 			service.save(entity, policy.getId());
@@ -138,22 +143,23 @@ public class PolicyPaymentServiceUnitTest {
 	
 	@Test
 	void should_not_pay_same_premium_twice() throws Exception{
-		String policyNumber = "hello";
+		Policy policy = entity.getPolicy();
 		Period p1 = Period.of(2020, Month.JANUARY);
 		Period p2 = Period.of(2020, Month.MARCH);
+		
 		when(repo.findPeriodsByPaymentIds(anySet())).thenReturn(List.of(p1, p2));
+		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
+		
 		
 		var details = Set.of(PolicyPaymentDetails.premiumOf(p1, new BigDecimal(30)), 
 				PolicyPaymentDetails.premiumOf(Period.of(2020, Month.FEBRUARY), new BigDecimal(30)),
 				PolicyPaymentDetails.premiumOf(p2, new BigDecimal(30)));
-		details.forEach(it -> {
-			it.setPolicyNumber(policyNumber);
-		});
+
 		PolicyPayment payment = new PolicyPayment();
 		payment.setPolicyPaymentDetails(details);
 		
 		Throwable thrown = catchThrowable(() -> {
-			service.save(payment, policyNumber);
+			service.save(payment, policy.getPolicyNumber());
 		});
 		
 		assertThat(thrown).isInstanceOf(PaymentAlreadyMadeException.class);
@@ -163,40 +169,51 @@ public class PolicyPaymentServiceUnitTest {
 	}
 	
 	@Test 
-	void should_save_unpaid_payments() throws Exception{ //TODO is this test really doing what it has to do?
+	void should_save_unpaid_payments() throws Exception{
+		Policy policy = entity.getPolicy();
+		Period savedInOwed = Period.of(1992, Month.FEBRUARY);
+		LocalDate today = LocalDate.now();
+		Period lastMonth = Period.of(today.minusMonths(1));
+		Period thisMonth = Period.of(today);
+		
+		var unpaids = List.of(
+				new UnpaidPolicyPayment(PolicyPaymentDetails.premiumFor(policy, lastMonth)),
+				new UnpaidPolicyPayment(PolicyPaymentDetails.premiumFor(policy, savedInOwed)));
+		
+		entity.setPolicyPaymentDetails(Set.of(
+				PolicyPaymentDetails.premiumFor(policy, thisMonth)
+		));
+		
+		when(owedRepo.findByPolicy(entity.getPolicy())).thenReturn(unpaids);
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
+		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(lastMonth));
+		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
 		
-		PolicyPaymentDetails payment = PolicyPaymentDetails
-				.premiumOf(Period.now(), new BigDecimal(10));
-		Set<UnpaidPolicyPayment> unpaids = Set.of( 
-			new UnpaidPolicyPayment(payment, entity.getPolicy())
-		);
-		
-		PolicyPayment response = service.save(entity, entity.getPolicy().getId());
-		
-		assertThat(response)
-			.isNotNull()
-			.isEqualTo(entity);
+		service.save(entity, policy.getId());
+
+		verify(owedRepo).saveAll(unpaids);
 	}
 	
 	@Test
-	void veryfy_the_correct_amount_of_owed_premiums_is_returned() throws Exception {
+	void veryfy_the_correct_amount_of_owed_premiums_is_calculated() throws Exception {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
 		
-		Optional<Period> period = Optional.of(Period.of(2020, Month.JANUARY));
-		when(repo.getLastPayedPeriod(policy)).thenReturn(period);
-		when(policyRepo.findById(anyString())).thenReturn(Optional.of(entity.getPolicy()));
-		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
+		Optional<Period> lastPaidPeriod = Optional.of(Period.of(2020, Month.JANUARY));
 		
-		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
+		when(repo.getLastPayedPeriod(policy)).thenReturn(lastPaidPeriod);
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(entity.getPolicy()));
+		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
+		
+		List<PolicyPaymentDetails> owedPayments = service.getOwedPayments(
 				Period.of(2020, Month.MARCH), policyNumber);
-		List<Period> periods = detailsList.stream()
+		
+		List<Period> periods = owedPayments.stream()
 				.map(PolicyPaymentDetails::getPeriod)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		
-		assertThat(detailsList).hasSize(3); //Three because of penalty
+		assertThat(owedPayments).hasSize(3); //2 periods (FEBRUARY and MARCH) plus 1 penalty = 3 (size)
 		assertThat(periods).hasSize(2);
 		assertThat(periods).contains(Period.of(2020, Month.MARCH), 
 				Period.of(2020, Month.FEBRUARY));
@@ -211,7 +228,7 @@ public class PolicyPaymentServiceUnitTest {
 		
 		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
-		when(repo.getUnpaidPolicyPayment(anyString())).thenReturn(List.of());
+		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
 				Period.of(2020, Month.MARCH), policyNumber);
@@ -225,13 +242,14 @@ public class PolicyPaymentServiceUnitTest {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
 		Period period = Period.of(2020, Month.JANUARY);
-		PolicyPaymentDetails paimentDetails = PolicyPaymentDetails.premiumOf(Period.of(2019, Month.DECEMBER), 
-				policy.getPremiumAmount());
-		List<UnpaidPolicyPayment> unpaidList = List.of(new UnpaidPolicyPayment(paimentDetails, policy));
+		PolicyPaymentDetails paimentDetails = PolicyPaymentDetails.premiumFor(policy, 
+				Period.of(2019, Month.DECEMBER));
+		paimentDetails.setPolicy(entity.getPolicy());
+		List<UnpaidPolicyPayment> unpaidList = List.of(new UnpaidPolicyPayment(paimentDetails));
 		
+		when(owedRepo.findByPolicy(policy)).thenReturn(unpaidList);
 		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
-		when(repo.getUnpaidPolicyPayment(policyNumber)).thenReturn(unpaidList);
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
 				Period.of(2020, Month.MARCH), policyNumber);

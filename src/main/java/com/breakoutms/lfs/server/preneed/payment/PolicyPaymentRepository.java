@@ -27,9 +27,6 @@ public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Lo
 //			+ "ORDER BY year desc, month desc") 
 //	//TODO: LIMIT THE RESULTS TO RETURN ONLY ONE RECORD
 	Optional<Period> getLastPayedPeriod(Policy policy);
-
-	@Query("FROM UnpaidPolicyPayment e WHERE e.policy.policyNumber = :policyNumber AND e.deleted=false")
-	List<UnpaidPolicyPayment> getUnpaidPolicyPayment(String policyNumber);
 	
 	@Query(value = "SELECT premium_payment_id FROM policy_payment_details "
 			+ "WHERE policy_number = :policyNumber "

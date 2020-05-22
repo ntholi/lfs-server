@@ -90,8 +90,9 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	// Has been added for faster lookup, allowing lookup by policy 
 	// without having to join PolicyPayment table
 	@NotNull
-	@Column(columnDefinition = "CHAR(10)")
-	private String policyNumber;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private Policy policy;
 	
 	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
 		this.type = type;

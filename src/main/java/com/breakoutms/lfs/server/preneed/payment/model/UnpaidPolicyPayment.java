@@ -7,12 +7,14 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -61,14 +63,16 @@ public class UnpaidPolicyPayment extends AuditableEntity<Long>{
 	@Column(nullable=false, precision = 8, scale = 2)
 	private BigDecimal amount;
     
-	@ManyToOne @JoinColumn(name="policy")
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
 	private Policy policy;
 	
-	public UnpaidPolicyPayment(PolicyPaymentDetails payment, Policy policy) {
+	public UnpaidPolicyPayment(PolicyPaymentDetails payment) {
 		this.type = payment.getType();
 		this.period = payment.getPeriod();
 		this.amount = payment.getAmount();
-		this.policy = policy;
+		this.policy = payment.getPolicy();
 	}
 	
 	public PolicyPaymentDetails getPolicyPaymentDetails() {

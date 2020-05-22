@@ -37,6 +37,7 @@ public class PolicyPaymentService {
 
 	private final PolicyPaymentRepository repo;
 	private final PolicyRepository policyRepo;
+	private final UnpaidPolicyPaymentRepository owedRepo;
 	
 	public Optional<PolicyPayment> get(Long id) {
 		return repo.findById(id);
@@ -47,19 +48,54 @@ public class PolicyPaymentService {
 	}
 	
 	@Transactional
+	protected List<PolicyPaymentDetails> getOwedPayments(Period currentPeriod, String policyNumber) {
+		Policy policy = policyRepo.findById(policyNumber)
+				.orElseThrow(() -> new InvalidOperationException(
+						"Unable to determine owed premiums for unknown policy number '"
+						+ policyNumber+"'"));
+		
+		List<PolicyPaymentDetails> list = new ArrayList<>();
+
+		for (UnpaidPolicyPayment item : owedRepo.findByPolicy(policy)) {
+			list.add(item.getPolicyPaymentDetails());
+		}
+		
+		Period lastPaid = getLastPayedPeriod(policy);
+		list.addAll(getOwedPremiums(policy, currentPeriod, lastPaid));
+		
+		BigDecimal penaltyDue = calculatePenaltyDue(policy, lastPaid);
+		if(penaltyDue != null && penaltyDue.signum() > 0) {
+			list.add(PolicyPaymentDetails.penaltyOf(penaltyDue));
+		}
+		
+		return list;
+	}
+	
+	@Transactional
 	public PolicyPayment save(final PolicyPayment entity, String policyNumber) {
 		Policy policy = policyRepo.findById(policyNumber)
 				.orElseThrow(ExceptionSupplier.policyNotFound(policyNumber));
 		
 		if(policy.getStatus() == PolicyStatus.DEACTIVATED) {
+			//TODO: Add logic for re-activating deactivated policy
 			Period period = getLastPayedPeriod(policy);
 			String msg = "Account has been deactivated, "
 					+ "last premium payment was for period "+period;
 			throw new AccountNotActiveException(msg);
 		}
 		
+//		TODO: getOwedPayments has to be cached for each policyNumber catch value deleted here
+		List<UnpaidPolicyPayment> notPaid = getOwedPayments(Period.now(), policyNumber)
+				.stream()
+				.filter(it -> !entity.getPolicyPaymentDetails().contains(it))
+				.map(UnpaidPolicyPayment::new)
+				.collect(Collectors.toList());
+		if(!notPaid.isEmpty()) {
+			owedRepo.saveAll(notPaid);
+		}
+		
 		entity.setPolicy(policy);
-		entity.getPolicyPaymentDetails().forEach(it -> it.setPolicyNumber(policyNumber));
+		entity.getPolicyPaymentDetails().forEach(it -> it.setPolicy(policy));
 		
 		var periods = getAlreadyPaidPremiums(entity, policyNumber);
 		if(!periods.isEmpty()) {
@@ -102,32 +138,8 @@ public class PolicyPaymentService {
 		repo.deleteById(id);
 	}
 
-	public List<PolicyPaymentDetails> getPaymentDetails(Long policyPaymentId) {
+	protected List<PolicyPaymentDetails> getPaymentDetails(Long policyPaymentId) {
 		return repo.getPaymentDetails(policyPaymentId);
-	}
-	
-	@Transactional
-	public List<PolicyPaymentDetails> getOwedPayments(Period currentPeriod, String policyNumber) {
-		Policy policy = policyRepo.findById(policyNumber)
-				.orElseThrow(() -> new InvalidOperationException(
-						"Unable to determine owed premiums for unknown policy number '"
-						+ policyNumber+"'"));
-		
-		Period lastPaid = getLastPayedPeriod(policy);
-		List<PolicyPaymentDetails> list = new ArrayList<>();
-
-		for (UnpaidPolicyPayment item : repo.getUnpaidPolicyPayment(policy.getPolicyNumber())) {
-			list.add(item.getPolicyPaymentDetails());
-		}
-		
-		list.addAll(getOwedPremiums(policy, currentPeriod, lastPaid));
-		
-		BigDecimal penaltyDue = calculatePenaltyDue(policy, lastPaid);
-		if(penaltyDue != null && penaltyDue.signum() > 0) {
-			list.add(PolicyPaymentDetails.penaltyOf(penaltyDue));
-		}
-		
-		return list;
 	}
 
 	protected String generatePremiumId(String policyNumber, PolicyPaymentDetails premium) {
