@@ -36,7 +36,7 @@ import com.github.database.rider.junit5.DBUnitExtension;
 @Transactional
 @ActiveProfiles("test")
 @DBUnit(allowEmptyFields = true) 
-@DataSet({"funeral_scheme.xml", "policy.xml"}) //TODO: figure out how this works
+@DataSet({"funeral_scheme.xml", "policy.xml"})
 public class PolicyPaymentServiceIntegrationTest {
 
 
