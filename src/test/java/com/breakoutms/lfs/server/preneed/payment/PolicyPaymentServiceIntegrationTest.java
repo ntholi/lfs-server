@@ -52,11 +52,12 @@ public class PolicyPaymentServiceIntegrationTest {
 	@BeforeEach
 	void beforeEach() throws Exception {
 		entity = createPolicyPayment(getPolicy());
+		//TODO: @DataSet is not initiated when calling it in @BeforeEach when running test after the db has been
+		// re-created. fix it
 	}
 	
 	@Test
 	void get_by_id() throws Exception {
-		
 		repo.save(entity);
 		PolicyPayment response = service.get(entity.getId()).orElse(null);
 		assertThat(response).isEqualTo(entity);
