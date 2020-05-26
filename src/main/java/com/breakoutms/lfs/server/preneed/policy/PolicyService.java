@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.preneed.policy;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
@@ -42,6 +44,17 @@ public class PolicyService {
 		policy.setFuneralScheme(funeralScheme);
 		policy.setCoverAmount(premium.getCoverAmount());
 		policy.setPremiumAmount(premium.getPremiumAmount());
+		
+		LocalDate activeDate = policy.getRegistrationDate()
+				.plusMonths(funeralScheme.getMonthsBeforeActive());
+		LocalDate today = LocalDate.now();
+		
+		if(today.isEqual(activeDate) || today.isAfter(activeDate)) {
+			policy.setStatus(PolicyStatus.ACTIVE);
+		}
+		else {
+			policy.setStatus(PolicyStatus.WAITING_PERIOD);
+		}
 		return repo.save(policy);
 	}
 	

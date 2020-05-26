@@ -29,6 +29,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
@@ -72,9 +73,87 @@ public class PolicyServiceUnitTest {
 		Policy response = service.save(Policy.builder()
 				.dateOfBirth(LocalDate.now())
 				.build(), "");
+		
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(response);
+	}
+	
+	@Test
+	void update() throws Exception {
+		var id = entity.getId();
+		FuneralScheme fs = entity.getFuneralScheme();
+		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(fs));
+		when(repo.existsById(id)).thenReturn(true);
+		when(repo.save(any(Policy.class))).thenReturn(entity);
+
+		Policy response = service.update(id, new Policy(), "");
+		assertThat(response)
+			.isNotNull()
+			.isEqualTo(response);
+	}
+	
+	@Test
+	void failt_to_update_with_unknownId() {
+		var unknownId = "123456";
+		String exMsg = ExceptionSupplier.policyNotFound(unknownId).get().getMessage();
+		
+		when(repo.existsById(unknownId)).thenReturn(false);
+
+		Throwable thrown = catchThrowable(() -> {
+			service.update(unknownId, new Policy(), "");
+		});
+		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
+		assertThat(thrown).hasMessageContaining(exMsg);
+	}
+	
+	@Test
+	void delete() {
+		var id = entity.getId();
+		service.delete(id);
+		verify(repo).deleteById(id);
+	}
+	
+	
+	@Test
+	void a_new_policy_should_have_waiting_period_status() {
+		FuneralScheme scheme = entity.getFuneralScheme();
+		LocalDate today = LocalDate.now();
+		
+		when(funeralSchemeRepo.findByName(anyString()))
+			.thenReturn(Optional.of(entity.getFuneralScheme()));
+		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
+			.thenReturn(Optional.of(new Premium()));
+		when(repo.save(any(Policy.class))).thenReturn(entity);
+		
+		entity.setRegistrationDate(today);
+		Policy response1 = service.save(entity, anyString());
+		assertThat(response1.getStatus()).isEqualTo(PolicyStatus.WAITING_PERIOD);
+		
+		entity.setRegistrationDate(today
+				.minusMonths(scheme.getMonthsBeforeActive()));
+		Policy response2 = service.save(entity, anyString());
+		assertThat(response2.getStatus()).isEqualTo(PolicyStatus.ACTIVE);
+	}
+	
+	
+	@Test
+	void assign_policy_to_specified_policy() {
+		String funeralSchemeName = "ABC";
+		var scheme = new FuneralScheme(funeralSchemeName);
+		
+		Policy policy = new PolicyMother().build();
+		
+		when(funeralSchemeRepo.findByName(funeralSchemeName)).thenReturn(Optional.of(scheme));
+		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
+			.thenReturn(Optional.of(new Premium()));
+		when(repo.save(any(Policy.class))).thenReturn(policy);
+		
+		Policy response = service.save(policy, funeralSchemeName);
+		
+		assertThat(response.getFuneralScheme())
+			.isNotNull()
+			.isEqualTo(scheme);
 	}
 	
 	@Test
@@ -119,41 +198,6 @@ public class PolicyServiceUnitTest {
 		});
 		System.out.println(thrown.getMessage());
 		assertThat(thrown).isInstanceOf(InvalidOperationException.class);
-	}
-	
-	@Test
-	void update() throws Exception {
-		var id = entity.getId();
-		FuneralScheme fs = entity.getFuneralScheme();
-		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(fs));
-		when(repo.existsById(id)).thenReturn(true);
-		when(repo.save(any(Policy.class))).thenReturn(entity);
-
-		Policy response = service.update(id, new Policy(), "");
-		assertThat(response)
-			.isNotNull()
-			.isEqualTo(response);
-	}
-	
-	@Test
-	void failt_to_update_with_unknownId() {
-		var unknownId = "123456";
-		String exMsg = ExceptionSupplier.policyNotFound(unknownId).get().getMessage();
-		
-		when(repo.existsById(unknownId)).thenReturn(false);
-
-		Throwable thrown = catchThrowable(() -> {
-			service.update(unknownId, new Policy(), "");
-		});
-		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
-		assertThat(thrown).hasMessageContaining(exMsg);
-	}
-	
-	@Test
-	void delete() {
-		var id = entity.getId();
-		service.delete(id);
-		verify(repo).deleteById(id);
 	}
 	
 	private Policy createEntity() {

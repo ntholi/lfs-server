@@ -213,6 +213,7 @@
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-junit5</artifactId>
 			<version>1.13.1</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
