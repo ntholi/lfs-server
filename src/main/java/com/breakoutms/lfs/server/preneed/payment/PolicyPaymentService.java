@@ -65,7 +65,9 @@ public class PolicyPaymentService {
 		
 		BigDecimal penaltyDue = calculatePenaltyDue(policy, lastPaid);
 		if(penaltyDue != null && penaltyDue.signum() > 0) {
-			list.add(PolicyPaymentDetails.penaltyOf(penaltyDue));
+			PolicyPaymentDetails item = PolicyPaymentDetails.penaltyOf(penaltyDue);
+			item.setPolicy(policy);
+			list.add(item);
 		}
 		
 		return list;
@@ -117,7 +119,7 @@ public class PolicyPaymentService {
 		return repo.findPeriodsByPaymentIds(premiumIds);
 	}
 
-	private int periodAtInt(PolicyPaymentDetails paymentDetails) {
+	private int periodAsInt(PolicyPaymentDetails paymentDetails) {
 		Period period = paymentDetails.getPeriod();
 		return period.getYear() + period.getMonth().getValue();
 	}
@@ -181,7 +183,7 @@ public class PolicyPaymentService {
 		
 		return populateOwedPeriods(lastPaid, currentPeriod)
 				.stream()
-				.map(it -> new PolicyPaymentDetails(Type.PREMIUM, stdPremium, it))
+				.map(it -> new PolicyPaymentDetails(Type.PREMIUM, stdPremium, it, policy))
 				.collect(Collectors.toList());
 	}
 	

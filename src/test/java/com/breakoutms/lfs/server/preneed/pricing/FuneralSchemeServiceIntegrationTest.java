@@ -82,7 +82,7 @@ class FuneralSchemeServiceIntegrationTest {
 	}
 	
 	@Test
-	void succesfull_update() {
+	void update() {
 		var entity = new FuneralScheme();
 		var before = "A1";
 		var after = "A2";
@@ -234,7 +234,6 @@ class FuneralSchemeServiceIntegrationTest {
 		entityManager.flush();
 		entityManager.clear();
 		
-		FuneralScheme deepCopy = DeepCopy.copy(entity);
-		return deepCopy;
+		return DeepCopy.copy(entity);
 	}
 }

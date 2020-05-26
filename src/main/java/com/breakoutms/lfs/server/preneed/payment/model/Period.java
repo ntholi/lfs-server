@@ -14,11 +14,11 @@ import lombok.Data;
 public class Period {
 	
 	@NotNull
-	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
+	@Column(columnDefinition = "TINYINT UNSIGNED")
 	private Month month;
 	
 	@NotNull
-	@Column(nullable=false, columnDefinition = "SMALLINT UNSIGNED")
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer year;
 	
 	public static Period now() {

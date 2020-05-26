@@ -100,6 +100,13 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 		this.period = period;
 	}
 	
+	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period, Policy policy) {
+		this.type = type;
+		this.amount = amount;
+		this.period = period;
+		this.policy = policy;
+	}
+	
 	public static PolicyPaymentDetails premiumOf(Period period, BigDecimal amount) {
 		return new PolicyPaymentDetails(Type.PREMIUM, amount, period);
 	}

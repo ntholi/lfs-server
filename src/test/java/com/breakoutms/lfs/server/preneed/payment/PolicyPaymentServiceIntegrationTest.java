@@ -1,32 +1,37 @@
 package com.breakoutms.lfs.server.preneed.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
-import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
-import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
-import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.DBUnitExtension;
@@ -36,7 +41,7 @@ import com.github.database.rider.junit5.DBUnitExtension;
 @Transactional
 @ActiveProfiles("test")
 @DBUnit(allowEmptyFields = true) 
-@DataSet({"funeral_scheme.xml", "policy.xml"})
+@DataSet({"funeral_scheme.xml", "policy.xml"}) //TODO: figure out how this works
 public class PolicyPaymentServiceIntegrationTest {
 
 
@@ -44,54 +49,134 @@ public class PolicyPaymentServiceIntegrationTest {
 	@Autowired FuneralSchemeRepository funeralSchemeRepo;
 	@Autowired PolicyRepository policyRepository;
 	@Autowired PolicyPaymentService service;
+	@Autowired PolicyPaymentRepository repo;
+	@Autowired EntityManager entityManager;
 	
 	private PolicyPayment entity;
 	
 	@BeforeEach
 	void beforeEach() throws Exception {
-		entity = createPolicyPayment();
+		entity = createPolicyPayment(getPolicy());
 	}
 	
 	@Test
-	void save() {
+	void get_by_id() throws Exception {
 		
+		repo.save(entity);
+		PolicyPayment response = service.get(entity.getId()).orElse(null);
+		assertThat(response).isEqualTo(entity);
 	}
 	
 	@Test
-	void verify_that_premiumId_is_generated_correctly() throws Exception {
+	void all() {
+		PageRequest pagable = PageRequest.of(0, 1);
+	
+		repo.save(entity);
+		
+		Page<PolicyPayment> page = service.all(pagable);
+		assertThat(page).isNotEmpty();
+		assertThat(page).hasSize(1);
+		assertThat(page.get()).first().isEqualTo(entity);
+	}
 
+	@Test
+	void save() throws Exception {
+		PolicyPayment entity = new PolicyPaymentMother(getPolicy())
+				.removeId()
+				.withPremiumForCurrentMonth()
+				.build();
+		
+		PolicyPayment response = service.save(entity, getPolicy().getId());
+		
+		assertThat(response)
+			.isNotNull()
+			.isEqualTo(entity);
 	}
 	
 	@Test
-	void test() throws Exception {
-		BigDecimal amount = entity.getPolicy().getPremiumAmount();
+	void update() throws Exception {
+
+		var before = new BigDecimal("300");
+		var after = new BigDecimal("400");
+		
+		entity.setAmountTendered(before);
+		assertThat(entity.getAmountTendered()).isEqualTo(before);
+		Entry<Long, PolicyPayment> result = persistAndGetCopy(entity);
+		var copy = result.getValue();
+		var id = result.getKey();
+		
+		copy.setAmountTendered(after);
+		var updatedEntity = service.update(id, copy);
+		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
+		assertThat(updatedEntity.getAmountTendered()).isEqualTo(after);
+	}
+	
+	@Test
+	void failt_to_update_with_unknownId() {
+		var unknownId = 123456L;
+		String exMsg = ExceptionSupplier.notFound(PolicyPayment.class, unknownId)
+				.get().getMessage();
+
+		Throwable thrown = catchThrowable(() -> {
+			service.update(unknownId, new PolicyPayment());
+		});
+		assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
+		assertThat(thrown).hasMessageContaining(exMsg);
+	}
+	
+	@Test
+	void delete() {
+		repo.save(entity);
+		
+		var id = entity.getId();
+		service.delete(id);
+		
+		assertThat(repo.findAll()).isEmpty();
+	}
+	
+	@Test
+	void premiumId_is_generated_correctly() throws Exception {
+		Policy policy = getPolicy();
+		
 		LocalDate today = LocalDate.now();
-		var premium = PolicyPaymentDetails.premiumOf(Period.of(today), amount);
-
-		entity.setPolicyPaymentDetails(Set.of(premium));
-
-		String premiumId = entity.getPolicy().getPolicyNumber()
+		String premiumId = policy.getPolicyNumber()
 				+ String.valueOf(today.getYear()).substring(2)
 				+ today.getMonthValue();
 
-		var savedEntity = service.save(entity, entity.getPolicy().getId());
+		PolicyPayment entity = service.save(new PolicyPaymentMother(policy)
+				.removeId()
+				.withPremiumForCurrentMonth()
+				.build(), policy.getId());
 
-		var payment = createPolicyPayment();
-		payment.setPolicyPaymentDetails(Set.of(premium));
-		service.save(entity, entity.getPolicy().getId());
-
-		assertThat(savedEntity).isNotNull();
-		assertThat(savedEntity.getId()).isNotNull();
-		assertThat(savedEntity.getPolicyPaymentDetails()
+		assertThat(entity).isNotNull();
+		assertThat(entity.getId()).isNotNull();
+		assertThat(entity.getPolicyPaymentDetails()
 				.iterator()
 				.next()
 				.getPremiumPaymentId()).isEqualTo(premiumId);
 	}
 
-	protected PolicyPayment createPolicyPayment() throws Exception {
-		Policy policy = policyRepository.findById("256070816").get();
+	protected Entry<Long, PolicyPayment> persistAndGetCopy(PolicyPayment entity) {		
+		service.save(entity, getPolicy().getId());
+		entityManager.flush();
+		entityManager.clear();
+		
+		Long id = entity.getId();
+		
+		entity.setId(null);
+//		return DeepCopy.copy(entity);
+		return Map.entry(id, entity);
+	}
+	
+	protected PolicyPayment createPolicyPayment(Policy policy) throws Exception {
 		return new PolicyPaymentMother(policy)
+				.removeId()
+				.payment(null)
 				.withPremiumForCurrentMonth()
 				.build();
+	}
+	
+	private Policy getPolicy() {
+		return policyRepository.findById("256070816").get();
 	}
 }

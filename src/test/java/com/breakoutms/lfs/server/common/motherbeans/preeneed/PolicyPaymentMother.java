@@ -15,6 +15,11 @@ public class PolicyPaymentMother extends AuditableMother<PolicyPayment, Long>{
 		super();
 	}
 	
+	public PolicyPaymentMother removeId() {
+		entity.setId(null);
+		return this;
+	}
+	
 	public PolicyPaymentMother(Policy policy) {
 		super();
 		entity.setPolicy(policy);
@@ -42,13 +47,15 @@ public class PolicyPaymentMother extends AuditableMother<PolicyPayment, Long>{
 	public PolicyPaymentMother withPremiumForCurrentMonth() {
 		Policy policy = entity.getPolicy();
 		var payment = PolicyPaymentDetails.premiumOf(Period.now(), policy.getPremiumAmount());
+		payment.setPolicyPayment(entity);
+		payment.setPolicy(policy);
 		
 		//reset payment details
 		Set<PolicyPaymentDetails> paymentDetails = new HashSet<>();
 		paymentDetails.add(payment);
 		entity.setPolicyPaymentDetails(paymentDetails);
 		
+		
 		return this;
 	}
-
 }
