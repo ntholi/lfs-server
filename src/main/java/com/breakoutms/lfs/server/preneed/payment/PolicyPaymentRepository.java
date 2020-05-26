@@ -12,7 +12,6 @@ import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 
 @Repository
 public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Long>{

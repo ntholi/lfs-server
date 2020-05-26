@@ -91,7 +91,7 @@ public class PolicyPaymentJPATest {
 		
 		List<Month> paidMonths = repo.findPeriodsByPaymentIds(premiumIds)
 				.stream()
-				.map(it -> it.getMonth())
+				.map(Period::getMonth)
 				.collect(Collectors.toList());
 		
 		assertThat(paidMonths).hasSize(2);

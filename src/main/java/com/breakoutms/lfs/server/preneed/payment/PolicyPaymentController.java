@@ -37,7 +37,6 @@ import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
-import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/policies")

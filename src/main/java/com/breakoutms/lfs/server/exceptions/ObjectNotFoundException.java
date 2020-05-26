@@ -3,6 +3,11 @@ package com.breakoutms.lfs.server.exceptions;
 @SuppressWarnings("serial")
 public class ObjectNotFoundException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4908492165304579699L;
+
 	public ObjectNotFoundException() {
 		super("Object not found");
 	}

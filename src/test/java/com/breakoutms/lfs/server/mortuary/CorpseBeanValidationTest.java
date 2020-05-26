@@ -13,8 +13,6 @@ import javax.validation.Validation;
 
 import org.junit.jupiter.api.Test;
 
-import com.breakoutms.lfs.server.mortuary.Corpse;
-
 public class CorpseBeanValidationTest {
 
 	@Test
