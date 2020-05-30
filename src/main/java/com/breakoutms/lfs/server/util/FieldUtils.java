@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Id;
 
@@ -21,7 +22,9 @@ public class FieldUtils {
 		for(Class<?> c = type; c != null; c = c.getSuperclass()){
 			fields.addAll(0, Arrays.asList(c.getDeclaredFields()));
 		}
-		return fields;
+		return fields.stream() // remove AuditableEntity.CLAUSE field
+				.filter(it -> !it.getName().equals("CLAUSE"))
+				.collect(Collectors.toList());
 	}
 
 
