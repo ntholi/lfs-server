@@ -39,6 +39,7 @@ import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -210,10 +211,9 @@ public class PolicyPaymentServiceUnitTest {
 		
 		List<Period> periods = owedPayments.stream()
 				.map(PolicyPaymentDetails::getPeriod)
-				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		
-		assertThat(owedPayments).hasSize(3); //2 periods (FEBRUARY and MARCH) plus 1 penalty = 3 (size)
+		assertThat(owedPayments).hasSize(2); // FEBRUARY and MARCH 
 		assertThat(periods).hasSize(2);
 		assertThat(periods).contains(Period.of(2020, Month.MARCH), 
 				Period.of(2020, Month.FEBRUARY));
@@ -231,10 +231,19 @@ public class PolicyPaymentServiceUnitTest {
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.MARCH), policyNumber);
+				Period.of(2020, Month.APRIL), policyNumber);
 		
-		assertThat(detailsList).hasSize(3); //[2 periods from Fab to March] + [penalty]
-		assertThat(detailsList).contains(PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee()));
+		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
+		penalty.setPolicy(policy);
+		
+		assertThat(detailsList).hasSize(4); //[2 periods from Fab, March, Apr] + [penalty]
+		assertThat(detailsList).contains(penalty);
+		
+		assertThat(service.getOwedPayments(Period.of(2020, Month.JUNE), policyNumber)
+				.stream()
+				.filter(PolicyPaymentDetails::isPenalty)
+				.findFirst().get().getAmount()
+		).isEqualTo(funeralScheme.getPenaltyFee().multiply(new BigDecimal(2)));
 	}
 	
 	@Test
@@ -252,9 +261,9 @@ public class PolicyPaymentServiceUnitTest {
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.MARCH), policyNumber);
+				Period.of(2020, Month.APRIL), policyNumber);
 		
-		assertThat(detailsList).hasSize(4); // [2 periods from Fab to March] + [1 unpaid payment] + [penalty]
+		assertThat(detailsList).hasSize(5); // [3 periods from Fab to Apr] + [1 unpaid payment] + [penalty]
 		assertThat(detailsList).contains(unpaidList.get(0).getPolicyPaymentDetails());
 	}
 	

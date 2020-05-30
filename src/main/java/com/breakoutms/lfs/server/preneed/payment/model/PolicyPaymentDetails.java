@@ -107,6 +107,18 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 		this.policy = policy;
 	}
 	
+	public boolean isPenalty() {
+		return type != null && type == Type.PENALTY;
+	}
+	
+	public boolean isPremium() {
+		return type != null && type == Type.PREMIUM;
+	}
+	
+	public boolean isRegistration() {
+		return type != null && type == Type.REGISTRATION;
+	}
+	
 	public static PolicyPaymentDetails premiumOf(Period period, BigDecimal amount) {
 		return new PolicyPaymentDetails(Type.PREMIUM, amount, period);
 	}
@@ -116,11 +128,18 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	}
 	
 	public static PolicyPaymentDetails premiumFor(Policy policy, Period period) {
-		return premiumOf(period, policy.getPremiumAmount());
+		PolicyPaymentDetails details =  premiumOf(period, policy.getPremiumAmount());
+		details.setPolicy(policy);
+		return details;
 	}
 	
 	public static PolicyPaymentDetails premiumFor(Policy policy) {
-		return premiumOf(Period.now(), policy.getPremiumAmount());
+		return premiumFor(policy, Period.now());
+	}
+	
+	public PolicyPaymentDetails forPolicyPayment(PolicyPayment policyPayment) {
+		this.policyPayment = policyPayment;
+		return this;
 	}
 
 	public boolean hasSamePeriod(PolicyPaymentDetails info) {

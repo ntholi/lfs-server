@@ -63,7 +63,7 @@ public class PolicyPaymentService {
 		Period lastPaid = getLastPayedPeriod(policy);
 		list.addAll(getOwedPremiums(policy, currentPeriod, lastPaid));
 		
-		BigDecimal penaltyDue = calculatePenaltyDue(policy, lastPaid);
+		BigDecimal penaltyDue = calculatePenaltyDue(policy, currentPeriod, lastPaid);
 		if(penaltyDue != null && penaltyDue.signum() > 0) {
 			PolicyPaymentDetails item = PolicyPaymentDetails.penaltyOf(penaltyDue);
 			item.setPolicy(policy);
@@ -181,20 +181,20 @@ public class PolicyPaymentService {
 	private List<PolicyPaymentDetails> getOwedPremiums(Policy policy, Period currentPeriod, Period lastPaid) {
 		BigDecimal stdPremium = policy.getPremiumAmount();
 		
-		return populateOwedPeriods(lastPaid, currentPeriod)
+		return populateOwedPeriods(currentPeriod, lastPaid)
 				.stream()
 				.map(it -> new PolicyPaymentDetails(Type.PREMIUM, stdPremium, it, policy))
 				.collect(Collectors.toList());
 	}
 	
-	private BigDecimal calculatePenaltyDue(Policy policy, Period lastPaymentPeriod) {
+	private BigDecimal calculatePenaltyDue(Policy policy, Period currentPeriod, Period lastPaymentPeriod) {
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
-		int overdueMonths = getMonthsOverdue(policy, lastPaymentPeriod);
+		int overdueMonths = getMonthsOverdue(policy, currentPeriod, lastPaymentPeriod);
 		return funeralScheme.getPenaltyFee().multiply(new BigDecimal(overdueMonths));
 	}
 	
-	private int getMonthsOverdue(Policy policy, Period lastPaymentPeriod) {
-		int months = Period.differenceInMonths(Period.of(LocalDate.now()), lastPaymentPeriod);
+	private int getMonthsOverdue(Policy policy, Period currentPeriod, Period lastPaymentPeriod) {
+		int months = Period.differenceInMonths(currentPeriod, lastPaymentPeriod);
 		months -= 1; // minus one for the current month
 		int allowed = policy.getFuneralScheme().getMonthsBeforePenalty();
 		if(allowed <= 0) {
@@ -206,7 +206,7 @@ public class PolicyPaymentService {
 		return 0;
 	}
 	
-	private List<Period> populateOwedPeriods(Period lastPeriod, Period currentPeriod){
+	private List<Period> populateOwedPeriods(Period currentPeriod, Period lastPeriod){
 		List<Period> list = new ArrayList<>();
 		int months = Period.differenceInMonths(currentPeriod, lastPeriod);
 		for (int i = 0; i < months; i++) {

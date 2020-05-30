@@ -76,6 +76,8 @@ public class UnpaidPolicyPayment extends AuditableEntity<Long>{
 	}
 	
 	public PolicyPaymentDetails getPolicyPaymentDetails() {
-		return new PolicyPaymentDetails(type, amount, period);
+		PolicyPaymentDetails details = new PolicyPaymentDetails(type, amount, period);
+		details.setPolicy(policy);
+		return details;
 	}
 }

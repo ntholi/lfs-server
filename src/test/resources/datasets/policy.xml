@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <policy policy_number="256070816" created_at="2019-09-27 18:02:17" deleted="0" country="LESOTHO" date_of_birth="1991-09-02" deceased="0" district="4" gender="FEMALE" names="LIMAKATSO" national_id_number="053199287028" passport_number="" phone_number="57901819" premium_amount="30.0" registration_date="2019-10-01" residential_area="SEMPHETENYANE" surname="RAMORAKANE" branch_id="1" created_by="96" funeral_scheme_id="7" cover_amount="5000.0" status="ACTIVE"/>
+    <policy policy_number="256070816" created_at="2020-01-27 18:02:17" deleted="0" country="LESOTHO" date_of_birth="1991-09-02" deceased="0" district="4" gender="FEMALE" names="LIMAKATSO" national_id_number="053199287028" passport_number="" phone_number="57901819" premium_amount="30.0" registration_date="2020-01-27" residential_area="SEMPHETENYANE" surname="RAMORAKANE" branch_id="1" created_by="96" funeral_scheme_id="7" cover_amount="5000.0" status="ACTIVE"/>
 
     <policy policy_number="256070819" created_at="2019-09-27 13:22:04" deleted="0" country="LESOTHO" date_of_birth="1994-03-25" deceased="0" district="4" gender="FEMALE" names="MATSELISO " national_id_number="043279214723" passport_number="" phone_number="57411273" premium_amount="30.0" registration_date="2019-10-01" residential_area="NAZARETH HA SEOEHLANE" surname="MOLEKO" branch_id="1" created_by="30" funeral_scheme_id="7" cover_amount="5000.0" status="ACTIVE"/>
 
