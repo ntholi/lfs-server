@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.preneed.payment;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,6 +49,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -146,6 +148,8 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
+		Policy policy = entity.getPolicy();
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
 		PolicyPaymentDTO dto = MappersForTests.INSTANCE.map(entity);
@@ -156,7 +160,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 			.andExpect(jsonPath("_links.policy.href", 
 					endsWith("/preneed/policies/"+entity.getPolicy().getId())));
 		
-//		verify(service).save(entity); TODO
+		verify(service).save(any(PolicyPayment.class), eq(policy.getId()));
 	}
 
 
@@ -171,7 +175,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 		
 	   Expectations.forInvalidFields(result, exMsg);
 	   
-//	   verify(service, times(0)).save(any(PolicyPayment.class)); TODO
+	   verify(service, times(0)).save(any(PolicyPayment.class), anyString());
 	}
 	
 	@Test

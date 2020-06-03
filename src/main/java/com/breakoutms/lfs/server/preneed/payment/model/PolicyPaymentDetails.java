@@ -27,6 +27,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,6 +79,7 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@NotNull
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private PolicyPayment policyPayment;
