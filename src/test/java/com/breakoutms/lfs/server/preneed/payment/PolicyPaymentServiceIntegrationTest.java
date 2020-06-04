@@ -295,6 +295,8 @@ public class PolicyPaymentServiceIntegrationTest {
 	}
 	
 	private Policy getPolicy() {
-		return policyRepository.findById("256070816").get();
+		Policy policy = policyRepository.findById("256070816").get();
+		policy.setPassportNumber(null);
+		return policy;
 	}
 }
