@@ -38,6 +38,7 @@ public class PolicyPaymentService {
 	private final PolicyPaymentRepository repo;
 	private final PolicyRepository policyRepo;
 	private final UnpaidPolicyPaymentRepository owedRepo;
+	private final PolicyPaymentDetailsRepository paymentDetailsRepo;
 	
 	public Optional<PolicyPayment> get(Long id) {
 		return repo.findById(id);
@@ -112,16 +113,11 @@ public class PolicyPaymentService {
 		for (PolicyPaymentDetails it : payments) {
 			if(it.getType() == Type.PREMIUM) {
 				final String premiumId = generatePremiumId(policyNumber, it);
-				it.setPremiumPaymentId(premiumId);
+				it.setPremiumId(premiumId);
 				premiumIds.add(premiumId);
 			}
 		}
-		return repo.findPeriodsByPaymentIds(premiumIds);
-	}
-
-	private int periodAsInt(PolicyPaymentDetails paymentDetails) {
-		Period period = paymentDetails.getPeriod();
-		return period.getYear() + period.getMonth().getValue();
+		return repo.findPeriodsByPremiumIds(premiumIds);
 	}
 
 	@Transactional
@@ -153,12 +149,12 @@ public class PolicyPaymentService {
 		Objects.requireNonNull(period, "Period for PREMIUM cannot be null");
 		
 		String year = String.valueOf(period.getYear()).substring(2);
-		Integer month = period.getMonth().getValue();
+		String month = String.format("%02d", period.getMonth().getValue());
 		return policyNumber+year+month;
 	}
 	
 	private Period getLastPayedPeriod(Policy policy) {
-		Optional<Period> periodOpt = repo.getLastPayedPeriod(policy);
+		Optional<Period> periodOpt = paymentDetailsRepo.getLastPayedPeriod(policy.getId());
 		Period period = null;
 		if(periodOpt.isPresent()){
 			period = periodOpt.get();

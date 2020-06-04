@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @DisplayName("All Policy Payment Tests")
 @SelectPackages("com.breakoutms.lfs.server.preneed.payment")
-public class AllPolicyTests {
+public class AllPolicyPaymentTests {
 
 }

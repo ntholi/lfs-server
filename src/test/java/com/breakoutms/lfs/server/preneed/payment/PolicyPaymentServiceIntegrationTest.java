@@ -2,22 +2,16 @@ package com.breakoutms.lfs.server.preneed.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Map.Entry;
+
 import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -155,7 +149,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		LocalDate today = LocalDate.now();
 		String premiumId = policy.getPolicyNumber()
 				+ String.valueOf(today.getYear()).substring(2)
-				+ today.getMonthValue();
+				+ String.format("%02d", today.getMonthValue());
 
 		PolicyPayment entity = service.save(new PolicyPaymentMother(policy)
 				.removeId()
@@ -167,7 +161,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		assertThat(entity.getPolicyPaymentDetails()
 				.iterator()
 				.next()
-				.getPremiumPaymentId()).isEqualTo(premiumId);
+				.getPremiumId()).isEqualTo(premiumId);
 	}
 	
 	@Test

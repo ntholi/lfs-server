@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,14 +33,13 @@ import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
-import com.breakoutms.lfs.server.preneed.policy.model.Policy;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +48,7 @@ public class PolicyPaymentServiceUnitTest {
 	@Mock private PolicyPaymentRepository repo;
 	@Mock private PolicyRepository policyRepo;
 	@Mock private UnpaidPolicyPaymentRepository owedRepo;
+	@Mock private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	@InjectMocks private PolicyPaymentService service;
 	private final PolicyPayment entity;
 	private final long ID = 5L;
@@ -129,7 +128,7 @@ public class PolicyPaymentServiceUnitTest {
 		policy.setStatus(PolicyStatus.DEACTIVATED);
 		Period period = Period.now();
 		
-		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
 		
@@ -148,7 +147,7 @@ public class PolicyPaymentServiceUnitTest {
 		Period p1 = Period.of(2020, Month.JANUARY);
 		Period p2 = Period.of(2020, Month.MARCH);
 		
-		when(repo.findPeriodsByPaymentIds(anySet())).thenReturn(List.of(p1, p2));
+		when(repo.findPeriodsByPremiumIds(anySet())).thenReturn(List.of(p1, p2));
 		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
 		
 		
@@ -187,7 +186,7 @@ public class PolicyPaymentServiceUnitTest {
 		
 		when(owedRepo.findByPolicy(entity.getPolicy())).thenReturn(unpaids);
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
-		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(lastMonth));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(lastMonth));
 		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(entity.getPolicy()));
 		
 		service.save(entity, policy.getId());
@@ -202,7 +201,7 @@ public class PolicyPaymentServiceUnitTest {
 		
 		Optional<Period> lastPaidPeriod = Optional.of(Period.of(2020, Month.JANUARY));
 		
-		when(repo.getLastPayedPeriod(policy)).thenReturn(lastPaidPeriod);
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(lastPaidPeriod);
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(entity.getPolicy()));
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
@@ -226,7 +225,7 @@ public class PolicyPaymentServiceUnitTest {
 		Period period = Period.of(2020, Month.JANUARY);
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
-		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
@@ -257,7 +256,7 @@ public class PolicyPaymentServiceUnitTest {
 		List<UnpaidPolicyPayment> unpaidList = List.of(new UnpaidPolicyPayment(paimentDetails));
 		
 		when(owedRepo.findByPolicy(policy)).thenReturn(unpaidList);
-		when(repo.getLastPayedPeriod(policy)).thenReturn(Optional.of(period));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(

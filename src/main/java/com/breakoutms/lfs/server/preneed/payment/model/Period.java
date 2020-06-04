@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
@@ -14,12 +15,26 @@ import lombok.Data;
 public class Period {
 	
 	@NotNull
-	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Column(columnDefinition = "TINYINT")
+	@Convert(converter = MonthAttributeConverter.class)
 	private Month month;
 	
 	@NotNull
-	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	@Column(columnDefinition = "SMALLINT")
 	private Integer year;
+	
+	public Period(@NotNull Integer month, @NotNull Integer year) {
+		this.month = MonthAttributeConverter.fromInt(month);
+		this.year = year;
+	}
+	
+	public Period(@NotNull Month month, @NotNull Integer year) {
+		this.month = month;
+		this.year = year;
+	}
+	
+	public Period() {
+	}
 	
 	public static Period now() {
 		return Period.of(LocalDate.now());

@@ -66,6 +66,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	@MockBean private BranchRepository branchRepo;
 	@MockBean private UnpaidPolicyPaymentRepository unpaidRepo;
+	@MockBean private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	
 	private final PolicyPayment entity = createEntity();
 	private final long ID = 5L;

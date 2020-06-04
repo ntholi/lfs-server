@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.preneed.payment.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -41,6 +45,7 @@ import lombok.ToString;
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
+
 @GenericGenerator(
         name = "policy_payment_details_id",          
         strategy = IdGenerator.STRATEGY,
@@ -48,8 +53,30 @@ import lombok.ToString;
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
 })
 @Table(indexes = {
-        @Index(columnList = "premiumPaymentId", name = "unique_premium_payment", unique=true)
+        @Index(columnList = "premiumId", name = "unique_premium_payment", unique=true)
 })
+
+@SqlResultSetMapping(
+	    name="period",
+	    classes={
+	        @ConstructorResult(
+	            targetClass=Period.class,
+	            columns={
+	                @ColumnResult(name="month", type = Integer.class),
+	                @ColumnResult(name="year", type = Integer.class)
+	            }
+	        )
+	    }
+	)
+
+@NamedNativeQuery(name="PolicyPaymentDetails.getLastPayedPeriod", 
+	query="SELECT month, year FROM policy_payment_details "
+			+ " WHERE ( deleted = 0)"
+			+ " AND policy_number = :policyNumber"
+			+ " ORDER BY premium_id DESC"
+			+ " LIMIT 1",
+		resultSetMapping="period")
+
 @SQLDelete(sql = "UPDATE policy_payment_details SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class PolicyPaymentDetails extends AuditableEntity<Long> {
@@ -87,13 +114,13 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	private boolean markedAsPaid;
 	
 	@Column(columnDefinition = "CHAR(14)")
-	private String premiumPaymentId;
+	private String premiumId;
 	
 	// Has been added for faster lookup, allowing lookup by policy 
 	// without having to join PolicyPayment table
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, name = "policy_number")
 	private Policy policy;
 	
 	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {

@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +34,7 @@ import com.github.database.rider.junit5.DBUnitExtension;
 public class PolicyPaymentJPATest {
 
 	@Autowired PolicyPaymentRepository repo;
+	@Autowired PolicyPaymentDetailsRepository paymentDetailsRepo;
 	@Autowired PolicyRepository policyRepo;
 	@Autowired PolicyPaymentService service;
 	
@@ -55,15 +55,24 @@ public class PolicyPaymentJPATest {
 			it.setPolicy(policy);
 		});
 		payment.setPolicyPaymentDetails(details);
-		String premiumId = payment.getPolicy().getPolicyNumber()
-				+ String.valueOf(lastPeriod.getYear()).substring(2)
-				+ lastPeriod.getMonth().getValue();
 		
 		service.save(payment, policy.getPolicyNumber());
 		
-		Optional<String> res = repo.findLastPremiumId(policy.getId());
+		paymentDetailsRepo.findAll().forEach(it ->{
+			System.err.println();
+			System.err.print("getPremiumPaymentId: "+it.getPremiumId());
+			System.err.print(", policy: "+it.getPolicy().getId());
+			System.err.print(", period: "+it.getPeriod());
+			System.err.println();
+		});
 		
-		assertThat(res).contains(premiumId);
+//		Period res = paymentDetailsRepo.findFirstByPolicyOrderByPremiumPaymentIdDesc(policy).get().getPeriod();
+		
+		Period res = paymentDetailsRepo.getLastPayedPeriod(policy.getId()).get();
+		
+		System.out.println(res);
+		
+		assertThat(res).isEqualTo(lastPeriod);
 	}
 	
 	@Test
@@ -89,7 +98,7 @@ public class PolicyPaymentJPATest {
 				.map(it -> service.generatePremiumId(policy.getId(), it))
 				.collect(Collectors.toSet());
 		
-		List<Month> paidMonths = repo.findPeriodsByPaymentIds(premiumIds)
+		List<Month> paidMonths = repo.findPeriodsByPremiumIds(premiumIds)
 				.stream()
 				.map(Period::getMonth)
 				.collect(Collectors.toList());
