@@ -17,6 +17,7 @@ public interface PolicyPaymentDetailsRepository extends JpaRepository<PolicyPaym
 	 * @param policyNumber
 	 * @return
 	 */
+	//TODO: FOR SOME REASON, THIS METHOD UPDATES POLICY SOMEHOW, i DON'T KNOW HOW
 	@Query(nativeQuery = true)
 	Optional<Period> getLastPayedPeriod(@Param("policyNumber") String policyNumber);
 }
