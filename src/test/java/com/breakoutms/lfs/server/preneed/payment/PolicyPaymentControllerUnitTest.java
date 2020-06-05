@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,10 @@ import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -232,6 +235,38 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 
 		verify(service).getPaymentDetails(ID); 
 	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void test_getPolicyPaymentInquiry() throws Exception {
+		Policy policy = entity.getPolicy();
+		String policyNumber = policy.getPolicyNumber();
+		Period period = Period.of(2020, Month.JANUARY);
+		FuneralScheme funeralScheme = policy.getFuneralScheme();
+		
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+		when(unpaidRepo.findByPolicy(policy)).thenReturn(List.of());
+		
+		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
+		
+		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(
+				policyNumber, Period.of(2020, Month.APRIL));
+		
+		mockMvc.perform(get(URL+"/inquire"))
+			.andDo(print())
+			.andExpect(status().isOk());
+		
+//		assertThat(inquiry.getPolicyNumber()).isEqualTo(policyNumber);
+//		assertThat(inquiry.getPolicyHolder()).isEqualTo(policy.getFullName());
+//		assertThat(inquiry.getPremium()).isEqualTo(policy.getPremiumAmount());
+//		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(period);
+//		assertThat(inquiry.getPenaltyDue()).isEqualTo(penalty.getAmount());
+//		assertThat(inquiry.getPremiumDue()).isEqualTo(policy.getPremiumAmount()
+//				.multiply(new BigDecimal("3")));
+//		assertThat(inquiry.getPayments()).hasSize(4);
+	}
+	
 	
 	private PolicyPayment createEntity() throws Exception {
 		return new PolicyPaymentMother(PolicyMother.of(PlanType.Plan_C, 43))

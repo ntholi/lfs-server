@@ -17,5 +17,5 @@ public class PolicyPaymentInquiry {
 	private BigDecimal penaltyDue;
 	private BigDecimal premiumDue;
 	private BigDecimal paymentDue;
-	private List<PolicyPaymentDetails> payments;
+	private List<PolicyPaymentDetailsViewModel> payments;
 }

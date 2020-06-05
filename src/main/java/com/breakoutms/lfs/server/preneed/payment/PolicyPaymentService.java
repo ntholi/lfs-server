@@ -26,6 +26,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
+import com.breakoutms.lfs.server.preneed.policy.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -86,7 +87,7 @@ public class PolicyPaymentService {
 				.penaltyDue(penaltyDue)
 				.premiumDue(premiumDue)
 				.paymentDue(paymentDue)
-				.payments(paymentDetails)
+				.payments(PreneedMapper.INSTANCE.map(paymentDetails))
 				.build();
 	}
 	

@@ -22,5 +22,4 @@ public class PolicyPaymentDetailsViewModel extends RepresentationModel<PolicyPay
 	private PolicyPaymentDetails.Type type;
 	private Period period;
 	private BigDecimal amount;
-	private boolean markedAsPaid;
 }

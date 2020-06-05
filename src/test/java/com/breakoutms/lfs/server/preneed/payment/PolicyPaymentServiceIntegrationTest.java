@@ -2,12 +2,15 @@ package com.breakoutms.lfs.server.preneed.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
@@ -272,6 +276,28 @@ public class PolicyPaymentServiceIntegrationTest {
 		
 		assertThat(detailsList).hasSize(5); // [2 periods from Fab to Apr] + [1 unpaid payment] + [penalty]
 		assertThat(detailsList).contains(unpaid.getPolicyPaymentDetails());
+	}
+	
+	@Test
+	void test_getPolicyPaymentInquiry() {
+		Policy policy = entity.getPolicy();
+		String policyNumber = policy.getPolicyNumber();
+		Period period = Period.of(2020, Month.JANUARY);
+		FuneralScheme funeralScheme = policy.getFuneralScheme();
+		
+		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
+		
+		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(
+				policyNumber, Period.of(2020, Month.APRIL));
+		
+		assertThat(inquiry.getPolicyNumber()).isEqualTo(policyNumber);
+		assertThat(inquiry.getPolicyHolder()).isEqualTo(policy.getFullName());
+		assertThat(inquiry.getPremium()).isEqualTo(policy.getPremiumAmount());
+		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(period);
+		assertThat(inquiry.getPenaltyDue()).isEqualTo(penalty.getAmount());
+		assertThat(inquiry.getPremiumDue()).isEqualTo(policy.getPremiumAmount()
+				.multiply(new BigDecimal("3")));
+		assertThat(inquiry.getPayments()).hasSize(4);
 	}
 	
 	protected Entry<Long, PolicyPayment> persistAndGetCopy(PolicyPayment entity) {		

@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.preneed.policy;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -47,4 +49,5 @@ public abstract class PreneedMapper {
 	public abstract PolicyPaymentDetails map(PolicyPaymentDetailsDTO dto);
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
 	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
+	public abstract List<PolicyPaymentDetailsViewModel> map(List<PolicyPaymentDetails> list);
 }
