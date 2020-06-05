@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
@@ -23,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SQLDelete;
@@ -153,13 +157,19 @@ public class Policy extends AuditableEntity<String> {
 		this.dateOfBirth = LocalDate.now().minusYears(age);
 	}
 	
+	public String getFullName() {
+	    return Stream.of(names, surname)
+	        .filter(StringUtils::isNotBlank)
+	        .collect(Collectors.joining(" "));
+	}
+	
 	@JsonIgnore
-	public int getAge() {
+	public Optional<Integer> getAge() {
 		Integer age = null;
 		if(dateOfBirth != null) {
 			age = (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
 		}
-		return age;
+		return Optional.of(age);
 	}
 	
 	@JsonIgnore

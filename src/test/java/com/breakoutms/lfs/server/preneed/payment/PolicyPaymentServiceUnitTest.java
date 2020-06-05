@@ -36,6 +36,7 @@ import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
@@ -206,7 +207,7 @@ public class PolicyPaymentServiceUnitTest {
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> owedPayments = service.getOwedPayments(
-				Period.of(2020, Month.MARCH), policyNumber);
+				policyNumber, Period.of(2020, Month.MARCH));
 		
 		List<Period> periods = owedPayments.stream()
 				.map(PolicyPaymentDetails::getPeriod)
@@ -230,7 +231,7 @@ public class PolicyPaymentServiceUnitTest {
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.APRIL), policyNumber);
+				policyNumber, Period.of(2020, Month.APRIL));
 		
 		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
 		penalty.setPolicy(policy);
@@ -238,7 +239,7 @@ public class PolicyPaymentServiceUnitTest {
 		assertThat(detailsList).hasSize(4); //[2 periods from Fab, March, Apr] + [penalty]
 		assertThat(detailsList).contains(penalty);
 		
-		assertThat(service.getOwedPayments(Period.of(2020, Month.JUNE), policyNumber)
+		assertThat(service.getOwedPayments(policyNumber, Period.of(2020, Month.JUNE))
 				.stream()
 				.filter(PolicyPaymentDetails::isPenalty)
 				.findFirst().get().getAmount()
@@ -260,10 +261,36 @@ public class PolicyPaymentServiceUnitTest {
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.APRIL), policyNumber);
+				policyNumber, Period.of(2020, Month.APRIL));
 		
 		assertThat(detailsList).hasSize(5); // [3 periods from Fab to Apr] + [1 unpaid payment] + [penalty]
 		assertThat(detailsList).contains(unpaidList.get(0).getPolicyPaymentDetails());
+	}
+	
+	@Test
+	void test_getPolicyPaymentInquiry() {
+		Policy policy = entity.getPolicy();
+		String policyNumber = policy.getPolicyNumber();
+		Period period = Period.of(2020, Month.JANUARY);
+		FuneralScheme funeralScheme = policy.getFuneralScheme();
+		
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
+		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
+		
+		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
+		
+		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(
+				policyNumber, Period.of(2020, Month.APRIL));
+		
+		assertThat(inquiry.getPolicyNumber()).isEqualTo(policyNumber);
+		assertThat(inquiry.getPolicyHolder()).isEqualTo(policy.getFullName());
+		assertThat(inquiry.getPremium()).isEqualTo(policy.getPremiumAmount());
+		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(period);
+		assertThat(inquiry.getPenaltyDue()).isEqualTo(penalty.getAmount());
+		assertThat(inquiry.getPremiumDue()).isEqualTo(policy.getPremiumAmount()
+				.multiply(new BigDecimal("3")));
+		assertThat(inquiry.getPayments()).hasSize(4);
 	}
 	
 	private PolicyPayment createEntity() {

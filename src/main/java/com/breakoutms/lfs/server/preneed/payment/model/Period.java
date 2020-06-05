@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.preneed.payment.model;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class Period {
+public class Period implements Comparable<Period>{
 	
 	@NotNull
 	@Column(columnDefinition = "TINYINT")
@@ -55,6 +56,16 @@ public class Period {
 		return plusMonths(1);
 	}
 	
+	public Period previous() {
+		return minusMonths(1);
+	}
+	
+	public Period minusMonths(int months) {
+		LocalDate date = LocalDate.of(year, month, 1)
+				.minusMonths(months);
+		return Period.of(date);
+	}
+	
 	public Period plusMonths(int months) {
 		months = month.getValue() + months;
 		int years = 0;
@@ -91,19 +102,29 @@ public class Period {
 	 * @param p2
 	 * @return **/
 	public static int differenceInMonths(Period p1, Period p2) {
-		int years = p1.year - p2.year;
-		int p1Months = (12 * years) + p1.month.getValue();
-		int p2Months = p2.month.getValue();
+		LocalDate date1 = LocalDate.of(p1.year, p1.month, 1); 
+		LocalDate date2 = LocalDate.of(p2.year, p2.month, 1); 
 		
-		return p1Months - p2Months;
+		return (int) ChronoUnit.MONTHS.between(date1, date2);
 	}
 
 	public String name() {
 		return month+ " "+ year;
 	}
 	
+	public Integer ordinal() {
+		String y = String.valueOf(year).substring(2);
+		String m = String.format("%02d", month.getValue());
+		return Integer.valueOf(y + m);
+	}
+	
 	@Override
 	public String toString() {
 		return name();
+	}
+
+	@Override
+	public int compareTo(Period o) {
+		return ordinal().compareTo(o.ordinal());
 	}
 }

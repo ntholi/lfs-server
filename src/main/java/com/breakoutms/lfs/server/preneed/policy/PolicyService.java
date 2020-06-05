@@ -37,7 +37,7 @@ public class PolicyService {
 	@Transactional
 	public Policy save(Policy policy, final String funeralSchemeName) {
 		FuneralScheme funeralScheme = getFuneralScheme(funeralSchemeName);
-		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge())
+		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge().get())
 				.orElseThrow(() -> new InvalidOperationException(
 						"Unable to determine Premium for "+funeralSchemeName+" funeral scheme "+
 						"with policy holder's age at "+ policy.getAge()));

@@ -22,6 +22,7 @@ import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
@@ -49,12 +50,55 @@ public class PolicyPaymentService {
 	}
 	
 	@Transactional
-	protected List<PolicyPaymentDetails> getOwedPayments(Period currentPeriod, String policyNumber) {
+	public PolicyPaymentInquiry getPolicyPaymentInquiry(String policyNumber, Period currentPeriod) {
+		Policy policy = policyRepo.findById(policyNumber)
+				.orElseThrow(() -> new InvalidOperationException(
+						"Unable to get payment details for unknown policy number '"
+						+ policyNumber+"'"));
+		List<PolicyPaymentDetails> paymentDetails = getOwedPayments(policy, currentPeriod);
+		Period lastPeriod = paymentDetails.stream()
+				.map(PolicyPaymentDetails::getPeriod)
+				.filter(Objects::nonNull)
+				.sorted()
+				.findFirst()
+				.map(Period::previous).orElse(null);
+		
+		BigDecimal penaltyDue = paymentDetails.stream()
+				.filter(PolicyPaymentDetails::isPenalty)
+				.map(PolicyPaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		BigDecimal premiumDue = paymentDetails.stream()
+				.filter(PolicyPaymentDetails::isPremium)
+				.map(PolicyPaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		BigDecimal paymentDue = paymentDetails.stream()
+				.map(PolicyPaymentDetails::getAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+				
+		
+		return PolicyPaymentInquiry.builder()
+				.policyNumber(policyNumber)
+				.policyHolder(policy.getFullName())
+				.premium(policy.getPremiumAmount())
+				.lastPayedPeriod(lastPeriod)
+				.penaltyDue(penaltyDue)
+				.premiumDue(premiumDue)
+				.paymentDue(paymentDue)
+				.payments(paymentDetails)
+				.build();
+	}
+	
+	protected List<PolicyPaymentDetails> getOwedPayments(String policyNumber, Period currentPeriod) {
 		Policy policy = policyRepo.findById(policyNumber)
 				.orElseThrow(() -> new InvalidOperationException(
 						"Unable to determine owed premiums for unknown policy number '"
 						+ policyNumber+"'"));
-		
+		return getOwedPayments(policy, currentPeriod);
+	}
+	
+	protected List<PolicyPaymentDetails> getOwedPayments(Policy policy, Period currentPeriod) {
 		List<PolicyPaymentDetails> list = new ArrayList<>();
 
 		for (UnpaidPolicyPayment item : owedRepo.findByPolicy(policy)) {
@@ -87,8 +131,7 @@ public class PolicyPaymentService {
 			throw new AccountNotActiveException(msg);
 		}
 		
-//		TODO: getOwedPayments has to be cached for each policyNumber catch value deleted here
-		List<UnpaidPolicyPayment> notPaid = getOwedPayments(Period.now(), policyNumber)
+		List<UnpaidPolicyPayment> notPaid = getOwedPayments(policy, Period.now())
 				.stream()
 				.filter(it -> !entity.getPolicyPaymentDetails().contains(it))
 				.map(UnpaidPolicyPayment::new)
@@ -110,7 +153,7 @@ public class PolicyPaymentService {
 	protected List<Period> getAlreadyPaidPremiums(final PolicyPayment entity, String policyNumber) {
 		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
 		Set<String> premiumIds = new HashSet<>();
-		for (PolicyPaymentDetails it : payments) {
+		for (PolicyPaymentDetails it: payments) {
 			if(it.getType() == Type.PREMIUM) {
 				final String premiumId = generatePremiumId(policyNumber, it);
 				it.setPremiumId(premiumId);
@@ -148,9 +191,7 @@ public class PolicyPaymentService {
 		Period period = premium.getPeriod();
 		Objects.requireNonNull(period, "Period for PREMIUM cannot be null");
 		
-		String year = String.valueOf(period.getYear()).substring(2);
-		String month = String.format("%02d", period.getMonth().getValue());
-		return policyNumber+year+month;
+		return policyNumber+String.valueOf(period.ordinal());
 	}
 	
 	private Period getLastPayedPeriod(Policy policy) {
@@ -190,7 +231,7 @@ public class PolicyPaymentService {
 	}
 	
 	private int getMonthsOverdue(Policy policy, Period currentPeriod, Period lastPaymentPeriod) {
-		int months = Period.differenceInMonths(currentPeriod, lastPaymentPeriod);
+		int months = Period.differenceInMonths(lastPaymentPeriod, currentPeriod);
 		months -= 1; // minus one for the current month
 		int allowed = policy.getFuneralScheme().getMonthsBeforePenalty();
 		if(allowed <= 0) {
@@ -204,7 +245,7 @@ public class PolicyPaymentService {
 	
 	private List<Period> populateOwedPeriods(Period currentPeriod, Period lastPeriod){
 		List<Period> list = new ArrayList<>();
-		int months = Period.differenceInMonths(currentPeriod, lastPeriod);
+		int months = Period.differenceInMonths(lastPeriod, currentPeriod);
 		for (int i = 0; i < months; i++) {
 			lastPeriod = lastPeriod.plusMonths(1);
 			list.add(lastPeriod);

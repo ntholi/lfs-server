@@ -222,7 +222,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		String policyNumber = policy.getPolicyNumber();
 		
 		List<PolicyPaymentDetails> owedPayments = service.getOwedPayments(
-				Period.of(2020, Month.MARCH), policyNumber);
+				policyNumber, Period.of(2020, Month.MARCH));
 		
 		List<Period> periods = owedPayments.stream()
 				.map(PolicyPaymentDetails::getPeriod)
@@ -241,7 +241,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.APRIL), policyNumber);
+				policyNumber, Period.of(2020, Month.APRIL));
 		
 		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
 		penalty.setPolicy(policy);
@@ -249,7 +249,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		assertThat(detailsList).hasSize(4); //[2 periods from Fab, March, Apr] + [penalty]
 		assertThat(detailsList).contains(penalty);
 		
-		assertThat(service.getOwedPayments(Period.of(2020, Month.JUNE), policyNumber)
+		assertThat(service.getOwedPayments(policyNumber, Period.of(2020, Month.JUNE))
 				.stream()
 				.filter(PolicyPaymentDetails::isPenalty)
 				.findFirst().get().getAmount()
@@ -268,7 +268,7 @@ public class PolicyPaymentServiceIntegrationTest {
 		unpaidRepo.saveAndFlush(unpaid);
 		
 		List<PolicyPaymentDetails> detailsList = service.getOwedPayments(
-				Period.of(2020, Month.APRIL), policyNumber);
+				policyNumber, Period.of(2020, Month.APRIL));
 		
 		assertThat(detailsList).hasSize(5); // [2 periods from Fab to Apr] + [1 unpaid payment] + [penalty]
 		assertThat(detailsList).contains(unpaid.getPolicyPaymentDetails());
