@@ -49,7 +49,6 @@ import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -241,30 +240,26 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	void test_getPolicyPaymentInquiry() throws Exception {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
-		Period period = Period.of(2020, Month.JANUARY);
+		Period lastPaidPeriod = Period.of(2020, Month.JANUARY);
+		Period currentPeriod = Period.of(2020, Month.APRIL);
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
-		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(lastPaidPeriod));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(unpaidRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
 		
-		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(
-				policyNumber, Period.of(2020, Month.APRIL));
-		
-		mockMvc.perform(get(URL+"/inquire"))
+		mockMvc.perform(get(URL+"/inquire?period="+currentPeriod.ordinal()))
 			.andDo(print())
-			.andExpect(status().isOk());
-		
-//		assertThat(inquiry.getPolicyNumber()).isEqualTo(policyNumber);
-//		assertThat(inquiry.getPolicyHolder()).isEqualTo(policy.getFullName());
-//		assertThat(inquiry.getPremium()).isEqualTo(policy.getPremiumAmount());
-//		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(period);
-//		assertThat(inquiry.getPenaltyDue()).isEqualTo(penalty.getAmount());
-//		assertThat(inquiry.getPremiumDue()).isEqualTo(policy.getPremiumAmount()
-//				.multiply(new BigDecimal("3")));
-//		assertThat(inquiry.getPayments()).hasSize(4);
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("policyNumber").value(policyNumber))
+			.andExpect(jsonPath("policyHolder").value(policy.getFullName()))
+			.andExpect(jsonPath("premium").value(policy.getPremiumAmount()))
+			.andExpect(jsonPath("lastPayedPeriod").value(lastPaidPeriod))
+			.andExpect(jsonPath("penaltyDue").value(penalty.getAmount()))
+			.andExpect(jsonPath("premiumDue").value(policy.getPremiumAmount()
+					.multiply(new BigDecimal("3"))));
 	}
 	
 	

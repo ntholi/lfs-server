@@ -271,22 +271,23 @@ public class PolicyPaymentServiceUnitTest {
 	void test_getPolicyPaymentInquiry() {
 		Policy policy = entity.getPolicy();
 		String policyNumber = policy.getPolicyNumber();
-		Period period = Period.of(2020, Month.JANUARY);
+		Period lastPaidPeriod = Period.of(2020, Month.JANUARY);
+		Period currentPeriod = Period.of(2020, Month.APRIL);
 		FuneralScheme funeralScheme = policy.getFuneralScheme();
 		
-		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(period));
+		when(paymentDetailsRepo.getLastPayedPeriod(policy.getId())).thenReturn(Optional.of(lastPaidPeriod));
 		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
 		when(owedRepo.findByPolicy(policy)).thenReturn(List.of());
 		
 		PolicyPaymentDetails penalty = PolicyPaymentDetails.penaltyOf(funeralScheme.getPenaltyFee());
 		
 		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(
-				policyNumber, Period.of(2020, Month.APRIL));
+				policyNumber, currentPeriod);
 		
 		assertThat(inquiry.getPolicyNumber()).isEqualTo(policyNumber);
 		assertThat(inquiry.getPolicyHolder()).isEqualTo(policy.getFullName());
 		assertThat(inquiry.getPremium()).isEqualTo(policy.getPremiumAmount());
-		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(period);
+		assertThat(inquiry.getLastPayedPeriod()).isEqualTo(lastPaidPeriod);
 		assertThat(inquiry.getPenaltyDue()).isEqualTo(penalty.getAmount());
 		assertThat(inquiry.getPremiumDue()).isEqualTo(policy.getPremiumAmount()
 				.multiply(new BigDecimal("3")));

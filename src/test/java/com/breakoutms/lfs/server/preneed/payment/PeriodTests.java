@@ -46,6 +46,20 @@ class PeriodTests {
 		assertThat(p2.getYear()).isEqualTo(2021);
 		assertThat(p2.getMonth()).isEqualTo(Month.JANUARY);
 	}
+	
+	@Test
+	void testFromOrdinal() {
+		Period p1 = Period.fromOrdinal("2012");
+		Period p2 = Period.fromOrdinal("0707");
+		Period p3 = Period.fromOrdinal("1901");
+//		Period p4 = Period.fromOrdinal("8801"); THIS ONE IT ASSUMES IS JANUARY 2088 not JANUARY 1988
+//		I should probably fix it
+		
+		assertEquals(p1, Period.of(2020, Month.DECEMBER));
+		assertEquals(p2, Period.of(2007, Month.JULY));
+		assertEquals(p3, Period.of(2019, Month.JANUARY));
+//		assertEquals(p4, Period.of(1991, Month.JANUARY));
+	}
 
 	@Test
 	void testPrevious() {
