@@ -29,6 +29,7 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 		Field[] idFields = FieldUtils.getFieldsWithAnnotation(entity.getClass(), Id.class);
 		for (Field field: idFields) {
 			try {
+				field.setAccessible(true);
 				field.set(entity, id);
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -74,7 +74,6 @@ class ProductServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		var entity = new Product();
 		var before = "A1";
 		var after = "A2";
 		
@@ -103,7 +102,6 @@ class ProductServiceIntegrationTest {
 	
 	@Test
 	void successful_delete() {
-		var entity = new Product();
 		entity.setName("123");
 		repo.save(entity);
 		var id = entity.getId();
