@@ -27,7 +27,7 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.preneed.policy.PreneedMapper;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefitViewModel;
@@ -48,7 +48,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	private static final String FUNERAL_SCHEME = "funeralScheme";
 	private final FuneralSchemeService service;
 	private final PagedResourcesAssembler<FuneralSchemeViewModel> pagedAssembler;
-	
+
+	//TODO: ADD DELETE END-POINT
 
 	@GetMapping("/{id}")
 	public ResponseEntity<FuneralSchemeViewModel> get(@PathVariable Integer id) {

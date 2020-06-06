@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.hateoas.CollectionModel;
 
-import com.breakoutms.lfs.server.preneed.policy.PreneedMapper;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

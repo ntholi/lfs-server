@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.preneed.policy;
+package com.breakoutms.lfs.server.preneed;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public abstract class PreneedMapper {
 	
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)
-	protected abstract Policy map(PolicyDTO dto);
+	public abstract Policy map(PolicyDTO dto);
 	
 	public abstract PolicyPayment map(PolicyPaymentDTO dto);
 	@Mapping(source = "month", target = "period.month")
