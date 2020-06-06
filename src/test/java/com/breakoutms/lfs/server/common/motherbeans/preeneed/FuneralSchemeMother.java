@@ -8,9 +8,9 @@ import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
+import com.breakoutms.lfs.server.products.model.ProductType;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
-import com.breakoutms.lfs.server.sales.items.ItemType;
 
 public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>{
 
@@ -100,25 +100,25 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.id(1)
 						.deductable(Deductable.values()[1])
 						.discount(money(0))
-						.itemType(ItemType.values()[0])
+						.productType(ProductType.values()[0])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(2)
 						.deductable(Deductable.values()[0])
 						.discount(money(0))
-						.itemType(ItemType.values()[5])
+						.productType(ProductType.values()[5])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(3)
 						.deductable(Deductable.values()[1])
 						.discount(money(0))
-						.itemType(ItemType.values()[7])
+						.productType(ProductType.values()[7])
 						.funeralScheme(entity).build(),
 					FuneralSchemeBenefit.builder()
 						.id(4)
 						.deductable(Deductable.values()[1])
 						.discount(money(0))
-						.itemType(ItemType.values()[9])
+						.productType(ProductType.values()[9])
 						.funeralScheme(entity).build()
 			));
 			entity.setPenaltyDeductibles(Set.of(
@@ -188,25 +188,25 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.id(5)
 					.deductable(Deductable.values()[1])
 					.discount(money(0))
-					.itemType(ItemType.values()[0])
+					.productType(ProductType.values()[0])
 					.funeralScheme(entity).build(),
 				FuneralSchemeBenefit.builder()
 					.id(6)
 					.deductable(Deductable.values()[0])
 					.discount(money(0))
-					.itemType(ItemType.values()[5])
+					.productType(ProductType.values()[5])
 					.funeralScheme(entity).build(),
 				FuneralSchemeBenefit.builder()
 					.id(7)
 					.deductable(Deductable.values()[1])
 					.discount(money(0))
-					.itemType(ItemType.values()[7])
+					.productType(ProductType.values()[7])
 					.funeralScheme(entity).build(),
 				FuneralSchemeBenefit.builder()
 					.id(8)
 					.deductable(Deductable.values()[1])
 					.discount(money(0))
-					.itemType(ItemType.values()[9])
+					.productType(ProductType.values()[9])
 					.funeralScheme(entity).build()
 		));
 		entity.setPenaltyDeductibles(Set.of(

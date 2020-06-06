@@ -6,7 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
-import com.breakoutms.lfs.server.sales.items.ItemType;
+import com.breakoutms.lfs.server.products.model.ProductType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 public class FuneralSchemeBenefitViewModel extends RepresentationModel<FuneralSchemeBenefitViewModel> {
 
 	private Integer id;
-	private ItemType itemType;
+	private ProductType productType;
 	private Deductable deductable;
 	private BigDecimal discount;
 }
