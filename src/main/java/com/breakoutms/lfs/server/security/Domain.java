@@ -6,6 +6,7 @@ public enum Domain {
 	MORTUARY(Const.MORTUARY), 
 	UNDERTAKER(Const.UNDERTAKER), 
 	PRENEED(Const.PRENEED), 
+	PRODUCTS(Const.PRODUCTS),
 	SALES(Const.SALES), 
 	REVENUE(Const.REVENUE), 
 	ADMIN(Const.ADMIN);
@@ -24,6 +25,7 @@ public enum Domain {
 		public static final String MORTUARY = "mortuary";
 		public static final String UNDERTAKER = "undertaker";
 		public static final String PRENEED = "preneed";
+		public static final String PRODUCTS = "products";
 		public static final String SALES = "sales";
 		public static final String REVENUE = "revenue";
 		public static final String ADMIN = "admin";

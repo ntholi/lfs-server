@@ -14,6 +14,7 @@ public interface ControllerUnitTest {
 	String READ = "READ";
 	String WRITE = "WRITE";
 	String UPDATE = "UPDATE";
+//	String DELETE = "DELETE"; TODO: CREATE TESTS FOR DELETE
 
 	public default ResultActions post(MockMvc mockMvc, String url, Object obj) throws Exception {
 		return mockMvc.perform(MockMvcRequestBuilders.post(url)

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "funeralSchemes")
+@Relation(collectionRelation = "products")
 public class ProductViewModel extends RepresentationModel<ProductViewModel> {
 
 	private Integer id;

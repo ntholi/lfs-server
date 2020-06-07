@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.products;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +45,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 @Import(GeneralConfigurations.class)
 public class ProductControllerUnitTest implements ControllerUnitTest {
 
-	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
+	private static final String DEFAULT_ROLE = "ROLE_PRODUCTS";
 	
 	@Autowired private MockMvc mockMvc;
 	@MockBean private ProductRepository repo;
@@ -54,7 +55,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 	
 	private final Integer ID = 7;
 	private final Product entity = createEntity();
-	private final String URL = "/preneed/funeral-schemes/";
+	private final String URL = "/products/";
 
 	private Expectations expect;
 	
@@ -69,10 +70,6 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 	    ResultActions result = mockMvc.perform(get(URL+ID));
 	    result.andExpect(status().isOk());
-	    result.andExpect(jsonPath("_links.premiums.href", endsWith(entity.getId()+"/premiums")));
-	    result.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(entity.getId()+"/dependent-benefits")));
-	    result.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(entity.getId()+"/funeral-scheme-benefits")));
-	    result.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(entity.getId()+"/penalty-deductibles")));
 	    result.andDo(print());
 	    expect.forEntity(result, entity);
 	    
@@ -106,7 +103,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		
 	    ResultActions result = mockMvc.perform(get(url))
 	    		.andExpect(status().isOk());
-	    expect.forPage(result, list, "funeralSchemes", url);
+	    expect.forPage(result, list, "products", url);
 	    
 	    verify(service).all(pageRequest);
 	}
@@ -130,16 +127,14 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 	void save() throws Exception {
 		when(repo.save(any(Product.class))).thenReturn(entity);
 
-		var result = post(mockMvc, URL, entity);
+		var newEntity = new ProductMother().removeIDs().build();
+		
+		var result = post(mockMvc, URL, newEntity);
 		result.andDo(print());
 		result.andExpect(status().isCreated());
-		expect.forEntity(result, entity)
-			.andExpect(jsonPath("_links.premiums.href", endsWith(URL+ID+"/premiums")))
-			.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(URL+ID+"/dependent-benefits")))
-			.andExpect(jsonPath("_links.funeralSchemeBenefits.href", endsWith(URL+ID+"/funeral-scheme-benefits")))
-			.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(URL+ID+"/penalty-deductibles")));
+		expect.forEntity(result, entity);
 		
-		verify(service).save(entity);
+		verify(service).save(newEntity);
 	}
 
 
@@ -148,7 +143,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 	void save_fails_because_of_invalid_field() throws Exception {
 		String exMsg = "Invalid input for 'Name'";
 		
-		var entity = new Product();
+		var entity = new ProductMother().build();
 		entity.setName(" ");
 		
 		var result = post(mockMvc, URL, entity);
@@ -170,7 +165,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		result.andExpect(status().isOk());
 		expect.forEntity(result, entity);
 		
-		verify(service).update(ID, entity);
+		verify(service).update(eq(ID), any(Product.class));
 	}
 	
 	@Test
@@ -180,7 +175,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		when(repo.existsById(ID)).thenReturn(true);
 		when(repo.save(any(Product.class))).thenReturn(entity);
 		
-		var entity = new Product();
+		var entity = new ProductMother().build();
 		entity.setName(" ");
 
 		var result = put(mockMvc, URL+ID, entity);

@@ -29,7 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.PRENEED+"/products")
+@RequestMapping("/"+Domain.Const.PRODUCTS)
 @AllArgsConstructor
 public class ProductController implements ViewModelController<Product, ProductViewModel> {
 
@@ -41,7 +41,7 @@ public class ProductController implements ViewModelController<Product, ProductVi
 	public ResponseEntity<ProductViewModel> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
-				ExceptionSupplier.notFound("Funeral Scheme", id));
+				ExceptionSupplier.notFound("Product", id));
 	}
 	
 	@GetMapping
