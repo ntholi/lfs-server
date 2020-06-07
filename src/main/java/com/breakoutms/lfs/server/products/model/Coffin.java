@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.products.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -40,4 +42,8 @@ public class Coffin extends Product{
 	@Size(min = 1, max = 35)
 	@Column(nullable=false, length = 35)
 	private String category;
+
+	public Coffin(String name, BigDecimal price, ProductType productType) {
+		super(name, price, productType);
+	}
 }

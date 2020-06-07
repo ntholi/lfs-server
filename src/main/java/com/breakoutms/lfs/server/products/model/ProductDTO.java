@@ -35,4 +35,9 @@ public class ProductDTO {
 	
 	@Column(length = 205)
 	private String description;
+	
+	@NotBlank
+	@Size(min = 1, max = 35)
+	@Column(nullable=false, length = 35)
+	private String category;
 }

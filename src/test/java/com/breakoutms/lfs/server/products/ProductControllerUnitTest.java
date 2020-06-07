@@ -1,6 +1,5 @@
 package com.breakoutms.lfs.server.products;
 
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -9,9 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -37,7 +36,9 @@ import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
+import com.breakoutms.lfs.server.products.model.ProductType;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -182,6 +183,22 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		Expectations.forInvalidFields(result, exMsg);
 
 		verify(service, times(0)).update(anyInt(), any(Product.class));
+	}
+	
+	
+	@Test
+	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
+	void fail_to_save_invalid_corpse() throws Exception {
+		String exMsg = "Invalid input for 'Category'";
+		
+		var entity = new Coffin("ABC", new BigDecimal("20.10"), ProductType.COFFIN_CASKET);
+		entity.setCategory(" x ");
+		
+		var result = post(mockMvc, URL, entity);
+		
+	   Expectations.forInvalidFields(result, exMsg);
+	   
+	   verify(service, times(0)).save(any(Product.class));
 	}
 	
 	private Product createEntity() {

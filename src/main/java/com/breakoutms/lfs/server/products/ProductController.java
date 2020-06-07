@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.products;
 
-import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -8,6 +8,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +36,10 @@ import lombok.val;
 @AllArgsConstructor
 public class ProductController implements ViewModelController<Product, ProductViewModel> {
 
+	private final Validator validator;
 	private final ProductService service;
 	private final PagedResourcesAssembler<ProductViewModel> pagedAssembler;
-	
+
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductViewModel> get(@PathVariable Integer id) {
@@ -43,8 +47,8 @@ public class ProductController implements ViewModelController<Product, ProductVi
 				service.get(id), 
 				ExceptionSupplier.notFound("Product", id));
 	}
-	
-	@GetMapping
+
+	@GetMapping 
 	public ResponseEntity<PagedModel<EntityModel<ProductViewModel>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -52,24 +56,39 @@ public class ProductController implements ViewModelController<Product, ProductVi
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductViewModel> save(@Valid @RequestBody ProductDTO dto) {
-		Product entity = ProductMapper.INSTANCE.map(dto);
+	//@Valid has been omitted here but used manual validation because ProductDTO
+	//can be mapped into any subclass of Product where each subclass has it's own
+	//validation requirements
+	public ResponseEntity<ProductViewModel> save(@RequestBody ProductDTO dto) throws MethodArgumentNotValidException {
+		Product entity = ProductFactory.get(dto);
+		validate("save", entity);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
 		);
 	}
-	
+
 	@PutMapping("/{id}")
+	//@Valid has been omitted here but used manual validation
 	public ResponseEntity<ProductViewModel> update(@PathVariable Integer id, 
-			@Valid @RequestBody ProductDTO dto) {
-		Product entity = ProductMapper.INSTANCE.map(dto);
+			@RequestBody ProductDTO dto) throws MethodArgumentNotValidException {
+		Product entity = ProductFactory.get(dto);
+		validate("update", entity);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
 	}
-	
+
+	protected void validate(String method, Product entity) throws MethodArgumentNotValidException {
+	    SpringValidatorAdapter v = new SpringValidatorAdapter(validator);
+	    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(entity, Product.class.getSimpleName());
+	    v.validate(entity, errors);
+	    if (errors.hasErrors()) {
+				throw new MethodArgumentNotValidException(null, errors);
+	    }
+	}
+
 	@Override
 	public ProductViewModel toViewModel(Product entity) {
 		ProductViewModel dto = ProductMapper.INSTANCE.map(entity);

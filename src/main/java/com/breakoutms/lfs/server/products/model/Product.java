@@ -75,4 +75,11 @@ public class Product extends AuditableEntity<Integer>{
 	
 	@Column(length = 205)
 	private String description;
+
+	public Product(String name, BigDecimal price, ProductType productType) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.productType = productType;
+	}
 }
