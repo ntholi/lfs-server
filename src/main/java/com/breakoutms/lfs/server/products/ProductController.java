@@ -91,9 +91,9 @@ public class ProductController implements ViewModelController<Product, ProductVi
 
 	@Override
 	public ProductViewModel toViewModel(Product entity) {
-		ProductViewModel dto = ProductMapper.INSTANCE.map(entity);
+		ProductViewModel viewModel = ProductFactory.get(entity);
 		val id = entity.getId();
-		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
-		return dto;
+		viewModel.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
+		return viewModel;
 	}
 }
