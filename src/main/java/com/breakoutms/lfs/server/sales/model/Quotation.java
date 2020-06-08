@@ -44,7 +44,8 @@ public class Quotation extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "quotation_id")
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne( fetch = FetchType.LAZY, 
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Customer customer;
 	
 	@OneToMany(mappedBy="quotation", 

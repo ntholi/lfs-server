@@ -7,12 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -45,10 +43,6 @@ import lombok.ToString;
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
-})
-@Table(indexes = {
-        @Index(columnList = "name", name = "unique_product_name", unique=true),
-        @Index(columnList = "productType", name = "index_product_type")
 })
 @SQLDelete(sql = "UPDATE sales_product SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)

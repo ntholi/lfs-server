@@ -21,7 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.sales.model.BurialDetails;
+import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Sales;
+import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
 @ExtendWith(MockitoExtension.class)
 public class SalesServiceUnitTest {
@@ -51,7 +54,12 @@ public class SalesServiceUnitTest {
 	@Test
 	void save() throws Exception {
 		when(repo.save(any(Sales.class))).thenReturn(entity);
-		Sales response = service.save(new Sales());
+		
+		List<SalesProduct> salesProducts = entity.getQuotation().getSalesProducts();
+		Customer customer = entity.getQuotation().getCustomer();
+		BurialDetails burialDetails = entity.getBurialDetails();
+		Sales response = service.save(new Sales(), salesProducts, customer, burialDetails);
+		
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(entity);
@@ -91,7 +99,6 @@ public class SalesServiceUnitTest {
 	}
 	
 	private Sales createEntity() {
-		return new SalesMother()
-				.build();
+		return SalesMother.thaboLebese();
 	}
 }
