@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.persistence.EntityManager;
 
@@ -21,7 +22,9 @@ import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
+import com.breakoutms.lfs.server.products.model.ProductType;
 
 @SpringBootTest
 @Transactional
@@ -112,6 +115,17 @@ class ProductServiceIntegrationTest {
 		
 		service.delete(id);
 		assertThat(repo.findById(id)).isEmpty();
+	}
+	
+	@Test
+	void save_coffin() throws IOException {
+		var entity = new Coffin("ABC", new BigDecimal("20.10"), ProductType.COFFIN_CASKET);
+		entity.setCategory("hello_world");
+		var savedEntity = service.save(entity);
+		
+		assertThat(savedEntity).isInstanceOf(Coffin.class);
+		assertThat(savedEntity).isNotNull();
+		assertThat(savedEntity.getId()).isNotNull();
 	}
 	
 	protected Product persistAndGetCopy(Product entity) {		
