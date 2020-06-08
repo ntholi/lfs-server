@@ -30,11 +30,13 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 		return this;
 	}
 	
+	@Override
 	public FuneralSchemeMother id(Integer id) {
 		entity.setId(id);
 		return this;
 	}
 
+	@Override
 	public FuneralSchemeMother removeIDs() {
 		entity.setId(null);
 		entity.getBenefits().forEach(it -> it.setId(null));
