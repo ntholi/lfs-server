@@ -1,22 +1,19 @@
-package com.breakoutms.lfs.server.products.model;
+package com.breakoutms.lfs.server.sales.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -39,47 +36,49 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "product_id",          
+        name = "sales_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@Table(indexes = {
-        @Index(columnList = "name", name = "unique_product_name", unique=true),
-        @Index(columnList = "productType", name = "index_product_type")
-})
-@SQLDelete(sql = "UPDATE product SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE sales SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@Inheritance(strategy = InheritanceType.JOINED)
-public class Product extends AuditableEntity<Integer>{
+public class Sales extends AuditableEntity<Integer> {
 
+	public enum PaymentMode {
+		PRENEED,
+		SOCIETY,
+		CASH,
+		OTHER
+	}
+	
 	@Id
-	@GeneratedValue(generator = "product_id")
+	@GeneratedValue(generator = "sales_id")
 	private Integer id;
 	
-	@NotBlank
-	@Size(min = 1, max = 35)
-	@Column(nullable=false, length = 35)
-	private String name;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Quotation quotation;
+	
+	@Enumerated(EnumType.STRING)
+	private PaymentMode paymentMode;
+	
+	private LocalDate buyingDate;
+
+	@NotNull
+	@Min(value = 0L, message = "{validation.number.negative}")
+	@Digits(integer = 7, fraction = 2)
+	@Column(nullable=false, precision = 9, scale = 2)
+	private BigDecimal totalCost;
+
+	@NotNull
+	@Min(value = 0L, message = "{validation.number.negative}")
+	@Digits(integer = 7, fraction = 2)
+	@Column(nullable=false, precision = 9, scale = 2)
+	private BigDecimal payableAmount;
 	
 	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	@Column(nullable=false, precision = 9, scale = 2)
-	private BigDecimal price;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Column(nullable = false, length = 30)
-	private ProductType productType;
-	
-	@Column(length = 205)
-	private String description;
-
-	public Product(String name, BigDecimal price, ProductType productType) {
-		super();
-		this.name = name;
-		this.price = price;
-		this.productType = productType;
-	}
+	private BigDecimal topup;
 }

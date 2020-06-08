@@ -1,22 +1,21 @@
-package com.breakoutms.lfs.server.products.model;
+package com.breakoutms.lfs.server.sales.model;
 
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -26,12 +25,15 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.products.model.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Audited
@@ -39,47 +41,39 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "product_id",          
+        name = "sales_product_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
-	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
+	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
 })
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_product_name", unique=true),
         @Index(columnList = "productType", name = "index_product_type")
 })
-@SQLDelete(sql = "UPDATE product SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE sales_product SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Product extends AuditableEntity<Integer>{
+public class SalesProduct extends AuditableEntity<Long>{
 
 	@Id
-	@GeneratedValue(generator = "product_id")
-	private Integer id;
-	
-	@NotBlank
-	@Size(min = 1, max = 35)
-	@Column(nullable=false, length = 35)
-	private String name;
-	
+	@GeneratedValue(generator = "sales_product_id")
+	private Long id;
+
 	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	@Column(nullable=false, precision = 9, scale = 2)
-	private BigDecimal price;
+	private BigDecimal cost;
+    
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Product product;
 	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Column(nullable = false, length = 30)
-	private ProductType productType;
-	
-	@Column(length = 205)
-	private String description;
-
-	public Product(String name, BigDecimal price, ProductType productType) {
-		super();
-		this.name = name;
-		this.price = price;
-		this.productType = productType;
-	}
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	private int quantity;
+	 
+	@ToString.Exclude
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+    private Quotation quotation;
 }

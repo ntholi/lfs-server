@@ -1,12 +1,14 @@
-package com.breakoutms.lfs.server.products.model;
+package com.breakoutms.lfs.server.sales.model;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -18,32 +20,35 @@ import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Audited
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "coffin_id",          
+        name = "quotation_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE coffin SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE quotation SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@PrimaryKeyJoinColumn(name = "product_id")
-public class Coffin extends Product{
-	
-	@NotBlank
-	@Size(min = 1, max = 35)
-	@Column(nullable=false, length = 35)
-	private String category;
+public class Quotation extends AuditableEntity<Integer> {
 
-	public Coffin(String name, BigDecimal price, ProductType productType) {
-		super(name, price, productType);
-	}
+	@Id
+	@GeneratedValue(generator = "quotation_id")
+	private Integer id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Customer customer;
+	
+	@OneToMany(mappedBy="quotation", 
+			cascade=CascadeType.ALL,
+			fetch = FetchType.LAZY)
+	private List<SalesProduct> salesProducts;
 }

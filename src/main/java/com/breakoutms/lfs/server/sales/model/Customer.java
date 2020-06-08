@@ -1,10 +1,10 @@
-package com.breakoutms.lfs.server.products.model;
+package com.breakoutms.lfs.server.sales.model;
 
-import java.math.BigDecimal;
-
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -18,32 +18,37 @@ import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Audited
-@Data
+@Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "coffin_id",          
+        name = "customer_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE coffin SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE customer SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@PrimaryKeyJoinColumn(name = "product_id")
-public class Coffin extends Product{
+public class Customer extends AuditableEntity<Integer> {
+
+	@Id
+	@GeneratedValue(generator = "customer_id")
+	private Integer id;
 	
 	@NotBlank
-	@Size(min = 1, max = 35)
-	@Column(nullable=false, length = 35)
-	private String category;
-
-	public Coffin(String name, BigDecimal price, ProductType productType) {
-		super(name, price, productType);
-	}
+	@Size(min = 2, max = 60)
+	@Column(length = 60)
+	private String names;
+	
+	@Nullable
+	@Size(min = 3, max = 50)
+	@Column(length = 50)
+	private String phoneNumber;
 }
