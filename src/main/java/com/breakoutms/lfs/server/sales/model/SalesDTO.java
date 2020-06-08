@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaleDTO {
+public class SalesDTO {
 	
 	private String tagNo;
 	
