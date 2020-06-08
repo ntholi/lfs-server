@@ -35,12 +35,15 @@ public class SalesService {
 	public Sales save(final Sales sales, List<SalesProduct> salesProducts, 
 			Customer customer, BurialDetails burialDetails) {
 		
-		Quotation quotation = new Quotation();
-		quotation.setCustomer(customer);
-		quotation.setSalesProducts(salesProducts);
+		Quotation quot = new Quotation();
+		quot.setCustomer(customer);
+		quot.setSalesProducts(salesProducts);
+		if(salesProducts != null) {
+			salesProducts.forEach(it -> it.setQuotation(quot));
+		}
 		
 		sales.setBurialDetails(burialDetails);
-		sales.setQuotation(quotation);
+		sales.setQuotation(quot);
 		
 		return repo.save(sales);
 	}

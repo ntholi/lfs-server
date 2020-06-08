@@ -23,22 +23,25 @@ import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.products.ProductRepository;
 import com.breakoutms.lfs.server.sales.model.BurialDetails;
 import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.github.database.rider.core.api.dataset.DataSet;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
+@DataSet({"corpse.xml", "product.xml", "sales.xml"})
 public class SalesServiceIntegrationTest {
 
 	@Autowired SalesRepository repo;
-	@Autowired
-	private SalesService service;
-	@Autowired
-	private EntityManager entityManager;
+	@Autowired ProductRepository productRepo;
+	@Autowired private SalesService service;
+	@Autowired private EntityManager entityManager;
+	
 	private Sales entity;
 	
 	
@@ -47,20 +50,24 @@ public class SalesServiceIntegrationTest {
 		entity = new SalesMother()
 				.removeIDs()
 				.build();
+		SalesProduct s1 = entity.getQuotation().getSalesProducts().get(1);
+		SalesProduct s2 = entity.getQuotation().getSalesProducts().get(2);
+		s1.setProduct(productRepo.getOne(1));
+		s2.setProduct(productRepo.getOne(2));
+		entity.getQuotation().setSalesProducts(List.of(s1, s2));
 	}
 	
 	@Test
 	void get_by_id() throws IOException {
-		var id = repo.save(entity).getId();
+		var id = 1;
 		var savedEntity = service.get(id).orElse(null);
 		
 		assertThat(savedEntity.getId()).isEqualTo(id);
-		assertThat(savedEntity.getPayableAmount()).isEqualTo(entity.getPayableAmount());
+		assertThat(savedEntity.getTotalCost()).isEqualTo(new BigDecimal("150.00"));
 	}
 	
 	@Test
 	void all() {
-		repo.save(entity);
 		
 		PageRequest pagable = PageRequest.of(0, 1);
 		var page = service.all(pagable);
@@ -111,9 +118,8 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void successful_delete() {
-		entity.setPayableAmount(new BigDecimal("20"));
-		repo.save(entity);
-		var id = entity.getId();
+		var id = 1;
+		
 		assertThat(repo.findById(id)).isNotEmpty();
 		
 		entityManager.flush();

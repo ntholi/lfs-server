@@ -67,7 +67,7 @@ public class SalesProduct extends AuditableEntity<Long>{
 	 
 	@ToString.Exclude
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "quotation_id", nullable = false)
     private Quotation quotation;
 }

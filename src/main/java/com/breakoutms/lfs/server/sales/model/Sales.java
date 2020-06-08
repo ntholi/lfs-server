@@ -50,8 +50,7 @@ public class Sales extends AuditableEntity<Integer> {
 	public enum PaymentMode {
 		PRENEED,
 		SOCIETY,
-		CASH,
-		OTHER
+		CASH
 	}
 	
 	@Id
@@ -65,6 +64,7 @@ public class Sales extends AuditableEntity<Integer> {
 	private BurialDetails burialDetails;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition="ENUM('PRENEED','SOCIETY','CASH')")
 	private PaymentMode paymentMode;
 	
 	private LocalDate buyingDate;

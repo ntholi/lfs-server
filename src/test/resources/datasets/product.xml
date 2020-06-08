@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <product id="1" created_at="2020-06-07 19:43:55" created_by="1" deleted="0" description="Printed Letter" name="Letter" price="10.00" product_type="LETTERS" branch_id="1"/>
+    <product id="2" created_at="2020-06-12 10:30:00" created_by="1" deleted="0" description="Coffin" name="Coffin_One" price="100.00" product_type="COFFIN_CASKET" branch_id="1"/>
+
+    <!-- Coffin -->
+    <coffin product_id="2" category="Small" />
+</dataset>

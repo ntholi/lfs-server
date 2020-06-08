@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<!-- Sales -->
+    <sales id="1" created_at="2020-06-07 19:43:55" created_by="1" deleted="0" buying_date="2020-06-07" payable_amount="150.00" payment_mode="CASH" topup="0.00" total_cost="150.00" branch_id="1" burial_details_id="1" quotation_id="1"/>
+
+    <!-- Customer -->
+    <customer id="1" created_at="2020-06-12 10:30:00" created_by="1" deleted="0" names="Thabo Lebese" phone_number="581234567" branch_id="1"/>
+
+    <!-- Quotation -->
+    <quotation id="1" created_at="2020-06-12 10:30:00" created_by="1" deleted="0" branch_id="1" customer_id="1"/>
+
+    <!-- Sales Product -->
+    <sales_product id="1" created_at="2020-06-12 10:30:00" created_by="1" deleted="0" cost="100.00" quantity="1" branch_id="1" product_id="2" quotation_id="1"/>
+    <sales_product id="2" created_at="2020-06-12 10:30:00" created_by="1" deleted="0" cost="50.00" quantity="5" branch_id="1" product_id="1" quotation_id="1"/>
+
+    <!-- Burial Details -->
+    <burial_details id="1" created_at="2020-06-07 19:43:55" created_by="1" deleted="0" burial_place="Ha Hohlo" leaving_time="2020-06-12 10:30:00" physical_address="Ha Hohlo Maseru" road_status="Good" service_time="2020-06-12 10:30:00" branch_id="1" corpse_tag_no="1"/>
+
+</dataset>

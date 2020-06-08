@@ -82,7 +82,8 @@ public class Corpse extends AuditableEntity<String> {
 	@Column(length = 150)
 	private String phycialAddress;
 	
-	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Enumerated(EnumType.STRING)
+	@Column(length = 50)
 	private District district;
 	
 	@Column(length = 50)
