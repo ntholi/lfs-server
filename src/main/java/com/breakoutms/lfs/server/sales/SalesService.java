@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.sales.model.BurialDetails;
-import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
@@ -32,19 +30,8 @@ public class SalesService {
 	}
 	
 	@Transactional
-	public Sales save(final Sales sales, List<SalesProduct> salesProducts, 
-			Customer customer, BurialDetails burialDetails) {
-		
-		Quotation quot = new Quotation();
-		quot.setCustomer(customer);
-		quot.setSalesProducts(salesProducts);
-		if(salesProducts != null) {
-			salesProducts.forEach(it -> it.setQuotation(quot));
-		}
-		
-		sales.setBurialDetails(burialDetails);
-		sales.setQuotation(quot);
-		
+	public Sales save(final Sales sales) {
+		setAssociations(sales);
 		return repo.save(sales);
 	}
 	
@@ -58,6 +45,14 @@ public class SalesService {
 		}
 		entity.setId(id);
 		return repo.save(entity);
+	}
+	
+	protected void setAssociations(final Sales sales) {
+		Quotation quot = sales.getQuotation();
+		List<SalesProduct> salesProducts = quot.getSalesProducts();
+		if(salesProducts != null) {
+			salesProducts.forEach(it -> it.setQuotation(quot));
+		}
 	}
 
 	public void delete(Integer id) {

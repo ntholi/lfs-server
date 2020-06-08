@@ -24,8 +24,6 @@ import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.ProductRepository;
-import com.breakoutms.lfs.server.sales.model.BurialDetails;
-import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.github.database.rider.core.api.dataset.DataSet;
@@ -68,7 +66,6 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void all() {
-		
 		PageRequest pagable = PageRequest.of(0, 1);
 		var page = service.all(pagable);
 		
@@ -78,11 +75,7 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void save() throws IOException {
-		
-		List<SalesProduct> salesProducts = entity.getQuotation().getSalesProducts();
-		Customer customer = entity.getQuotation().getCustomer();
-		BurialDetails burialDetails = entity.getBurialDetails();
-		Sales savedEntity = service.save(new Sales(), salesProducts, customer, burialDetails);
+		Sales savedEntity = service.save(entity);
 		
 		assertThat(savedEntity).isNotNull();
 		assertThat(savedEntity.getId()).isNotNull();
@@ -90,17 +83,14 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		var before = new BigDecimal("20");
-		var after = new BigDecimal("21");
+		entity = repo.findById(1).get();
+		var newValue = new BigDecimal("123");
+		entity.setPayableAmount(newValue);
 		
-		entity.setPayableAmount(before);
-		assertThat(entity.getPayableAmount()).isEqualTo(before);
-		var copy = persistAndGetCopy(entity);
+		var updatedEntity = service.update(entity.getId(), entity);
 		
-		copy.setPayableAmount(after);
-		var updatedEntity = service.update(copy.getId(), copy);
 		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
-		assertThat(updatedEntity.getPayableAmount()).isEqualTo(after);
+		assertThat(updatedEntity.getPayableAmount()).isEqualTo(newValue);
 	}
 	
 	@Test
@@ -129,7 +119,7 @@ public class SalesServiceIntegrationTest {
 		assertThat(repo.findById(id)).isEmpty();
 	}
 	
-	protected Sales persistAndGetCopy(Sales entity) {		
+	protected Sales getCopy(Sales entity) {		
 		repo.save(entity);
 		entityManager.flush();
 		entityManager.clear();
