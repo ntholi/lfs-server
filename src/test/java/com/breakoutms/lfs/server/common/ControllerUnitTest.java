@@ -9,12 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-public interface ControllerUnitTest {
-
-	String READ = "READ";
-	String WRITE = "WRITE";
-	String UPDATE = "UPDATE";
-//	String DELETE = "DELETE"; TODO: CREATE TESTS FOR DELETE
+public interface ControllerUnitTest extends SecuredWebTest {
 
 	public default ResultActions post(MockMvc mockMvc, String url, Object obj) throws Exception {
 		return mockMvc.perform(MockMvcRequestBuilders.post(url)
