@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static com.breakoutms.lfs.server.common.SecuredWebTest.READ;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,9 +24,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.common.Expectations;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.core.CommonLinks;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.Corpse;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductType;
@@ -69,21 +72,21 @@ public class SalesControllerUnitTest {
 		verify(service).get(ID);
 	}
 
-//	@Test
-//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-//	void get_with_unkown_id_throws_notFound() throws Exception {
-//		var unkownId = 122423;
-//		String exMsg = ExceptionSupplier.notFound(Sales.class, unkownId).get().getMessage();
-//
-//		when(repo.findById(anyInt())).thenReturn(Optional.ofNullable(null));
-//
-//		var result = mockMvc.perform(get(URL+unkownId))
-//				.andExpect(status().isNotFound());
-//		Expectations.forObjectNotFound(result, exMsg);
-//
-//		verify(service).get(unkownId);
-//	}
-//
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_with_unkown_id_throws_notFound() throws Exception {
+		var unkownId = 122423;
+		String exMsg = ExceptionSupplier.notFound(Sales.class, unkownId).get().getMessage();
+
+		when(repo.findById(anyInt())).thenReturn(Optional.ofNullable(null));
+
+		var result = mockMvc.perform(get(URL+unkownId))
+				.andExpect(status().isNotFound());
+		Expectations.forObjectNotFound(result, exMsg);
+
+		verify(service).get(unkownId);
+	}
+
 //	@Test
 //	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 //	void get_all() throws Exception {

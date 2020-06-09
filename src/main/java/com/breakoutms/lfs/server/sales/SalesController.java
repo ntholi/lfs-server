@@ -40,7 +40,7 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	public ResponseEntity<SalesViewModel> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
-				ExceptionSupplier.notFound("Funeral Scheme", id));
+				ExceptionSupplier.notFound("Sales", id));
 	}
 	
 	@GetMapping
