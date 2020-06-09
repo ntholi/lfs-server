@@ -22,6 +22,7 @@ import com.breakoutms.lfs.server.util.WordUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @ControllerAdvice
@@ -128,12 +129,13 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Getter
 	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class ErrorResult {
-		private final LocalDateTime timestamp;
-		private final int status;
-		private final String error;
-		private final String message;
-		private final List<InvalidFieldError> fieldErrors;
+		private LocalDateTime timestamp;
+		private int status;
+		private String error;
+		private String message;
+		private List<InvalidFieldError> fieldErrors;
 	}
 	
 	@Getter

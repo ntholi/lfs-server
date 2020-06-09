@@ -1,9 +1,6 @@
 package com.breakoutms.lfs.server.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
 
@@ -12,11 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import com.breakoutms.lfs.server.sales.model.Sales;
+import com.breakoutms.lfs.server.exceptions.CentralExceptionHandler.ErrorResult;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -57,17 +54,24 @@ public class ResponseBodyMatchers {
 			Class<T> targetClass) {
 		return mvcResult -> {
 			String json = mvcResult.getResponse().getContentAsString();
-			T actualObject = objectMapper.readValue(json, targetClass);
-			assertThat(expectedObject).isEqualToComparingFieldByField(actualObject);
+			T responseObject = objectMapper.readValue(json, targetClass);
+			assertThat(responseObject).isEqualToComparingFieldByField(expectedObject);
 		};
 	}
 	
-//	public ResultMatcher notFound(Class<?> type, Object id) {
-//		return mvcResult -> {
-//			MockHttpServletResponse response = mvcResult.getResponse();
-//		};
-//	}
-	
+	public ResultMatcher notFound(Class<?> type, Object id) {
+		return mvcResult -> {
+			String json = mvcResult.getResponse().getContentAsString();
+			ErrorResult expected = objectMapper.readValue(json, ErrorResult.class);
+			String exMsg = ExceptionSupplier.notFound(type, id).get().getMessage();
+			
+			assertThat(mvcResult.getResponse().getStatus()).isEqualTo(404);
+			assertThat(expected.getError()).isEqualTo("Object Not Found Error");
+			assertThat(expected.getMessage()).isEqualTo(exMsg);
+			assertThat(expected.getStatus()).isEqualTo(404);
+		};
+	}
+
 	protected String asJSON(Object expectedObject) throws JsonProcessingException, JSONException {
 		JSONObject json = new JSONObject(objectMapper.writeValueAsString(expectedObject));
 		

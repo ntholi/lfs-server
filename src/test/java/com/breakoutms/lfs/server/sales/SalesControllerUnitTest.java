@@ -66,8 +66,7 @@ public class SalesControllerUnitTest {
 		
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
-				.andExpect(responseBody().isEqualTo(salesViewModel()))
-				.andReturn();
+				.andExpect(responseBody().isEqualTo(salesViewModel()));
 
 		verify(service).get(ID);
 	}
@@ -76,13 +75,8 @@ public class SalesControllerUnitTest {
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_with_unkown_id_throws_notFound() throws Exception {
 		var unkownId = 122423;
-		String exMsg = ExceptionSupplier.notFound(Sales.class, unkownId).get().getMessage();
-
-		when(repo.findById(anyInt())).thenReturn(Optional.ofNullable(null));
-
-		var result = mockMvc.perform(get(URL+unkownId))
-				.andExpect(status().isNotFound());
-		Expectations.forObjectNotFound(result, exMsg);
+		mockMvc.perform(get(URL+unkownId))
+			.andExpect(responseBody().notFound(Sales.class, unkownId));
 
 		verify(service).get(unkownId);
 	}
