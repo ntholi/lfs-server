@@ -70,7 +70,7 @@ public class Expectations {
 	    for (var item : values.entrySet()) {
 	    	if(item.getKey().equals("createdAt")
 	    			|| item.getKey().equals("createdBy")
-	    			|| item.getKey().equals(FieldUtils.getIdField(object.getClass()).getName())) {
+	    			|| item.getKey().equals(getIdFieldName(object))) {
 	    		//skip createdAt, and id field because with integration tests, their value will be assigned after
 	    		//the object is saved in the database, while the expected value will still be null because 
 	    		//the provided object did not assign their values
@@ -102,6 +102,14 @@ public class Expectations {
 	    }
 	    forCommonLinks(result, getId(object), path);
 		return result;
+	}
+
+	protected <T> String getIdFieldName(final T object) {
+		Field field = FieldUtils.getIdField(object.getClass());
+		if(field != null) {
+			return field.getName();
+		}
+		return null;
 	}
 
 	public <T> ResultActions forCommonLinks(final ResultActions result, final Object id) throws Exception {

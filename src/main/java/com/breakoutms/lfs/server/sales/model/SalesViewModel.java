@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.sales.model.Sales.PaymentMode;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @Relation(collectionRelation = "sales")
 public class SalesViewModel extends RepresentationModel<SalesViewModel> {

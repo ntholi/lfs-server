@@ -46,12 +46,6 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE sales SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class Sales extends AuditableEntity<Integer> {
-
-	public enum PaymentMode {
-		PRENEED,
-		SOCIETY,
-		CASH
-	}
 	
 	@Id
 	@GeneratedValue(generator = "sales_id")
