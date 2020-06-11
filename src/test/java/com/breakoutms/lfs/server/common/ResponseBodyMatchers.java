@@ -29,19 +29,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class ResponseBodyMatchers {
 
 	@Autowired ObjectMapper objectMapper = createObjectMapper();
-
-	public ResultMatcher notFound(Class<?> type, Object id) {
-		return mvcResult -> {
-			String json = mvcResult.getResponse().getContentAsString();
-			ErrorResult expected = objectMapper.readValue(json, ErrorResult.class);
-			String exMsg = ExceptionSupplier.notFound(type, id).get().getMessage();
-			
-			assertThat(mvcResult.getResponse().getStatus()).isEqualTo(404);
-			assertThat(expected.getError()).isEqualTo("Object Not Found Error");
-			assertThat(expected.getMessage()).isEqualTo(exMsg);
-			assertThat(expected.getStatus()).isEqualTo(404);
-		};
-	}
 	
 	public ResultMatcher isEqualTo(Object expectedObject) {
 		return mvcResult -> {
@@ -50,7 +37,7 @@ public class ResponseBodyMatchers {
 		};
 	}
 	
-	public <T> ResultMatcher containsObjectAsJson(Object expectedObject, 
+	public <T> ResultMatcher isEqualToComparingFieldByField(Object expectedObject, 
 			Class<T> targetClass) {
 		return mvcResult -> {
 			String json = mvcResult.getResponse().getContentAsString();
@@ -84,6 +71,19 @@ public class ResponseBodyMatchers {
 			String item = array.getJSONObject(0).toString();
 			
 			JSONAssert.assertEquals(objectToJSON(viewModel), item, false);
+		};
+	}
+	
+	public ResultMatcher notFound(Class<?> type, Object id) {
+		return mvcResult -> {
+			String json = mvcResult.getResponse().getContentAsString();
+			ErrorResult expected = objectMapper.readValue(json, ErrorResult.class);
+			String exMsg = ExceptionSupplier.notFound(type, id).get().getMessage();
+			
+			assertThat(mvcResult.getResponse().getStatus()).isEqualTo(404);
+			assertThat(expected.getError()).isEqualTo("Object Not Found Error");
+			assertThat(expected.getMessage()).isEqualTo(exMsg);
+			assertThat(expected.getStatus()).isEqualTo(404);
 		};
 	}
 	
