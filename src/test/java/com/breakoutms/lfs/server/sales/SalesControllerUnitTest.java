@@ -2,13 +2,17 @@ package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static com.breakoutms.lfs.server.common.SecuredWebTest.READ;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,16 +23,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.config.HypermediaWebTestClientConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
-import com.breakoutms.lfs.server.common.Expectations;
+import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.Corpse;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductType;
@@ -79,6 +88,26 @@ public class SalesControllerUnitTest {
 			.andExpect(responseBody().notFound(Sales.class, unkownId));
 
 		verify(service).get(unkownId);
+	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_all() throws Exception {
+		var url = URL+"?page=0&size=20&sort=createdAt,desc";
+		var list = Arrays.asList(entity);
+		var pageRequest = PageRequestHelper.from(url);
+		
+		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
+		
+		var totalCost = entity.getTotalCost();
+		mockMvc.perform(get(url))
+			.andExpect(status().isOk())
+//			.andExpect(jsonPath("$[*].sales").isArray())
+//			.andExpect(jsonPath("$[*].sales[0].totalCost").value(totalCost.toString()))
+//			.andExpect(jsonPath("$[*].sales.length()").value(1))
+			.andExpect(responseBody().isPagedModel())
+			.andExpect(responseBody().contains(salesViewModel()))
+			.andReturn();
 	}
 
 //	@Test
