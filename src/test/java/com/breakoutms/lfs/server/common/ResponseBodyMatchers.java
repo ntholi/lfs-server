@@ -62,16 +62,12 @@ public class ResponseBodyMatchers {
 		};
 	}
 	
-	public ResultMatcher contains(RepresentationModel<?> viewModel) {
-		String rel = "sales";
-		return mvcResult -> {
-			String json = mvcResult.getResponse().getContentAsString();
-			JSONObject _embedded = new JSONObject(json).getJSONObject("_embedded");
-			JSONArray array = _embedded.getJSONArray(rel);
-			String item = array.getJSONObject(0).toString();
-			
-			JSONAssert.assertEquals(objectToJSON(viewModel), item, false);
-		};
+	public PageModelSizeMatchers pageSize() {
+		return new PageModelSizeMatchers();
+	}
+	
+	public PageModelMatchers pagedModel(String collectionRelation) {
+		return new PageModelMatchers(collectionRelation);
 	}
 	
 	public ResultMatcher notFound(Class<?> type, Object id) {
@@ -144,5 +140,35 @@ public class ResponseBodyMatchers {
 	
 	public static ResponseBodyMatchers responseBody(){
 		return new ResponseBodyMatchers();
+	}
+	
+	public class PageModelMatchers {
+		private String collectionRelation;
+		public PageModelMatchers(String collectionRelation) {
+			this.collectionRelation = collectionRelation;
+		}
+		
+		public ResultMatcher contains(RepresentationModel<?> viewModel) {
+			return mvcResult -> {
+				String json = mvcResult.getResponse().getContentAsString();
+				JSONObject _embedded = new JSONObject(json).getJSONObject("_embedded");
+				JSONArray array = _embedded.getJSONArray(collectionRelation);
+				String item = array.getJSONObject(0).toString();
+				
+				JSONAssert.assertEquals(objectToJSON(viewModel), item, false);
+			};
+		}
+	}
+	
+	public class PageModelSizeMatchers {
+		public ResultMatcher isEqualTo(int size) {
+			return mvcResult -> {
+				String json = mvcResult.getResponse().getContentAsString();
+				JSONObject page = new JSONObject(json).getJSONObject("page");
+				
+				assertThat(page).isNotNull();
+				assertThat(page.get("totalElements")).isEqualTo(size);
+			};
+		}
 	}
 }

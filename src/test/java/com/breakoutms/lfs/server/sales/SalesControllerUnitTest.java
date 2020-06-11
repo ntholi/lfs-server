@@ -2,13 +2,9 @@ package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static com.breakoutms.lfs.server.common.SecuredWebTest.READ;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
@@ -24,14 +20,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.config.HypermediaWebTestClientConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
@@ -99,14 +90,11 @@ public class SalesControllerUnitTest {
 		
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
 		
-		var totalCost = entity.getTotalCost();
 		mockMvc.perform(get(url))
 			.andExpect(status().isOk())
-//			.andExpect(jsonPath("$[*].sales").isArray())
-//			.andExpect(jsonPath("$[*].sales[0].totalCost").value(totalCost.toString()))
-//			.andExpect(jsonPath("$[*].sales.length()").value(1))
 			.andExpect(responseBody().isPagedModel())
-			.andExpect(responseBody().contains(salesViewModel()))
+			.andExpect(responseBody().pageSize().isEqualTo(1))
+			.andExpect(responseBody().pagedModel("sales").contains(salesViewModel()))
 			.andReturn();
 	}
 
