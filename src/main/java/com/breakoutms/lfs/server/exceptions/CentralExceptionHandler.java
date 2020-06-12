@@ -23,6 +23,7 @@ import com.breakoutms.lfs.server.util.WordUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 
 @ControllerAdvice
@@ -127,7 +128,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
 	}
 
-	@Getter
+	@Getter @ToString
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class ErrorResult {
@@ -140,9 +141,15 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@Getter
 	@AllArgsConstructor
-	class InvalidFieldError {
+	@NoArgsConstructor
+	public static class InvalidFieldError {
 		String fieldName;
 		String message;
+		
+		@Override
+		public String toString() {
+			return String.format("[fieldName: '%s', message: '%s']", fieldName, message);
+		}
 	}
 
 	private String[] getFieldsWithErrors(BindingResult result) {

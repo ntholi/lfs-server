@@ -1,13 +1,20 @@
 package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
-import static com.breakoutms.lfs.server.common.SecuredWebTest.READ;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
@@ -45,7 +53,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(SalesController.class)
 @Import(GeneralConfigurations.class)
-public class SalesControllerUnitTest {
+public class SalesControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_SALES";
 
@@ -98,70 +106,44 @@ public class SalesControllerUnitTest {
 			.andReturn();
 	}
 
-//	@Test
-//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-//	void get_all() throws Exception {
-//
-//		var url = URL+"?page=0&size=20&sort=createdAt,desc";
-//
-//		var list = Arrays.asList(entity);
-//		var pageRequest = PageRequestHelper.from(url);
-//		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
-//
-//		ResultActions result = mockMvc.perform(get(url))
-//				.andExpect(status().isOk());
-//		expect.forPage(result, list, "Saless", url);
-//
-//		verify(service).all(pageRequest);
-//	}
-//
-//	@Test
-//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-//	void get_all_with_no_content_returns_NO_CONTENT_status() throws Exception {
-//		var url = URL+"?page=0&size=20&sort=createdAt,desc";
-//
-//		var pageRequest = PageRequestHelper.from(url);
-//		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(new ArrayList<>()));
-//
-//		mockMvc.perform(get(url))
-//		.andExpect(status().isNoContent());
-//
-//		verify(service).all(pageRequest);
-//	}
-//
-//	@Test
-//	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
-//	void save() throws Exception {
-//		when(repo.save(any(Sales.class))).thenReturn(entity);
-//
-//		var result = post(mockMvc, URL, entity);
-//		result.andDo(print());
-//		result.andExpect(status().isCreated());
-//		expect.forEntity(result, entity)
-//		.andExpect(jsonPath("_links.premiums.href", endsWith(URL+ID+"/premiums")))
-//		.andExpect(jsonPath("_links.dependentBenefits.href", endsWith(URL+ID+"/dependent-benefits")))
-//		.andExpect(jsonPath("_links.SalesBenefits.href", endsWith(URL+ID+"/funeral-scheme-benefits")))
-//		.andExpect(jsonPath("_links.penaltyDeductibles.href", endsWith(URL+ID+"/penalty-deductibles")));
-//
-//		verify(service).save(entity);
-//	}
-//
-//
-//	@Test
-//	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
-//	void save_fails_because_of_invalid_field() throws Exception {
-//		String exMsg = "Invalid input for 'Name'";
-//
-//		var entity = new Sales();
-//		entity.setPayableAmount(new BigDecimal("-2"));
-//
-//		var result = post(mockMvc, URL, entity);
-//
-//		Expectations.forInvalidFields(result, exMsg);
-//
-//		verify(service, times(0)).save(any(Sales.class));
-//	}
-//
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void get_all_with_no_content_returns_NO_CONTENT_status() throws Exception {
+		var url = URL+"?page=0&size=20&sort=createdAt,desc";
+
+		var pageRequest = PageRequestHelper.from(url);
+		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(new ArrayList<>()));
+
+		mockMvc.perform(get(url))
+		.andExpect(status().isNoContent());
+
+		verify(service).all(pageRequest);
+	}
+
+	@Test
+	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
+	void save() throws Exception {
+		when(repo.save(any(Sales.class))).thenReturn(entity);
+
+		post(mockMvc, URL, salesDTO())
+			.andExpect(status().isCreated())
+			.andExpect(responseBody().isEqualTo(salesViewModel()));
+
+		verify(service).save(entity);
+	}
+
+
+	@Test
+	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
+	void save_fails_because_of_invalid_field() throws Exception {
+		entity.setPayableAmount(new BigDecimal("-2"));
+
+		post(mockMvc, URL, entity)
+			.andExpect(responseBody().containsErrorFor("payableAmount"));
+
+		verify(service, times(0)).save(any(Sales.class));
+	}
+
 //	@Test
 //	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 //	void update() throws Exception {

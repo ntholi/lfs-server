@@ -38,8 +38,4 @@ public interface ControllerUnitTest extends SecuredWebTest {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public default ResponseBodyMatchers responseBody(){
-		return new ResponseBodyMatchers();
-	}
 }

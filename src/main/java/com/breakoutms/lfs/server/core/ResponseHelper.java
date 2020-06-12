@@ -33,7 +33,7 @@ public class ResponseHelper {
 			@NotNull final PagedResourcesAssembler<D> assembler,
 			@NotNull final Page<T> pagedList) {
 
-		if(pagedList.isEmpty()) {
+		if(pagedList == null || pagedList.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		Page<D> page = pagedList
