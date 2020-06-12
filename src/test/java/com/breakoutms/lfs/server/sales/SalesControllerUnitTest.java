@@ -1,7 +1,6 @@
 package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -9,9 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -129,7 +126,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 			.andExpect(status().isCreated())
 			.andExpect(responseBody().isEqualTo(salesViewModel()));
 
-		verify(service).save(entity);
+		verify(service).save(any(Sales.class));
 	}
 
 
@@ -144,36 +141,29 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		verify(service, times(0)).save(any(Sales.class));
 	}
 
-//	@Test
-//	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
-//	void update() throws Exception {
-//		when(repo.existsById(ID)).thenReturn(true);
-//		when(repo.save(any(Sales.class))).thenReturn(entity);
-//
-//		var result = put(mockMvc, URL+ID, entity);
-//		result.andDo(print());
-//
-//		result.andExpect(status().isOk());
-//		expect.forEntity(result, entity);
-//
-//		verify(service).update(ID, entity);
-//	}
-//
-//	@Test
-//	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
-//	void update_fails_if_any_field_is_invalid() throws Exception {
-//		String exMsg = "Invalid input for 'Name'";
-//		when(repo.existsById(ID)).thenReturn(true);
-//		when(repo.save(any(Sales.class))).thenReturn(entity);
-//
-//		var entity = new Sales();
-//		entity.setPayableAmount(new BigDecimal("-2"));
-//
-//		var result = put(mockMvc, URL+ID, entity);
-//		Expectations.forInvalidFields(result, exMsg);
-//
-//		verify(service, times(0)).update(anyInt(), any(Sales.class));
-//	}
+	@Test
+	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
+	void update() throws Exception {
+		when(repo.existsById(ID)).thenReturn(true);
+		when(repo.save(any(Sales.class))).thenReturn(entity);
+
+		put(mockMvc, URL+ID, salesDTO())
+			.andExpect(status().isOk())
+			.andExpect(responseBody().isEqualTo(salesViewModel()));
+
+		verify(service).update(eq(ID), any(Sales.class));
+	}
+
+	@Test
+	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
+	void update_fails_if_any_field_is_invalid() throws Exception {
+		entity.setPayableAmount(new BigDecimal("-2"));
+		
+		put(mockMvc, URL+ID, entity)
+			.andExpect(responseBody().containsErrorFor("payableAmount"));
+
+		verify(service, times(0)).update(anyInt(), any(Sales.class));
+	}
 
 	//	@Test
 	//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
