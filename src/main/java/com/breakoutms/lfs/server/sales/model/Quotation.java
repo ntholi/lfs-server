@@ -49,6 +49,7 @@ public class Quotation extends AuditableEntity<Integer> {
 	private Customer customer;
 	
 	@OneToMany(mappedBy="quotation", 
+			orphanRemoval = true,
 			cascade=CascadeType.ALL)
 	private List<SalesProduct> salesProducts;
 }

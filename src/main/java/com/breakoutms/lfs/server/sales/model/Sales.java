@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -51,7 +50,7 @@ public class Sales extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "sales_id")
 	private Integer id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Quotation quotation;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

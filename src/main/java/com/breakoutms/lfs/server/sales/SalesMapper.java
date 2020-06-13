@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.sales;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.sales.model.Sales;
@@ -34,4 +35,27 @@ public abstract class SalesMapper {
 	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
 	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
 	protected abstract SalesViewModel map(Sales sales);
+
+	@Mapping(source = "quotation.customer.names", target = "customerNames")
+	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
+	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
+	@Mapping(source = "burialDetails.corpse.tagNo", target = "tagNo")
+	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
+	@Mapping(source = "burialDetails.serviceTime", target = "serviceTime")
+	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
+	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
+	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
+	protected abstract SalesDTO toDTO(Sales entity);
+
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "quotation.id", ignore = true)
+	@Mapping(target = "quotation.customer.id", ignore = true)
+	@Mapping(target = "burialDetails.id", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "branch", ignore = true)
+	protected abstract void update(Sales updateEntity, @MappingTarget Sales saved);
+	
+	protected abstract Sales copy(Sales sales);
+
 }

@@ -43,7 +43,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	protected LocalDateTime createdAt;
 	
 	@CreatedBy
-	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	@Column(updatable=false, columnDefinition = "SMALLINT UNSIGNED")
 	private Integer createdBy;
 	
 	@Column(columnDefinition = "BIT(1) default 0")

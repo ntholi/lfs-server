@@ -19,12 +19,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.ProductRepository;
 import com.breakoutms.lfs.server.sales.model.Sales;
+import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
@@ -87,16 +87,18 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		entity = repo.findById(1).get();
+		Sales entity = SalesMapper.INSTANCE.copy(repo.findById(1).get());
+
 		var newValue = new BigDecimal("123");
 		entity.setPayableAmount(newValue);
 		
-		var updatedEntity = service.update(entity.getId(), entity);
+		var updatedEntity = service.update(entity.getId(), fromDTO(entity));
 		
 		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
 		assertThat(updatedEntity.getPayableAmount()).isEqualTo(newValue);
+		assertThat(updatedEntity).isEqualToComparingFieldByField(entity);
 	}
-	
+
 	@Test
 	void failt_to_update_with_unknownId() {
 		var unknownId = 123456;
@@ -123,11 +125,14 @@ public class SalesServiceIntegrationTest {
 		assertThat(repo.findById(id)).isEmpty();
 	}
 	
-	protected Sales getCopy(Sales entity) {		
-		repo.save(entity);
-		entityManager.flush();
-		entityManager.clear();
-		
-		return DeepCopy.copy(entity, Sales.class);
+	/**
+	 * Convert entity object to DTO, then convert it back again to entity object
+	 * this is done to simulate that data comes from the controller
+	 * @param entity
+	 * @return
+	 */
+	private Sales fromDTO(Sales entity) {
+		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
+		return SalesMapper.INSTANCE.map(dto);
 	}
 }
