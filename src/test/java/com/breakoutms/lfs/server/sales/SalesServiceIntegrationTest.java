@@ -26,13 +26,17 @@ import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.ProductRepository;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
-@DataSet({"corpse.xml", "product.xml", "sales.xml"})
+@DBRider
+@DBUnit(allowEmptyFields = true) 
+@DataSet(value = {"corpse.xml", "product.xml", "sales.xml"})
 public class SalesServiceIntegrationTest {
 
 	@Autowired SalesRepository repo;

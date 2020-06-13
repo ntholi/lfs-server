@@ -67,30 +67,30 @@
 
 <!-- funeral_scheme_benefit-->
 
-    <funeral_scheme_benefit id="13" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="5"/>
-    <funeral_scheme_benefit id="15" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="5"/>
-    <funeral_scheme_benefit id="16" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="5"/>
-    <funeral_scheme_benefit id="17" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="5"/>
-    <funeral_scheme_benefit id="18" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="10"/>
-    <funeral_scheme_benefit id="20" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="10"/>
-    <funeral_scheme_benefit id="21" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="10"/>
-    <funeral_scheme_benefit id="22" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="10"/>
-    <funeral_scheme_benefit id="23" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="9"/>
-    <funeral_scheme_benefit id="25" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="9"/>
-    <funeral_scheme_benefit id="26" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="9"/>
-    <funeral_scheme_benefit id="27" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="9"/>
-    <funeral_scheme_benefit id="28" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="8"/>
-    <funeral_scheme_benefit id="30" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="8"/>
-    <funeral_scheme_benefit id="31" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="8"/>
-    <funeral_scheme_benefit id="32" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="8"/>
-    <funeral_scheme_benefit id="33" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="7"/>
-    <funeral_scheme_benefit id="35" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="7"/>
-    <funeral_scheme_benefit id="36" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="7"/>
-    <funeral_scheme_benefit id="37" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="7"/>
-    <funeral_scheme_benefit id="38" deductable="Deductable" discount="0.0" item_type="COFFIN" funeral_scheme_id="6"/>
-    <funeral_scheme_benefit id="40" deductable="Free" discount="0.0" item_type="REFRIGERATION" funeral_scheme_id="6"/>
-    <funeral_scheme_benefit id="41" deductable="Deductable" discount="0.0" item_type="SERVICES" funeral_scheme_id="6"/>
-    <funeral_scheme_benefit id="42" deductable="Deductable" discount="0.0" item_type="TRANSPORT" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="13" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="15" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="16" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="17" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="5"/>
+    <funeral_scheme_benefit id="18" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="20" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="21" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="22" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="10"/>
+    <funeral_scheme_benefit id="23" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="25" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="26" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="27" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="9"/>
+    <funeral_scheme_benefit id="28" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="30" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="31" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="32" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="8"/>
+    <funeral_scheme_benefit id="33" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="35" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="36" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="37" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="7"/>
+    <funeral_scheme_benefit id="38" deductable="Deductable" discount="0.0" product_type="COFFIN_CASKET" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="40" deductable="Free" discount="0.0" product_type="REFRIGERATION" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="41" deductable="Deductable" discount="0.0" product_type="SERVICES" funeral_scheme_id="6"/>
+    <funeral_scheme_benefit id="42" deductable="Deductable" discount="0.0" product_type="TRANSPORT" funeral_scheme_id="6"/>
     
 <!-- penalty_deductible-->
 
