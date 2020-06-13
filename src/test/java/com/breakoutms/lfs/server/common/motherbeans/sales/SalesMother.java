@@ -22,11 +22,14 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 		entity.getBurialDetails().getCorpse().setTagNo(null);
 		entity.getQuotation().setId(null);
 		entity.getQuotation().getCustomer().setId(null);
-		entity.getQuotation().getSalesProducts().forEach(it -> it.setId(null));
+		entity.getQuotation().getSalesProducts().forEach(it -> {
+			it.setId(null);
+			it.getQuotation().setId(null);
+		});
 		return this;
 	}
 
-	public static Sales thaboLebese() {
+	public static SalesMother thaboLebese() {
 		return new SalesMother()
 				.id(7)
 				.tagNo("101")
@@ -36,8 +39,7 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 				.totalCost(new BigDecimal("150"))
 				.payableAmount(new BigDecimal("150"))
 				.topup(new BigDecimal(0))
-				.buyingDate(LocalDate.now())
-				.build();
+				.buyingDate(LocalDate.now());
 	}
 	
 	public SalesMother id(Integer id) {

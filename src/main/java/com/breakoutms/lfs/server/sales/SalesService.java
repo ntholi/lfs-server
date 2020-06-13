@@ -36,14 +36,16 @@ public class SalesService {
 	}
 	
 	@Transactional
-	public Sales update(Integer id, Sales entity) {
-		if(entity == null) {
+	public Sales update(Integer id, Sales updateEntity) {
+		if(updateEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Sales").get();
 		}
-		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Sales", id).get();
-		}
-		entity.setId(id);
+		Sales entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.notFound("Sales", id));
+		
+		setAssociations(updateEntity);
+		SalesMapper.INSTANCE.update(updateEntity, entity);
+		
 		return repo.save(entity);
 	}
 	

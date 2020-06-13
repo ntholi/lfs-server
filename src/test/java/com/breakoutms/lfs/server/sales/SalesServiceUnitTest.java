@@ -93,6 +93,6 @@ public class SalesServiceUnitTest {
 	}
 	
 	private Sales createEntity() {
-		return SalesMother.thaboLebese();
+		return SalesMother.thaboLebese().build();
 	}
 }

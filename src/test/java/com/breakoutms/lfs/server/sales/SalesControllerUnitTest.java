@@ -1,8 +1,9 @@
 package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -61,7 +63,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@MockBean private BranchRepository branchRepo;
 
 	private final Integer ID = 7;
-	private final Sales entity = createEntity();
+	private Sales entity = createEntity();
 	private final String URL = "/sales/";
 
 	@Test
@@ -69,9 +71,10 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	void get_by_id() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		
+		var viewModel = SalesMapper.INSTANCE.map(entity);
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
-				.andExpect(responseBody().isEqualTo(salesViewModel()));
+				.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).get(ID);
 	}
@@ -95,11 +98,13 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
 		
+		var viewModel = SalesMapper.INSTANCE.map(entity);
+		
 		mockMvc.perform(get(url))
 			.andExpect(status().isOk())
 			.andExpect(responseBody().isPagedModel())
 			.andExpect(responseBody().pageSize().isEqualTo(1))
-			.andExpect(responseBody().pagedModel("sales").contains(salesViewModel()))
+			.andExpect(responseBody().pagedModel("sales").contains(viewModel))
 			.andReturn();
 	}
 
@@ -112,7 +117,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(new ArrayList<>()));
 
 		mockMvc.perform(get(url))
-		.andExpect(status().isNoContent());
+			.andExpect(status().isNoContent());
 
 		verify(service).all(pageRequest);
 	}
@@ -120,15 +125,29 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
+		entity = entityWithoutIds();
+		entity.getQuotation().setId(101);
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
-		post(mockMvc, URL, salesDTO())
+		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
+		
+		SalesViewModel viewModel = SalesMapper.INSTANCE.map(entity);
+		viewModel.add(CommonLinks.addLinksWithBranch(SalesController.class, entity.getId(), null));
+		
+		post(mockMvc, URL, dto)
 			.andExpect(status().isCreated())
-			.andExpect(responseBody().isEqualTo(salesViewModel()));
+			.andExpect(responseBody().isEqualTo(viewModel));
 
-		verify(service).save(any(Sales.class));
+		ArgumentCaptor<Sales> captor = ArgumentCaptor.forClass(Sales.class);
+		verify(repo).save(captor.capture());
+		
+		assertThat(captor.getValue().getPayableAmount()).isEqualTo(entity.getPayableAmount());
+		assertThat(captor.getValue().getQuotation().getCustomer())
+			.isEqualTo(entity.getQuotation().getCustomer());
+		captor.getValue().getQuotation().getSalesProducts().forEach(it ->{
+			assertNotNull(it.getQuotation());
+		});
 	}
-
 
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
@@ -144,14 +163,30 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		when(repo.existsById(ID)).thenReturn(true);
+		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
+		SalesViewModel viewModel = SalesMapper.INSTANCE.map(entity);
+		
+		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
-		put(mockMvc, URL+ID, salesDTO())
+		put(mockMvc, URL+ID, dto)
 			.andExpect(status().isOk())
-			.andExpect(responseBody().isEqualTo(salesViewModel()));
+			.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).update(eq(ID), any(Sales.class));
+		
+		ArgumentCaptor<Sales> captor = ArgumentCaptor.forClass(Sales.class);
+		verify(repo).save(captor.capture());
+		
+		assertThat(captor.getValue().getId()).isEqualTo(entity.getId());
+		assertThat(captor.getValue().getPayableAmount()).isEqualTo(entity.getPayableAmount());
+		assertThat(captor.getValue().getQuotation().getCustomer())
+			.isEqualTo(entity.getQuotation().getCustomer());
+		
+		captor.getValue().getQuotation().getSalesProducts().forEach(it ->{
+			assertThat(it.getQuotation().getCustomer().getNames())
+				.isEqualTo(entity.getQuotation().getCustomer().getNames());
+		});
 	}
 
 	@Test
@@ -161,8 +196,6 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		
 		put(mockMvc, URL+ID, entity)
 			.andExpect(responseBody().containsErrorFor("payableAmount"));
-
-		verify(service, times(0)).update(anyInt(), any(Sales.class));
 	}
 
 	//	@Test
@@ -184,7 +217,11 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	//	}
 	
 	private Sales createEntity() {
-		return SalesMother.thaboLebese();
+		return SalesMother.thaboLebese().build();
+	}
+	
+	private Sales entityWithoutIds() {
+		return SalesMother.thaboLebese().removeIDs().build();
 	}
 
 	private SalesDTO salesDTO() {
@@ -231,7 +268,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 				.buyingDate(entity.getBuyingDate())
 				.build();
 		
-		viewModel.add(CommonLinks.addLinksWithBranch(SalesController.class, entity.getId(), null));
+		
 		
 		return viewModel;
 	}

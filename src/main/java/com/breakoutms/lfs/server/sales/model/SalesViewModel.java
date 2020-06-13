@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Relation(collectionRelation = "sales")
 public class SalesViewModel extends RepresentationModel<SalesViewModel> {
 
+	private Integer id;
+	
 	private Integer quotationNo;
 	
 	private String tagNo;
