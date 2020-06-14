@@ -57,11 +57,25 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		
 		var viewModel = SalesMapper.INSTANCE.map(entity);
+		
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
 				.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).get(ID);
+	}
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void verify_links() throws Exception {
+		when(repo.findById(ID)).thenReturn(Optional.of(entity));
+
+		int quotNo = entity.getQuotation().getId();
+		mockMvc.perform(get(URL+ID))
+				.andExpect(responseBody().hasLink("all", "/sales"))
+				.andExpect(responseBody().hasLink("self", "/sales/"+ID))
+				.andExpect(responseBody().hasLink("branch", "/branches/1"))
+				.andExpect(responseBody().hasLink("salesProducts", "/sales/quotations/"+quotNo+"/sales-products"));
 	}
 
 	@Test

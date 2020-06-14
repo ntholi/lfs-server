@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.common.motherbeans;
 import static org.jeasy.random.FieldPredicates.named;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 import javax.persistence.Id;
 
@@ -15,6 +16,11 @@ import com.breakoutms.lfs.server.branch.Branch;
 public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMother<T>{
 	
 	
+	public AuditableMother() {
+		super();
+		entity.setBranch(getBranch());
+	}
+
 	public AuditableMother<T, ID> id(ID id) {
 		setIDValue(id);
 		return this;
@@ -42,8 +48,7 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 		return super.getRandomParameters()
 				.excludeField(named("branch")
 				.or(named("createdAt"))
-				.or(named("createdBy")))
-				.randomize(named("branch"), () -> getBranch());
+				.or(named("createdBy")));
 	}
 	
 	private Branch getBranch() {

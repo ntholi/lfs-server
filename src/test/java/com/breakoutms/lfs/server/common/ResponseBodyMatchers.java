@@ -4,13 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
@@ -18,8 +21,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.breakoutms.lfs.server.exceptions.CentralExceptionHandler.ErrorResult;
 import com.breakoutms.lfs.server.exceptions.CentralExceptionHandler.InvalidFieldError;
-import com.breakoutms.lfs.server.util.WordUtils;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.util.WordUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -34,12 +37,14 @@ public class ResponseBodyMatchers {
 
 	@Autowired ObjectMapper objectMapper = createObjectMapper();
 
-	//TODO: FOR SOME REASON, THIS RETURNS TRUE EVEN IF THE RETURNED OBJECT HAS LINKS 
-	// YET THE EXPECTED OBJECT DOES NOT HAVE THEM FIX IT!
 	public ResultMatcher isEqualTo(Object expectedObject) {
 		return mvcResult -> {
-			String responseBody = mvcResult.getResponse().getContentAsString();
-			JSONAssert.assertEquals(objectToJSON(expectedObject), responseBody, false);
+			String responseJson = mvcResult.getResponse().getContentAsString();
+			String expectedJSon = objectToJSON(expectedObject);
+			responseJson = removeLinks(responseJson);
+			expectedJSon = removeLinks(expectedJSon);
+			
+			JSONAssert.assertEquals(expectedJSon, responseJson, JSONCompareMode.NON_EXTENSIBLE);
 		};
 	}
 
@@ -88,28 +93,13 @@ public class ResponseBodyMatchers {
 			assertThat(expected.getStatus()).isEqualTo(404);
 		};
 	}
-
-	protected String objectToJSON(Object expectedObject) throws JsonProcessingException, JSONException {
-		JSONObject json = new JSONObject(objectMapper.writeValueAsString(expectedObject));
-
-		JSONArray linksArray = json.getJSONArray("links");
-		JSONObject links = new JSONObject();
-
-		for (int i = 0; i < linksArray.length(); i++) {
-			JSONObject item = new JSONObject(linksArray.get(i).toString());
-			String rel = item.getString("rel");
-			String href = item.getString("href");
-			JSONObject value = new JSONObject();
-			value.put("href", "http://localhost"+href);
-			links.put(rel, value);
-		}
-
-		json.remove("links");
-		if(links.length() > 0) {
-			json.put("_links", links);
-		}
-
-		return json.toString().replace("\\/", "/");
+	
+	public ResultMatcher hasLink(String rel, String path) {
+		return mvcResult -> {
+			String json = mvcResult.getResponse().getContentAsString();
+			Map<String, String> links = getLinks(json);
+			assertThat(links).containsEntry(rel, path);
+		};
 	}
 
 	public ResultMatcher containsErrorFor(String fieldName) {
@@ -133,6 +123,50 @@ public class ResponseBodyMatchers {
 			assertThat(response.getMessage()).contains("Invalid input for", 
 					WordUtils.humenize(fieldName));
 		};
+	}
+	
+	private String removeLinks(String json) throws JSONException {
+		JSONObject jObj = new JSONObject(json);
+		jObj.remove("_links");
+		return jObj.toString();
+	}
+	
+	private Map<String, String> getLinks(String json) throws JSONException {
+		Map<String, String> map = new HashMap<>();
+		JSONObject jObj = new JSONObject(json);
+		JSONObject links = jObj.getJSONObject("_links");
+		JSONArray names = links.names();
+		for (int i = 0; i < names.length(); i++) {
+			String rel = names.getString(i);
+			String href = links.getString(rel).replace("\\/", "/");
+			href = href.replace("\"href\":\"http://localhost", "");
+			href = href.replaceAll("\"", "").replace("{", "").replace("}", "");
+			map.put(rel, href);
+		}
+		return map;
+	}
+
+	protected String objectToJSON(Object expectedObject) throws JsonProcessingException, JSONException {
+		JSONObject json = new JSONObject(objectMapper.writeValueAsString(expectedObject));
+
+		JSONArray linksArray = json.getJSONArray("links");
+		JSONObject links = new JSONObject();
+
+		for (int i = 0; i < linksArray.length(); i++) {
+			JSONObject item = new JSONObject(linksArray.get(i).toString());
+			String rel = item.getString("rel");
+			String href = item.getString("href");
+			JSONObject value = new JSONObject();
+			value.put("href", "http://localhost"+href);
+			links.put(rel, value);
+		}
+
+		json.remove("links");
+		if(links.length() > 0) {
+			json.put("_links", links);
+		}
+
+		return json.toString().replace("\\/", "/");
 	}
 
 	private ObjectMapper createObjectMapper() { //TODO FIND A WAY TO USE THE OBJECT MAPPER IN GeneralConfigurations

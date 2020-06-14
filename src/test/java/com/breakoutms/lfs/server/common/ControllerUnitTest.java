@@ -1,10 +1,14 @@
 package com.breakoutms.lfs.server.common;
 
+import java.util.Optional;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.core.entity.District;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -37,5 +41,14 @@ public interface ControllerUnitTest extends SecuredWebTest {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public default Optional<Branch> branch() {
+		Branch branch = new Branch();
+		branch.setId(1);
+		branch.setDistrict(District.Maseru);
+		branch.setName("Maseru");
+		branch.setSyncNumber((short)256);
+		return Optional.of(branch);
 	}
 }
