@@ -7,11 +7,14 @@ import java.util.List;
 
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.mortuary.Corpse;
+import com.breakoutms.lfs.server.products.model.Product;
+import com.breakoutms.lfs.server.products.model.ProductType;
 import com.breakoutms.lfs.server.sales.model.BurialDetails;
 import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.google.common.collect.Lists;
 
 public class SalesMother extends AuditableMother<Sales, Integer> {
 
@@ -39,8 +42,22 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 				.totalCost(new BigDecimal("150"))
 				.payableAmount(new BigDecimal("150"))
 				.topup(new BigDecimal(0))
+				.salesProduct(getSalesProducts())
 				.linkSalesProductsToRightQuotation()
 				.buyingDate(LocalDate.now());
+	}
+	
+	private static List<SalesProduct> getSalesProducts() {
+		SalesProduct item1 = SalesProduct.builder()
+				.cost(new BigDecimal("50"))
+				.product(new Product("Latter", new BigDecimal("10"), ProductType.LETTERS))
+				.quantity(5).build();
+		SalesProduct item2 = SalesProduct.builder()
+				.cost(new BigDecimal("100"))
+				.product(new Product("Coffin_One", new BigDecimal("150"), ProductType.COFFIN_CASKET))
+				.quantity(1).build();
+		
+		return Lists.newArrayList(item1, item2);
 	}
 
 	private SalesMother linkSalesProductsToRightQuotation() {

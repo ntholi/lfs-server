@@ -7,13 +7,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -32,16 +30,8 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.mortuary.Corpse;
-import com.breakoutms.lfs.server.products.model.Product;
-import com.breakoutms.lfs.server.products.model.ProductType;
-import com.breakoutms.lfs.server.sales.model.BurialDetails;
-import com.breakoutms.lfs.server.sales.model.Customer;
-import com.breakoutms.lfs.server.sales.model.PaymentMode;
-import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
@@ -69,7 +59,6 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		var viewModel = SalesMapper.INSTANCE.map(entity);
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
-				.andDo(print())
 				.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).get(ID);
@@ -169,24 +158,6 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		put(mockMvc, URL+ID, entity)
 			.andExpect(responseBody().containsErrorFor("payableAmount"));
 	}
-
-//	@Test
-//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-//	void getSalesProducts() throws Exception {
-//		List<PenaltyDeductible> value = List.copyOf(entity.getPenaltyDeductibles());
-//		
-//		when(repo.getPenaltyDeductibles(anyInt())).thenReturn(value);
-//		
-//		mockMvc.perform(get(URL+"/"+ID+"/penalty-deductibles"))
-//			.andDo(print())
-//			.andExpect(status().isOk())
-//			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].months").value(value.get(0).getMonths()))
-//			.andExpect(jsonPath("_embedded.penaltyDeductibles[2].amount").value(value.get(2).getAmount()))
-//			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
-//			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
-//		
-//		verify(service).getPenaltyDeductibles(ID); 
-//	}
 	
 	private Sales createEntity() {
 		return SalesMother.thaboLebese().build();
@@ -194,67 +165,5 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	
 	private Sales entityWithoutIds() {
 		return SalesMother.thaboLebese().removeIDs().build();
-	}
-
-	private SalesDTO salesDTO() {
-		BurialDetails burialDetails = entity.getBurialDetails();
-		Corpse corpse = burialDetails.getCorpse();
-		Customer customer = entity.getQuotation().getCustomer();
-		return SalesDTO.builder()
-				.tagNo(corpse.getId())
-				.customerNames(customer.getNames())
-				.phoneNumber(customer.getPhoneNumber())
-				.leavingTime(burialDetails.getLeavingTime())
-				.serviceTime(burialDetails.getServiceTime())
-				.burialPlace(burialDetails.getBurialPlace())
-				.roadStatus(burialDetails.getRoadStatus())
-				.physicalAddress(burialDetails.getPhysicalAddress())
-				.salesProducts(salesProducts())
-				.totalCost(entity.getTotalCost())
-				.payableAmount(entity.getPayableAmount())
-				.topup(entity.getTopup())
-				.paymentMode(PaymentMode.CASH)
-				.buyingDate(entity.getBuyingDate())
-				.build();
-	}
-	
-	private SalesViewModel salesViewModel() {
-		BurialDetails burialDetails = entity.getBurialDetails();
-		Corpse corpse = burialDetails.getCorpse();
-		Quotation quotation = entity.getQuotation();
-		Customer customer = quotation.getCustomer();
-		SalesViewModel viewModel = SalesViewModel.builder()
-				.quotationNo(quotation.getId())
-				.tagNo(corpse.getId())
-				.customerNames(customer.getNames())
-				.phoneNumber(customer.getPhoneNumber())
-				.leavingTime(burialDetails.getLeavingTime())
-				.serviceTime(burialDetails.getServiceTime())
-				.burialPlace(burialDetails.getBurialPlace())
-				.roadStatus(burialDetails.getRoadStatus())
-				.physicalAddress(burialDetails.getPhysicalAddress())
-				.totalCost(entity.getTotalCost())
-				.payableAmount(entity.getPayableAmount())
-				.topup(entity.getTopup())
-				.paymentMode(PaymentMode.CASH)
-				.buyingDate(entity.getBuyingDate())
-				.build();
-		
-		
-		
-		return viewModel;
-	}
-
-	private List<SalesProduct> salesProducts() {
-		SalesProduct item1 = SalesProduct.builder()
-				.cost(new BigDecimal("50"))
-				.product(new Product("Latter", new BigDecimal("10"), ProductType.LETTERS))
-				.quantity(5).build();
-		SalesProduct item2 = SalesProduct.builder()
-				.cost(new BigDecimal("100"))
-				.product(new Product("Coffin_One", new BigDecimal("150"), ProductType.COFFIN_CASKET))
-				.quantity(1).build();
-		
-		return List.of(item1, item2);
 	}
 }
