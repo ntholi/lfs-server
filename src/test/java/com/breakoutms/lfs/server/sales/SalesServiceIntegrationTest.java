@@ -125,6 +125,17 @@ public class SalesServiceIntegrationTest {
 		assertThat(repo.findById(id)).isEmpty();
 	}
 	
+	@Test
+	void getSalesProducts() {
+		List<SalesProduct> salesProduct = service.getSalesProducts(1);
+		BigDecimal totalCost = salesProduct.stream()
+				.map(SalesProduct::getCost)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		assertThat(salesProduct.size()).isEqualTo(2);
+		assertThat(totalCost).isEqualTo(new BigDecimal("150.00"));
+	}
+	
 	/**
 	 * Convert entity object to DTO, then convert it back again to entity object
 	 * this is done to simulate that data comes from the controller

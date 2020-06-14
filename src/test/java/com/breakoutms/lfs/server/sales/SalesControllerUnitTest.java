@@ -1,13 +1,13 @@
 package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,7 +28,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
@@ -48,7 +46,7 @@ import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(SalesController.class)
+@WebMvcTest({SalesController.class})
 @Import(GeneralConfigurations.class)
 public class SalesControllerUnitTest implements ControllerUnitTest {
 
@@ -71,6 +69,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		var viewModel = SalesMapper.INSTANCE.map(entity);
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
+				.andDo(print())
 				.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).get(ID);

@@ -105,7 +105,9 @@ public class ResponseBodyMatchers {
 		}
 
 		json.remove("links");
-		json.put("_links", links);
+		if(links.length() > 0) {
+			json.put("_links", links);
+		}
 
 		return json.toString().replace("\\/", "/");
 	}
@@ -162,7 +164,11 @@ public class ResponseBodyMatchers {
 			return mvcResult -> {
 				String json = mvcResult.getResponse().getContentAsString();
 				JSONObject _embedded = new JSONObject(json).getJSONObject("_embedded");
+				assertThat(_embedded.has(collectionRelation))
+					.withFailMessage("Response JSON body does not have node with name '%s'", collectionRelation)
+					.isTrue();
 				JSONArray array = _embedded.getJSONArray(collectionRelation);
+				//TODO: THIS ONLY ASSUMES VIEW MODEL IS IN THE FIRST ELEMENT OF THE ARRAY
 				String item = array.getJSONObject(0).toString();
 
 				JSONAssert.assertEquals(objectToJSON(viewModel), item, false);

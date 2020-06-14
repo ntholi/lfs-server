@@ -3,13 +3,10 @@ package com.breakoutms.lfs.server.sales;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -26,9 +23,9 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.breakoutms.lfs.server.security.Domain;
 
@@ -76,24 +73,16 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 		);
 	}
 	
-	@GetMapping("/quotations/{quotationNo}")
-	public ResponseEntity<CollectionModel<SalesProductViewModel>> getSalesProducts(Integer quotationNo){
-		List<SalesProductViewModel> list = SalesMapper
-				.INSTANCE.map(service.getSalesProducts(quotationNo));
-		if(list.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		var result = CollectionModel.of(list, linkTo(methodOn(getClass())
-				.getSalesProducts(quotationNo)).withSelfRel());
-		
-		return ResponseEntity.ok(result);
-	}
-	
 	@Override
 	public SalesViewModel toViewModel(Sales entity) {
 		SalesViewModel dto = SalesMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
+		Quotation quotation = entity.getQuotation();
+		if(quotation != null) {
+			Integer quotNo = quotation.getId();
+			dto.add(linkTo(methodOn(QuotationController.class).getSalesProducts(quotNo)).withRel("salesProducts"));
+		}
 		return dto;
 	}
 }
