@@ -1,9 +1,15 @@
 package com.breakoutms.lfs.server.sales;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -22,6 +28,7 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
+import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.breakoutms.lfs.server.security.Domain;
 
@@ -67,6 +74,19 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
+	}
+	
+	@GetMapping("/quotations/{quotationNo}")
+	public ResponseEntity<CollectionModel<SalesProductViewModel>> getSalesProducts(Integer quotationNo){
+		List<SalesProductViewModel> list = SalesMapper
+				.INSTANCE.map(service.getSalesProducts(quotationNo));
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		var result = CollectionModel.of(list, linkTo(methodOn(getClass())
+				.getSalesProducts(quotationNo)).withSelfRel());
+		
+		return ResponseEntity.ok(result);
 	}
 	
 	@Override

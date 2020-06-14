@@ -34,6 +34,8 @@ public class ResponseBodyMatchers {
 
 	@Autowired ObjectMapper objectMapper = createObjectMapper();
 
+	//TODO: FOR SOME REASON, THIS RETURNS TRUE EVEN IF THE RETURNED OBJECT HAS LINKS 
+	// YET THE EXPECTED OBJECT DOES NOT HAVE THEM FIX IT!
 	public ResultMatcher isEqualTo(Object expectedObject) {
 		return mvcResult -> {
 			String responseBody = mvcResult.getResponse().getContentAsString();

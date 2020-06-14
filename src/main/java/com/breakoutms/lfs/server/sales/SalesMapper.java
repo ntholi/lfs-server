@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.sales;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -7,6 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
+import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 
 @Mapper(componentModel="spring")
@@ -57,5 +61,10 @@ public abstract class SalesMapper {
 	protected abstract void update(Sales updateEntity, @MappingTarget Sales saved);
 	
 	protected abstract Sales copy(Sales sales);
+
+	protected abstract List<SalesProductViewModel> map(List<SalesProduct> salesProducts);
+	
+	@Mapping(source = "product.name", target = "productName")
+	protected abstract SalesProductViewModel map(SalesProduct salesProduct);
 
 }

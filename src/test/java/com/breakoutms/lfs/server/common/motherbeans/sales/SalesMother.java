@@ -39,9 +39,24 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 				.totalCost(new BigDecimal("150"))
 				.payableAmount(new BigDecimal("150"))
 				.topup(new BigDecimal(0))
+				.linkSalesProductsToRightQuotation()
 				.buyingDate(LocalDate.now());
 	}
-	
+
+	private SalesMother linkSalesProductsToRightQuotation() {
+		Quotation quotation = entity.getQuotation();
+		if(quotation == null) {
+			quotation = new Quotation();
+		}
+		List<SalesProduct> salesProducts = entity.getQuotation().getSalesProducts();
+		if(salesProducts != null) {
+			for (SalesProduct item : salesProducts) {
+				item.setQuotation(quotation);
+			}
+		}
+		return this;
+	}
+
 	public SalesMother id(Integer id) {
 		entity.setId(id);
 		return this;
@@ -53,11 +68,8 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 			burialDetails = new BurialDetails();
 			entity.setBurialDetails(burialDetails);
 		}
-		Corpse corpse = burialDetails.getCorpse();
-		if(corpse == null) {
-			corpse = new Corpse();
-			burialDetails.setCorpse(corpse);
-		}
+		Corpse corpse  = new Corpse();
+		burialDetails.setCorpse(corpse);
 		corpse.setTagNo(tagNo);
 		return this;
 	}
@@ -111,7 +123,7 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 		entity.setQuotation(quotation);
 		return this;
 	}
-	
+
 	public SalesMother customer(Customer customer) {
 		Quotation quotation = entity.getQuotation();
 		if(quotation == null) {

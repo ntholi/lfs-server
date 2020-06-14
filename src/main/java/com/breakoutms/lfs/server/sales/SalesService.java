@@ -12,6 +12,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 
 import lombok.AllArgsConstructor;
 
@@ -59,5 +60,10 @@ public class SalesService {
 
 	public void delete(Integer id) {
 		repo.deleteById(id);
+	}
+
+	public List<SalesProduct> getSalesProducts(Integer quotationNo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

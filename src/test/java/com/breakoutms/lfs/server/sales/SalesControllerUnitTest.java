@@ -2,7 +2,6 @@ package com.breakoutms.lfs.server.sales;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -35,7 +34,6 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.mortuary.Corpse;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductType;
@@ -60,7 +58,6 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@MockBean private SalesRepository repo;
 	@SpyBean private SalesService service;
 	@MockBean private UserDetailsServiceImpl requiredBean;
-	@MockBean private BranchRepository branchRepo;
 
 	private final Integer ID = 7;
 	private Sales entity = createEntity();
@@ -97,7 +94,6 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		var pageRequest = PageRequestHelper.from(url);
 		
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
-		
 		var viewModel = SalesMapper.INSTANCE.map(entity);
 		
 		mockMvc.perform(get(url))
@@ -126,27 +122,16 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
 		entity = entityWithoutIds();
-		entity.getQuotation().setId(101);
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
 		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
-		
 		SalesViewModel viewModel = SalesMapper.INSTANCE.map(entity);
-		viewModel.add(CommonLinks.addLinksWithBranch(SalesController.class, entity.getId(), null));
 		
 		post(mockMvc, URL, dto)
 			.andExpect(status().isCreated())
 			.andExpect(responseBody().isEqualTo(viewModel));
 
-		ArgumentCaptor<Sales> captor = ArgumentCaptor.forClass(Sales.class);
-		verify(repo).save(captor.capture());
-		
-		assertThat(captor.getValue().getPayableAmount()).isEqualTo(entity.getPayableAmount());
-		assertThat(captor.getValue().getQuotation().getCustomer())
-			.isEqualTo(entity.getQuotation().getCustomer());
-		captor.getValue().getQuotation().getSalesProducts().forEach(it ->{
-			assertNotNull(it.getQuotation());
-		});
+		verify(repo).save(entity);
 	}
 
 	@Test
@@ -174,19 +159,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 			.andExpect(responseBody().isEqualTo(viewModel));
 
 		verify(service).update(eq(ID), any(Sales.class));
-		
-		ArgumentCaptor<Sales> captor = ArgumentCaptor.forClass(Sales.class);
-		verify(repo).save(captor.capture());
-		
-		assertThat(captor.getValue().getId()).isEqualTo(entity.getId());
-		assertThat(captor.getValue().getPayableAmount()).isEqualTo(entity.getPayableAmount());
-		assertThat(captor.getValue().getQuotation().getCustomer())
-			.isEqualTo(entity.getQuotation().getCustomer());
-		
-		captor.getValue().getQuotation().getSalesProducts().forEach(it ->{
-			assertThat(it.getQuotation().getCustomer().getNames())
-				.isEqualTo(entity.getQuotation().getCustomer().getNames());
-		});
+		verify(repo).save(entity);
 	}
 
 	@Test
@@ -198,23 +171,23 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 			.andExpect(responseBody().containsErrorFor("payableAmount"));
 	}
 
-	//	@Test
-	//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
-	//	void get_premiums() throws Exception {
-	//		List<Premium> value = List.copyOf(entity.getPremiums());
-	//		
-	//		when(repo.getPremiums(anyInt())).thenReturn(value);
-	//		
-	//		mockMvc.perform(get(URL+"/"+ID+"/premiums"))
-	//			.andDo(print())
-	//			.andExpect(status().isOk())
-	//			.andExpect(jsonPath("_embedded.premiums[0].premiumAmount").value(value.get(0).getPremiumAmount()))
-	//			.andExpect(jsonPath("_embedded.premiums[2].premiumAmount").value(value.get(2).getPremiumAmount()))
-	//			.andExpect(jsonPath("_embedded.premiums[0].Sales").doesNotExist())
-	//			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/premiums")));
-	//
-	//		verify(service).getPremiums(ID); 
-	//	}
+//	@Test
+//	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+//	void getSalesProducts() throws Exception {
+//		List<PenaltyDeductible> value = List.copyOf(entity.getPenaltyDeductibles());
+//		
+//		when(repo.getPenaltyDeductibles(anyInt())).thenReturn(value);
+//		
+//		mockMvc.perform(get(URL+"/"+ID+"/penalty-deductibles"))
+//			.andDo(print())
+//			.andExpect(status().isOk())
+//			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].months").value(value.get(0).getMonths()))
+//			.andExpect(jsonPath("_embedded.penaltyDeductibles[2].amount").value(value.get(2).getAmount()))
+//			.andExpect(jsonPath("_embedded.penaltyDeductibles[0].funeralScheme").doesNotExist())
+//			.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/penalty-deductibles")));
+//		
+//		verify(service).getPenaltyDeductibles(ID); 
+//	}
 	
 	private Sales createEntity() {
 		return SalesMother.thaboLebese().build();

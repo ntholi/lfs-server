@@ -67,6 +67,7 @@ public class SalesProduct extends AuditableEntity<Long>{
 	 
 	@ToString.Exclude
 	@JsonIgnore
+	@EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "quotation_id", nullable = false)
     private Quotation quotation;
