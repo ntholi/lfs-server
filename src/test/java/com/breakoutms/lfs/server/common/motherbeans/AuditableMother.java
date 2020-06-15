@@ -3,7 +3,6 @@ package com.breakoutms.lfs.server.common.motherbeans;
 import static org.jeasy.random.FieldPredicates.named;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 
 import javax.persistence.Id;
 
@@ -28,6 +27,11 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 
 	public AuditableMother<T, ID> removeIDs() {
 		setIDValue(null);
+		return this;
+	}
+	
+	public AuditableMother<T, ID> removeBranch() {
+		entity.setBranch(null);
 		return this;
 	}
 	

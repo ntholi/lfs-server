@@ -48,7 +48,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UserDetailsServiceImpl requiredBean;
 
 	private final Integer ID = 7;
-	private Sales entity = createEntity();
+	private Sales entity = existingEntity();
 	private final String URL = "/sales/";
 
 	@Test
@@ -123,7 +123,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
-		entity = entityWithoutIds();
+		entity = newEntity();
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
 		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
@@ -173,11 +173,15 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 			.andExpect(responseBody().containsErrorFor("payableAmount"));
 	}
 	
-	private Sales createEntity() {
-		return SalesMother.thaboLebese().build();
+	private Sales existingEntity() {
+		return SalesMother.thaboLebese()
+				.build();
 	}
 	
-	private Sales entityWithoutIds() {
-		return SalesMother.thaboLebese().removeIDs().build();
+	private Sales newEntity() {
+		return SalesMother.thaboLebese()
+				.removeIDs()
+				.removeBranch()
+				.build();
 	}
 }
