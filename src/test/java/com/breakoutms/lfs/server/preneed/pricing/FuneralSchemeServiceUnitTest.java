@@ -61,7 +61,7 @@ public class FuneralSchemeServiceUnitTest {
 	@Test
 	void update() throws Exception {
 		var id = entity.getId();
-		when(repo.existsById(id)).thenReturn(true);
+		when(repo.findById(id)).thenReturn(Optional.of(entity));
 		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
 
 		FuneralScheme response = service.update(id, new FuneralScheme());
@@ -75,7 +75,7 @@ public class FuneralSchemeServiceUnitTest {
 		var unknownId = 123456;
 		String exMsg = ExceptionSupplier.notFound(FuneralScheme.class, unknownId).get().getMessage();
 		
-		when(repo.existsById(unknownId)).thenReturn(false);
+		when(repo.findById(unknownId)).thenReturn(Optional.empty());
 
 		Throwable thrown = catchThrowable(() -> {
 			service.update(unknownId, new FuneralScheme());

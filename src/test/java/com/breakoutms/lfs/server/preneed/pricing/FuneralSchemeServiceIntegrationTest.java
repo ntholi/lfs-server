@@ -37,10 +37,8 @@ import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 class FuneralSchemeServiceIntegrationTest {
 
 	@Autowired FuneralSchemeRepository repo;
-	@Autowired
-	private FuneralSchemeService service;
-	@Autowired
-	private EntityManager entityManager;
+	@Autowired private FuneralSchemeService service;
+	@Autowired private EntityManager entityManager;
 	private FuneralScheme entity;
 	
 	
