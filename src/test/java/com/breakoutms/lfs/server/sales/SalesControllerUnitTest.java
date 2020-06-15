@@ -31,8 +31,6 @@ import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.sales.model.Sales;
-import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -46,9 +44,10 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@MockBean private SalesRepository repo;
 	@SpyBean private SalesService service;
 	@MockBean private UserDetailsServiceImpl requiredBean;
+	private SalesMapper modelMapper = SalesMapper.INSTANCE;
 
 	private final Integer ID = 7;
-	private Sales entity = existingEntity();
+	private Sales entity = persistedEntity();
 	private final String URL = "/sales/";
 
 	@Test
@@ -56,7 +55,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	void get_by_id() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		
-		var viewModel = SalesMapper.INSTANCE.map(entity);
+		var viewModel = modelMapper.map(entity);
 		
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
@@ -96,7 +95,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		var pageRequest = PageRequestHelper.from(url);
 		
 		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
-		var viewModel = SalesMapper.INSTANCE.map(entity);
+		var viewModel = modelMapper.map(entity);
 		
 		mockMvc.perform(get(url))
 			.andExpect(status().isOk())
@@ -126,8 +125,8 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 		entity = newEntity();
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
-		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
-		SalesViewModel viewModel = SalesMapper.INSTANCE.map(entity);
+		var dto = modelMapper.toDTO(entity);
+		var viewModel = modelMapper.map(entity);
 		
 		post(mockMvc, URL, dto)
 			.andExpect(status().isCreated())
@@ -150,8 +149,8 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
-		SalesViewModel viewModel = SalesMapper.INSTANCE.map(entity);
+		var dto = modelMapper.toDTO(entity);
+		var viewModel = modelMapper.map(entity);
 		
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		when(repo.save(any(Sales.class))).thenReturn(entity);
@@ -173,7 +172,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 			.andExpect(responseBody().containsErrorFor("payableAmount"));
 	}
 	
-	private Sales existingEntity() {
+	private Sales persistedEntity() {
 		return SalesMother.thaboLebese()
 				.build();
 	}
