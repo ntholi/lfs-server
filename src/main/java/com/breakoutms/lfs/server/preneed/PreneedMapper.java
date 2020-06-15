@@ -4,17 +4,18 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-import com.breakoutms.lfs.server.preneed.policy.model.Policy;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -38,6 +39,14 @@ public abstract class PreneedMapper {
 	public abstract PenaltyDeductibleViewModel map(PenaltyDeductible penaltyDeductible);
 	public abstract FuneralSchemeBenefitViewModel map(FuneralSchemeBenefit funeralSchemeBenefit);
 	public abstract DependentBenefitViewModel map(DependentBenefit dependentBenefit);
+	public abstract FuneralSchemeDTO toDTO(FuneralScheme entity);
+	
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "branch", ignore = true)
+	public abstract void update(FuneralScheme updatedEntity, @MappingTarget FuneralScheme saved);
+	
 	
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)

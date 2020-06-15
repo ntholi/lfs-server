@@ -61,7 +61,7 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 				.or(named("createdBy")));
 	}
 	
-	private Branch getBranch() {
+	protected Branch getBranch() {
 		Branch branch = new Branch();
 		branch.setId(1);
 		branch.setName("Maseru");

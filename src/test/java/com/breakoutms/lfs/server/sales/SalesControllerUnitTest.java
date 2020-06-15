@@ -47,7 +47,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	private SalesMapper modelMapper = SalesMapper.INSTANCE;
 
 	private final Integer ID = 7;
-	private Sales entity = persistedEntity();
+	private final Sales entity = persistedEntity();
 	private final String URL = "/sales/";
 
 	@Test
@@ -122,7 +122,7 @@ public class SalesControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
-		entity = newEntity();
+		var entity = newEntity();
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
 		var dto = modelMapper.toDTO(entity);

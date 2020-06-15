@@ -31,7 +31,7 @@ import lombok.ToString;
 @Entity
 @Audited
 @Data @Builder
-@EqualsAndHashCode(callSuper = true, exclude = "funeralScheme")
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @SQLDelete(sql = "UPDATE penalty_deductible SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
@@ -53,6 +53,7 @@ public class PenaltyDeductible extends AuditableEntity<Integer> {
 	
 	@ToString.Exclude
 	@JsonIgnore
+	@EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="funeral_scheme_id", nullable = false)
 	private FuneralScheme funeralScheme;

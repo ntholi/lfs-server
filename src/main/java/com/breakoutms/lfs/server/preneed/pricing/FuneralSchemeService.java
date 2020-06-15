@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
@@ -38,15 +39,16 @@ public class FuneralSchemeService {
 	}
 	
 	@Transactional
-	public FuneralScheme update(Integer id, FuneralScheme entity) {
-		if(entity == null) {
+	public FuneralScheme update(Integer id, FuneralScheme updatedEntity) {
+		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Funeral Scheme").get();
 		}
-		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Funeral Scheme", id).get();
-		}
-		entity.setId(id);
-		setAssociations(entity);
+		var entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.notFound("Funeral Scheme", id));
+
+		setAssociations(updatedEntity);
+		PreneedMapper.INSTANCE.update(updatedEntity, entity);
+		
 		return repo.save(entity);
 	}
 
@@ -56,23 +58,23 @@ public class FuneralSchemeService {
 	
 	protected void setAssociations(final FuneralScheme entity) {
 		if(entity.getPremiums() != null) {
-			entity.getPremiums().forEach(premium ->
-				premium.setFuneralScheme(entity)
+			entity.getPremiums().forEach(it ->
+				it.setFuneralScheme(entity)
 			);
 		}
 		if(entity.getDependentBenefits() != null) {
-			entity.getDependentBenefits().forEach(premium ->
-				premium.setFuneralScheme(entity)
+			entity.getDependentBenefits().forEach(it ->
+				it.setFuneralScheme(entity)
 			);
 		}
 		if(entity.getBenefits() != null) {
-			entity.getBenefits().forEach(premium ->
-				premium.setFuneralScheme(entity)
+			entity.getBenefits().forEach(it ->
+				it.setFuneralScheme(entity)
 			);
 		}
 		if(entity.getPenaltyDeductibles() != null) {
-			entity.getPenaltyDeductibles().forEach(premium ->
-				premium.setFuneralScheme(entity)
+			entity.getPenaltyDeductibles().forEach(it ->
+				it.setFuneralScheme(entity)
 			);
 		}
 	}

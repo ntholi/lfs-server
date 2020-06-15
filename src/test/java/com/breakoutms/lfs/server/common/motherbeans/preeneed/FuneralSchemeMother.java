@@ -1,20 +1,21 @@
 package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.util.Optional;
-import java.util.Set;
 
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
-import com.breakoutms.lfs.server.products.model.ProductType;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
+import com.breakoutms.lfs.server.products.model.ProductType;
+import com.google.common.collect.Sets;
 
 public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>{
 
 	public FuneralSchemeMother() {
+		super();
 		entity.getBenefits().forEach(it ->{
 			it.setDiscount(money(0));
 		});
@@ -54,7 +55,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.name("PLAN C")
 					.penaltyFee(money(10))
 					.registrationFee(money(50)).build();
-			entity.setPremiums(Set.of(
+			entity.setPremiums(Sets.newHashSet(
 					Premium.builder()
 						.id(1)
 						.coverAmount(money(5000))
@@ -77,7 +78,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.premiumAmount(money(120))
 						.funeralScheme(entity).build()
 			));
-			entity.setDependentBenefits(Set.of(
+			entity.setDependentBenefits(Sets.newHashSet(
 					DependentBenefit.builder()
 						.id(1)
 						.coverAmount(money(750))
@@ -97,7 +98,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.minmumAge(14)
 						.funeralScheme(entity).build()
 			));
-			entity.setBenefits(Set.of(
+			entity.setBenefits(Sets.newHashSet(
 					FuneralSchemeBenefit.builder()
 						.id(1)
 						.deductable(Deductable.values()[1])
@@ -123,7 +124,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.productType(ProductType.values()[9])
 						.funeralScheme(entity).build()
 			));
-			entity.setPenaltyDeductibles(Set.of(
+			entity.setPenaltyDeductibles(Sets.newHashSet(
 					PenaltyDeductible.builder()
 						.id(1)
 						.amount(money(1000)).months(1)
@@ -137,6 +138,8 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.amount(money(3000)).months(3)
 						.funeralScheme(entity).build()
 			));
+		setAssociations(entity);
+		entity.setBranch(getBranch());
 		return this;
 	}
 	
@@ -149,7 +152,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 				.name("PLAN A+")
 				.penaltyFee(money(20))
 				.registrationFee(money(300)).build();
-		entity.setPremiums(Set.of(
+		entity.setPremiums(Sets.newHashSet(
 				Premium.builder()
 					.id(4)
 					.coverAmount(money(15000))
@@ -165,7 +168,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.premiumAmount(money(220))
 					.funeralScheme(entity).build()
 		));
-		entity.setDependentBenefits(Set.of(
+		entity.setDependentBenefits(Sets.newHashSet(
 				DependentBenefit.builder()
 					.id(4)
 					.coverAmount(money(2000))
@@ -185,7 +188,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.minmumAge(14)
 					.funeralScheme(entity).build()
 		));
-		entity.setBenefits(Set.of(
+		entity.setBenefits(Sets.newHashSet(
 				FuneralSchemeBenefit.builder()
 					.id(5)
 					.deductable(Deductable.values()[1])
@@ -211,7 +214,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.productType(ProductType.values()[9])
 					.funeralScheme(entity).build()
 		));
-		entity.setPenaltyDeductibles(Set.of(
+		entity.setPenaltyDeductibles(Sets.newHashSet(
 				PenaltyDeductible.builder()
 					.id(1)
 					.amount(money(3000)).months(1)
@@ -225,7 +228,32 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.amount(money(5000)).months(3)
 					.funeralScheme(entity).build()
 		));
-	return this;
+		setAssociations(entity);
+		entity.setBranch(getBranch());
+		return this;
+	}
+	
+	protected void setAssociations(final FuneralScheme entity) {
+		if(entity.getPremiums() != null) {
+			entity.getPremiums().forEach(it ->
+				it.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getDependentBenefits() != null) {
+			entity.getDependentBenefits().forEach(it ->
+				it.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getBenefits() != null) {
+			entity.getBenefits().forEach(it ->
+				it.setFuneralScheme(entity)
+			);
+		}
+		if(entity.getPenaltyDeductibles() != null) {
+			entity.getPenaltyDeductibles().forEach(it ->
+				it.setFuneralScheme(entity)
+			);
+		}
 	}
 
 	public static Optional<Premium> getPremium(FuneralScheme funeralScheme, int age) {

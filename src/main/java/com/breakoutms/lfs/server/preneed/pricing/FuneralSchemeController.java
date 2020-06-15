@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
+import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
@@ -96,7 +96,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		var result = new CollectionModel<>(list,
+		var result = CollectionModel.of(list,
 				linkTo(methodOn(getClass()).getPremiums(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
@@ -113,7 +113,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		var result = new CollectionModel<>(list,
+		var result = CollectionModel.of(list,
 				linkTo(methodOn(getClass()).getDependentBenefits(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
@@ -130,7 +130,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		var result = new CollectionModel<>(list,
+		var result = CollectionModel.of(list,
 				linkTo(methodOn(getClass()).getFuneralSchemeBenefits(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
@@ -147,7 +147,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		var result = new CollectionModel<>(list,
+		var result = CollectionModel.of(list,
 				linkTo(methodOn(getClass()).getPenaltyDeductibles(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
