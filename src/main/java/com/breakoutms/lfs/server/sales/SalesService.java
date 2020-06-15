@@ -20,21 +20,21 @@ import lombok.AllArgsConstructor;
 public class SalesService {
 
 	private final SalesRepository repo;
-	
+
 	public Optional<Sales> get(Integer id) {
 		return repo.findById(id);
 	}
-	
+
 	public Page<Sales> all(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
-	
+
 	@Transactional
 	public Sales save(final Sales sales) {
 		setAssociations(sales);
 		return repo.save(sales);
 	}
-	
+
 	@Transactional
 	public Sales update(Integer id, Sales updateEntity) {
 		if(updateEntity == null) {
@@ -42,18 +42,20 @@ public class SalesService {
 		}
 		Sales entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Sales", id));
-		
+
 		setAssociations(updateEntity);
 		SalesMapper.INSTANCE.update(updateEntity, entity);
-		
+
 		return repo.save(entity);
 	}
-	
+
 	protected void setAssociations(final Sales sales) {
 		Quotation quot = sales.getQuotation();
-		List<SalesProduct> salesProducts = quot.getSalesProducts();
-		if(salesProducts != null) {
-			salesProducts.forEach(it -> it.setQuotation(quot));
+		if(quot != null) {
+			List<SalesProduct> salesProducts = quot.getSalesProducts();
+			if(salesProducts != null) {
+				salesProducts.forEach(it -> it.setQuotation(quot));
+			}
 		}
 	}
 

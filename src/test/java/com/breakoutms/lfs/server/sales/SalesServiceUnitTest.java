@@ -62,7 +62,7 @@ public class SalesServiceUnitTest {
 	@Test
 	void update() throws Exception {
 		var id = entity.getId();
-		when(repo.existsById(id)).thenReturn(true);
+		when(repo.findById(id)).thenReturn(Optional.of(entity));
 		when(repo.save(any(Sales.class))).thenReturn(entity);
 
 		Sales response = service.update(id, new Sales());
@@ -76,7 +76,7 @@ public class SalesServiceUnitTest {
 		var unknownId = 123456;
 		String exMsg = ExceptionSupplier.notFound(Sales.class, unknownId).get().getMessage();
 		
-		when(repo.existsById(unknownId)).thenReturn(false);
+		when(repo.findById(unknownId)).thenReturn(Optional.empty());
 
 		Throwable thrown = catchThrowable(() -> {
 			service.update(unknownId, new Sales());
