@@ -20,6 +20,7 @@ public abstract class ProductMapper {
 	public abstract Product map(ProductDTO dto);
 	public abstract Coffin mapCoffin(ProductDTO entity);
 	public abstract CoffinViewModel mapCoffin(Coffin entity);
+	protected abstract Product copy(Product product);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)

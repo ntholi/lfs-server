@@ -6,8 +6,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,27 +16,27 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductType;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
+@DBRider
+@DataSet(value = {"corpse.xml", "product.xml", "sales.xml"})
 class ProductServiceIntegrationTest {
 
 	@Autowired ProductRepository repo;
-	@Autowired
-	private ProductService service;
-	@Autowired
-	private EntityManager entityManager;
+	@Autowired private ProductService service;
+	private ProductMapper modelMapper = ProductMapper.INSTANCE;
 	private Product entity;
-	
 	
 	@BeforeEach
 	void init() throws IOException {
@@ -49,22 +47,21 @@ class ProductServiceIntegrationTest {
 	
 	@Test
 	void get_by_id() throws IOException {
-		var id = service.save(entity).getId();
+		var id = 1;
 		var savedEntity = service.get(id).orElse(null);
 		
 		assertThat(savedEntity.getId()).isEqualTo(id);
-		assertThat(savedEntity.getName()).isEqualTo(entity.getName());
+		assertThat(savedEntity.getName()).isEqualTo("Letter");
+		assertThat(savedEntity.getPrice()).isEqualTo(new BigDecimal("10.00"));
 	}
 	
 	@Test
 	void all() {
-		service.save(entity);
-		
-		PageRequest pagable = PageRequest.of(0, 1);
+		PageRequest pagable = PageRequest.of(0, 10);
 		var page = service.all(pagable);
 		
 		assertThat(page).isNotEmpty();
-		assertThat(page).hasSize(1);
+		assertThat(page).hasSize(2);
 	}
 	
 	@Test
@@ -77,17 +74,16 @@ class ProductServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		var before = "A1";
-		var after = "A2";
+		var entity = modelMapper.copy(repo.findById(1).get());
+
+		var newValue = "Hello World";
+		entity.setName(newValue);;
 		
-		entity.setName(before);
-		assertThat(entity.getName()).isEqualTo(before);
-		var copy = persistAndGetCopy(entity);
+		var updatedEntity = service.update(entity.getId(), fromDTO(entity));
 		
-		copy.setName(after);
-		var updatedEntity = service.update(copy.getId(), copy);
 		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
-		assertThat(updatedEntity.getName()).isEqualTo(after);
+		assertThat(updatedEntity.getName()).isEqualTo(newValue);
+		assertThat(updatedEntity).isEqualToComparingFieldByField(entity);
 	}
 	
 	@Test
@@ -105,13 +101,8 @@ class ProductServiceIntegrationTest {
 	
 	@Test
 	void successful_delete() {
-		entity.setName("123");
-		repo.save(entity);
-		var id = entity.getId();
+		var id = 1;
 		assertThat(repo.findById(id)).isNotEmpty();
-		
-		entityManager.flush();
-		entityManager.clear();
 		
 		service.delete(id);
 		assertThat(repo.findById(id)).isEmpty();
@@ -128,11 +119,14 @@ class ProductServiceIntegrationTest {
 		assertThat(savedEntity.getId()).isNotNull();
 	}
 	
-	protected Product persistAndGetCopy(Product entity) {		
-		service.save(entity);
-		entityManager.flush();
-		entityManager.clear();
-		
-		return DeepCopy.copy(entity, Product.class);
+	/**
+	 * Convert entity object to DTO, then convert it back again to entity object
+	 * this is done to simulate that data comes from the controller
+	 * @param entity
+	 * @return
+	 */
+	private Product fromDTO(Product entity) {
+		var dto = modelMapper.toDTO(entity);
+		return modelMapper.map(dto);
 	}
 }

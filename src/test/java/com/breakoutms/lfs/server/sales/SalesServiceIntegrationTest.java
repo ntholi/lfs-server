@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,9 +22,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.ProductRepository;
 import com.breakoutms.lfs.server.sales.model.Sales;
-import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 
@@ -35,14 +31,13 @@ import com.github.database.rider.junit5.api.DBRider;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @DBRider
-@DBUnit(allowEmptyFields = true) 
 @DataSet(value = {"corpse.xml", "product.xml", "sales.xml"})
 public class SalesServiceIntegrationTest {
 
 	@Autowired SalesRepository repo;
 	@Autowired ProductRepository productRepo;
 	@Autowired private SalesService service;
-	@Autowired private EntityManager entityManager;
+	private SalesMapper modelMapper = SalesMapper.INSTANCE;
 	
 	private Sales entity;
 	
@@ -87,7 +82,7 @@ public class SalesServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		Sales entity = SalesMapper.INSTANCE.copy(repo.findById(1).get());
+		var entity = modelMapper.copy(repo.findById(1).get());
 
 		var newValue = new BigDecimal("123");
 		entity.setPayableAmount(newValue);
@@ -115,11 +110,7 @@ public class SalesServiceIntegrationTest {
 	@Test
 	void successful_delete() {
 		var id = 1;
-		
 		assertThat(repo.findById(id)).isNotEmpty();
-		
-		entityManager.flush();
-		entityManager.clear();
 		
 		service.delete(id);
 		assertThat(repo.findById(id)).isEmpty();
@@ -143,7 +134,7 @@ public class SalesServiceIntegrationTest {
 	 * @return
 	 */
 	private Sales fromDTO(Sales entity) {
-		SalesDTO dto = SalesMapper.INSTANCE.toDTO(entity);
-		return SalesMapper.INSTANCE.map(dto);
+		var dto = modelMapper.toDTO(entity);
+		return modelMapper.map(dto);
 	}
 }
