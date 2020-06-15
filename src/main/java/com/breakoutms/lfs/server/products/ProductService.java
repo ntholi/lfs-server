@@ -32,14 +32,14 @@ public class ProductService {
 	}
 	
 	@Transactional
-	public Product update(Integer id, Product entity) {
-		if(entity == null) {
+	public Product update(Integer id, Product updatedEntity) {
+		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Product").get();
 		}
-		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Product", id).get();
-		}
-		entity.setId(id);
+		var entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.notFound("Product", id));
+		
+		ProductMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 

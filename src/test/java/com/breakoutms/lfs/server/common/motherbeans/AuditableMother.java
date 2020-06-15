@@ -35,6 +35,12 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 		return this;
 	}
 	
+	public AuditableMother<T, ID> noBranchNoID() {
+		removeIDs();
+		removeBranch();
+		return this;
+	}
+	
 	private void setIDValue(ID id) {
 		Field[] idFields = FieldUtils.getFieldsWithAnnotation(entity.getClass(), Id.class);
 		for (Field field: idFields) {

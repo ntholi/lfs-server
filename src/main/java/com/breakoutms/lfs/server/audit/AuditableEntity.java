@@ -35,7 +35,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	public static final String CLAUSE = "deleted = false";
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable=true, updatable=false)
+	@JoinColumn(nullable=true)
 	private Branch branch;
 	
 	@CreatedDate
