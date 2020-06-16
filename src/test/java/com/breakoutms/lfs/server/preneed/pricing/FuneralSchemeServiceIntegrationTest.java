@@ -24,21 +24,28 @@ import com.breakoutms.lfs.server.common.copy.DeepCopy;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
+@DBRider
+@DataSet(value = {"funeral_scheme.xml"})
 class FuneralSchemeServiceIntegrationTest {
 
 	@Autowired FuneralSchemeRepository repo;
 	@Autowired private FuneralSchemeService service;
 	@Autowired private EntityManager entityManager;
+	
+	private PreneedMapper modelMapper = PreneedMapper.INSTANCE;
 	private FuneralScheme entity;
 	
 	
@@ -52,26 +59,26 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void get_by_id() throws IOException {
-		var id = service.save(entity).getId();
+		var id = 7;
 		var savedEntity = service.get(id).orElse(null);
 		
 		assertThat(savedEntity.getId()).isEqualTo(id);
-		assertThat(savedEntity.getName()).isEqualTo(entity.getName());
+		assertThat(savedEntity.getName()).isEqualTo("PLAN C");
+		assertThat(savedEntity.getRegistrationFee()).isEqualTo(new BigDecimal("50.00"));
 	}
 	
 	@Test
 	void all() {
-		service.save(entity);
-		
-		PageRequest pagable = PageRequest.of(0, 1);
+		PageRequest pagable = PageRequest.of(0, 20);
 		var page = service.all(pagable);
 		
 		assertThat(page).isNotEmpty();
-		assertThat(page).hasSize(1);
+		assertThat(page).hasSize(11);
 	}
 	
 	@Test
 	void save() throws IOException {
+		entity.setName("Hello World");
 		var savedEntity = service.save(entity);
 		
 		assertThat(savedEntity).isNotNull();
@@ -81,18 +88,16 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void update() {
-		var entity = new FuneralScheme();
-		var before = "A1";
-		var after = "A2";
+		var entity = modelMapper.copy(repo.findById(7).get());
+
+		var newValue = "Hello World";
+		entity.setName(newValue);;
 		
-		entity.setName(before);
-		assertThat(entity.getName()).isEqualTo(before);
-		var copy = persistAndGetCopy(entity);
+		var updatedEntity = service.update(entity.getId(), fromDTO(entity));
 		
-		copy.setName(after);
-		var updatedEntity = service.update(copy.getId(), copy);
 		assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
-		assertThat(updatedEntity.getName()).isEqualTo(after);
+		assertThat(updatedEntity.getName()).isEqualTo(newValue);
+		assertThat(updatedEntity).isEqualToComparingFieldByField(entity);
 	}
 	
 	@Test
@@ -110,14 +115,8 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void successful_delete() {
-		var entity = new FuneralScheme();
-		entity.setName("123");
-		repo.save(entity);
-		var id = entity.getId();
+		var id = 7;
 		assertThat(repo.findById(id)).isNotEmpty();
-		
-		entityManager.flush();
-		entityManager.clear();
 		
 		service.delete(id);
 		assertThat(repo.findById(id)).isEmpty();
@@ -125,6 +124,7 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void update_premium() throws Exception {
+		entity.setName("SomeName");
 		var copy = persistAndGetCopy(entity);
 		var premium = copy.getPremiums().iterator().next();
 		int size = copy.getPremiums().size();
@@ -150,6 +150,7 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void update_dependentBenefits() throws Exception {
+		entity.setName("SomeName");
 		var copy = persistAndGetCopy(entity);
 		DependentBenefit dependentBenefit = copy.getDependentBenefits()
 				.iterator().next();
@@ -177,6 +178,7 @@ class FuneralSchemeServiceIntegrationTest {
 
 	@Test
 	void update_funeralSchemeBenefit() throws Exception {
+		entity.setName("SomeName");
 		var copy = persistAndGetCopy(entity);
 		var benefit = copy.getBenefits().iterator().next();
 		int size = copy.getBenefits().size();
@@ -203,6 +205,7 @@ class FuneralSchemeServiceIntegrationTest {
 	
 	@Test
 	void update_penaltyDeductible() throws Exception {
+		entity.setName("SomeName");
 		var copy = persistAndGetCopy(entity);
 		var deductable = copy.getPenaltyDeductibles().iterator().next();
 		int size = copy.getPenaltyDeductibles().size();
@@ -233,5 +236,16 @@ class FuneralSchemeServiceIntegrationTest {
 		entityManager.clear();
 		
 		return DeepCopy.copy(entity);
+	}
+	
+	/**
+	 * Convert entity object to DTO, then convert it back again to entity object
+	 * this is done to simulate that data comes from the controller
+	 * @param entity
+	 * @return
+	 */
+	private FuneralScheme fromDTO(FuneralScheme entity) {
+		var dto = modelMapper.toDTO(entity);
+		return modelMapper.map(dto);
 	}
 }

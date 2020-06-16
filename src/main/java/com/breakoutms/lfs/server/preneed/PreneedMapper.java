@@ -40,6 +40,7 @@ public abstract class PreneedMapper {
 	public abstract FuneralSchemeBenefitViewModel map(FuneralSchemeBenefit funeralSchemeBenefit);
 	public abstract DependentBenefitViewModel map(DependentBenefit dependentBenefit);
 	public abstract FuneralSchemeDTO toDTO(FuneralScheme entity);
+	public abstract FuneralScheme copy(FuneralScheme entity);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)
