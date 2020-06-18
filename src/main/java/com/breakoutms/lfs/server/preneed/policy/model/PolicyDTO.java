@@ -47,7 +47,7 @@ public class PolicyDTO {
 
 	@Nullable
 	@Size(min = 3, max = 40)
-	private String nationalIdNnumber;
+	private String nationalIdNumber;
 	
 	@Nullable
 	private String residentialArea;

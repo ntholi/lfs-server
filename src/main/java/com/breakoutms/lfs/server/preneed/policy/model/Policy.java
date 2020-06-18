@@ -164,12 +164,12 @@ public class Policy extends AuditableEntity<String> {
 	}
 	
 	@JsonIgnore
-	public Optional<Integer> getAge() {
+	public Integer getAge() {
 		Integer age = null;
 		if(dateOfBirth != null) {
 			age = (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
 		}
-		return Optional.of(age);
+		return age;
 	}
 	
 	@JsonIgnore

@@ -63,7 +63,6 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 		mockMvc.perform(get(URL+ID))
 				.andExpect(status().isOk())
 				.andExpect(responseBody().isEqualTo(viewModel));
-
 		verify(service).get(ID);
 	}
 	
@@ -116,7 +115,6 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 
 		mockMvc.perform(get(url))
 			.andExpect(status().isNoContent());
-
 		verify(service).all(pageRequest);
 	}
 

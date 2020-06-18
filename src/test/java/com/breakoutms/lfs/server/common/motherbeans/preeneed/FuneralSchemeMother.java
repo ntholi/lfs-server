@@ -265,4 +265,8 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 		}
 		return Optional.empty();
 	}
+	
+	public Optional<Premium> getPremium(int age) {
+		return getPremium(entity, age);
+	}
 }

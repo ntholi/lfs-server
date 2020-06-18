@@ -70,9 +70,7 @@ public class PolicyServiceUnitTest {
 		when(funeralSchemeRepo.findPremium(any(FuneralScheme.class), anyInt()))
 			.thenReturn(Optional.of(new Premium()));
 		when(repo.save(any(Policy.class))).thenReturn(entity);
-		Policy response = service.save(Policy.builder()
-				.dateOfBirth(LocalDate.now())
-				.build(), "");
+		Policy response = service.save(entity, "");
 		
 		assertThat(response)
 			.isNotNull()
@@ -84,7 +82,7 @@ public class PolicyServiceUnitTest {
 		var id = entity.getId();
 		FuneralScheme fs = entity.getFuneralScheme();
 		when(funeralSchemeRepo.findByName(anyString())).thenReturn(Optional.of(fs));
-		when(repo.existsById(id)).thenReturn(true);
+		when(repo.findById(id)).thenReturn(Optional.of(entity));
 		when(repo.save(any(Policy.class))).thenReturn(entity);
 
 		Policy response = service.update(id, new Policy(), "");
@@ -97,8 +95,6 @@ public class PolicyServiceUnitTest {
 	void failt_to_update_with_unknownId() {
 		var unknownId = "123456";
 		String exMsg = ExceptionSupplier.policyNotFound(unknownId).get().getMessage();
-		
-		when(repo.existsById(unknownId)).thenReturn(false);
 
 		Throwable thrown = catchThrowable(() -> {
 			service.update(unknownId, new Policy(), "");

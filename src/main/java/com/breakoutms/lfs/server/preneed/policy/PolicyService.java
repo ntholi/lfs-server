@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
@@ -37,9 +38,9 @@ public class PolicyService {
 	@Transactional
 	public Policy save(Policy policy, final String funeralSchemeName) {
 		FuneralScheme funeralScheme = getFuneralScheme(funeralSchemeName);
-		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge().get())
+		Premium premium = funeralSchemeRepo.findPremium(funeralScheme, policy.getAge())
 				.orElseThrow(() -> new InvalidOperationException(
-						"Unable to determine Premium for "+funeralSchemeName+" funeral scheme "+
+						"Unable to determine Premium for '"+funeralSchemeName+"' funeral scheme "+
 						"with policy holder's age at "+ policy.getAge()));
 		policy.setFuneralScheme(funeralScheme);
 		policy.setCoverAmount(premium.getCoverAmount());
@@ -59,14 +60,16 @@ public class PolicyService {
 	}
 	
 	@Transactional
-	public Policy update(String id, Policy entity, String funeralSchemeName) {
-		if(entity == null) {
+	public Policy update(String id, Policy updatedEntity, String funeralSchemeName) {
+		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Policy").get();
 		}
-		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.policyNotFound(id).get();
-		}
+		var entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.policyNotFound(id));
+		
 		entity.setFuneralScheme(getFuneralScheme(funeralSchemeName));
+		
+		PreneedMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 

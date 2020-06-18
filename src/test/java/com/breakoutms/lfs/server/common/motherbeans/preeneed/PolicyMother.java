@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import static org.jeasy.random.FieldPredicates.named;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.jeasy.random.EasyRandomParameters;
@@ -59,7 +60,17 @@ public class PolicyMother extends AuditableMother<Policy, String> {
 		updatePremiumAmount();
 		return this;
 	}
-
+	
+	public PolicyMother premiumAmount(BigDecimal premiumAmount) {
+		entity.setPremiumAmount(premiumAmount);
+		return this;
+	}
+	
+	public PolicyMother coverAmount(BigDecimal coverAmount) {
+		entity.setCoverAmount(coverAmount);
+		return this;
+	}
+	
 	private void updatePremiumAmount() {
 		var funeralScheme = entity.getFuneralScheme();
 		int age = entity.getAgeAtRegistration();
@@ -72,6 +83,7 @@ public class PolicyMother extends AuditableMother<Policy, String> {
 	@Override
 	public PolicyMother removeIDs() {
 		entity.setPolicyNumber(null);
+		entity.getFuneralScheme().setId(null);
 		entity.getDependents().forEach(it -> it.setId(null));
 		return this;
 	}

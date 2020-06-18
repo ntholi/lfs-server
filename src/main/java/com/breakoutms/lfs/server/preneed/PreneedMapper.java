@@ -48,10 +48,19 @@ public abstract class PreneedMapper {
 	@Mapping(target = "branch", ignore = true)
 	public abstract void update(FuneralScheme updatedEntity, @MappingTarget FuneralScheme saved);
 	
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "branch", ignore = true)
+	@Mapping(target = "age", ignore = true)
+	public abstract void update(Policy updatedEntity, @MappingTarget Policy saved);
+	
 	
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)
 	public abstract Policy map(PolicyDTO dto);
+	@Mapping(source = "funeralScheme.name", target = "funeralScheme")
+	public abstract PolicyDTO toDTO(Policy entity);
 	
 	public abstract PolicyPayment map(PolicyPaymentDTO dto);
 	@Mapping(source = "month", target = "period.month")

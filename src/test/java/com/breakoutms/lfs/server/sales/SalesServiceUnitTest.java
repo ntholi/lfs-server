@@ -51,9 +51,7 @@ public class SalesServiceUnitTest {
 	@Test
 	void save() throws Exception {
 		when(repo.save(any(Sales.class))).thenReturn(entity);
-		
 		Sales response = service.save(entity);
-		
 		assertThat(response)
 			.isNotNull()
 			.isEqualTo(entity);

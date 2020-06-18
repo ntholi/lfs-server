@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,13 +32,16 @@ public class PolicyViewModel extends RepresentationModel<PolicyViewModel>{
 	private String country;
 	private boolean deceased;
 	private LocalDate registrationDate;
-	private FuneralScheme funeralScheme;
 	private BigDecimal premiumAmount;
 	private BigDecimal coverAmount;
 	private boolean active;
 	private LocalDateTime createdAt;
 
-	public int getAge() {
-		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+	public Integer getAge() {
+		Integer age = null;
+		if(dateOfBirth != null) {
+			age = (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+		}
+		return age;
 	}
 }
