@@ -29,14 +29,18 @@ import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeService;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class PolicyServiceIntegrationTest {
+@ExtendWith(SpringExtension.class)
+@DBRider
+class PolicyServiceIntegrationTest {
 
 	private static final int AGE = 20;
+	private final String ID = "256070816";
 	@Autowired private FuneralSchemeService funeralSchemeService;
 	@Autowired private FuneralSchemeRepository funeralSchemeRepo;
 	@Autowired private PolicyRepository repo;
@@ -52,24 +56,22 @@ public class PolicyServiceIntegrationTest {
 	}
 
 	@Test
+	@DataSet(value = {"policy.xml"}, disableConstraints = true)
 	void get_by_id() throws IOException {
-		var id = service.save(entity, funeralSchemeName).getId();
-		var savedEntity = service.get(id).orElse(null);
+		var savedEntity = service.get(ID).orElse(null);
 		
-		assertThat(savedEntity.getId()).isEqualTo(id);
-		assertThat(savedEntity.getNames()).isEqualTo(entity.getNames());
-		assertThat(savedEntity.getFuneralScheme().getName()).isEqualTo(funeralSchemeName);
+		assertThat(savedEntity.getId()).isEqualTo(ID);
+		assertThat(savedEntity.getNames()).isEqualTo("LIMAKATSO");
 	}
 	
 	@Test
+	@DataSet(value = {"policy.xml"}, disableConstraints = true)
 	void all() {
-		service.save(entity, funeralSchemeName);
-		
-		PageRequest pagable = PageRequest.of(0, 1);
+		PageRequest pagable = PageRequest.of(0, 20);
 		var page = service.all(pagable);
 		
 		assertThat(page).isNotEmpty();
-		assertThat(page).hasSize(1);
+		assertThat(page).hasSize(16);
 	}
 	
 	@Test
@@ -87,8 +89,10 @@ public class PolicyServiceIntegrationTest {
 		deleteAllFuneralSchemes();
 		int age1 = 55;
 		int age2 = 18;
-		FuneralScheme f1 = new FuneralSchemeMother().planC().build();
-		FuneralScheme f2 = new FuneralSchemeMother().planAPlus().build();
+		String planC = "planC";
+		String planAPlus = "planAPlus";
+		FuneralScheme f1 = new FuneralSchemeMother().planC().name(planC).build();
+		FuneralScheme f2 = new FuneralSchemeMother().planAPlus().name(planAPlus).build();
 		funeralSchemeService.save(f1);
 		funeralSchemeService.save(f2);
 		
@@ -102,16 +106,16 @@ public class PolicyServiceIntegrationTest {
 				.registrationDate(LocalDate.now())
 				.build();
 		
-		var saved1 = service.save(policy1, "PLAN C");
-		var saved2 = service.save(policy2, "PLAN A+");
+		var saved1 = service.save(policy1, planC);
+		var saved2 = service.save(policy2, planAPlus);
 		
 		assertThat(saved1.getFuneralScheme()).isNotNull();
-		assertThat(saved1.getFuneralScheme().getName()).isEqualTo("PLAN C");
+		assertThat(saved1.getFuneralScheme().getName()).isEqualTo(planC);
 		assertThat(policy1.getPremiumAmount()).isEqualTo(new BigDecimal("40.0"));
 		assertThat(policy1.getCoverAmount()).isEqualTo(new BigDecimal("5000.0"));
 
 		assertThat(saved2.getAge()).isEqualTo(age2);
-		assertThat(saved2.getFuneralScheme().getName()).isEqualTo("PLAN A+");
+		assertThat(saved2.getFuneralScheme().getName()).isEqualTo(planAPlus);
 		assertThat(policy2.getPremiumAmount()).isEqualTo(new BigDecimal("200.0"));
 		assertThat(policy2.getCoverAmount()).isEqualTo(new BigDecimal("15000.0"));
 	}
