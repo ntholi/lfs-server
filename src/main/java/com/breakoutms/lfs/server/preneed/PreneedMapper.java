@@ -55,6 +55,13 @@ public abstract class PreneedMapper {
 	@Mapping(target = "age", ignore = true)
 	public abstract void update(Policy updatedEntity, @MappingTarget Policy saved);
 	
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "branch", ignore = true)
+	@Mapping(target = "policy", ignore = true)
+	public abstract void update(PolicyPayment updatedEntity, @MappingTarget PolicyPayment saved);
+	
 	
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)
@@ -69,4 +76,5 @@ public abstract class PreneedMapper {
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
 	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
 	public abstract List<PolicyPaymentDetailsViewModel> map(List<PolicyPaymentDetails> list);
+	public abstract PolicyPaymentDTO toDTO(PolicyPayment entity);
 }

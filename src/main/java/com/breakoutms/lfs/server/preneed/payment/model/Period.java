@@ -127,6 +127,9 @@ public class Period implements Comparable<Period>{
 	}
 
 	public Integer ordinal() {
+		if(year == null && month == null) {
+			return null;
+		}
 		String y = String.valueOf(year).substring(2);
 		String m = String.format("%02d", month.getValue());
 		return Integer.valueOf(y + m);

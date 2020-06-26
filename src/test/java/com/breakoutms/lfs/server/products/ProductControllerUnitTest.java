@@ -103,6 +103,9 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 			.andExpect(responseBody().pageSize().isEqualTo(1))
 			.andExpect(responseBody().pagedModel("products").contains(viewModel))
 			.andReturn();
+		
+		verify(service).all(pageRequest);
+		verify(repo).findAll(pageRequest);
 	}
 	
 	@Test
@@ -115,6 +118,7 @@ public class ProductControllerUnitTest implements ControllerUnitTest {
 
 		mockMvc.perform(get(url))
 			.andExpect(status().isNoContent());
+		
 		verify(service).all(pageRequest);
 	}
 

@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.preneed.payment;
 
+import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -21,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +33,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
-import com.breakoutms.lfs.server.common.Expectations;
-import com.breakoutms.lfs.server.common.MappersForTests;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
@@ -70,68 +66,77 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UnpaidPolicyPaymentRepository unpaidRepo;
 	@MockBean private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	
-	private final PolicyPayment entity = createEntity();
+	private PreneedMapper modelMapper = PreneedMapper.INSTANCE;
+	
+	private PolicyPayment entity = persistedEntity();
 	private final long ID = 5L;
 	private String policyNumber;
 	private final String URL;
-
-	private Expectations expect;
 	
-	public PolicyPaymentControllerUnitTest() throws Exception {
+	public PolicyPaymentControllerUnitTest() {
 		policyNumber = entity.getPolicy().getPolicyNumber();
 		URL = "/preneed/policies/"+policyNumber+"/payments/";
-	}
-	
-	@BeforeEach
-	public void setup() {
-		expect = new Expectations(URL, entity.getBranch());
 	}
 
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_by_id() throws Exception {
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
-	    ResultActions result = mockMvc.perform(get(URL+ID))
-	    		.andExpect(status().isOk())
-	    		.andExpect(jsonPath("policyPaymentDetails").doesNotHaveJsonPath())
-	    		.andExpect(jsonPath("_links.policy.href", endsWith("/preneed/policies/"+entity.getPolicy().getId())))
-	    		.andDo(print());
-	    expect.forEntity(result, entity);
-	    
+		
+		var viewModel = modelMapper.map(entity);
+		
+		mockMvc.perform(get(URL+ID))
+			.andExpect(status().isOk())
+			.andExpect(responseBody().isEqualTo(viewModel));
 	    verify(service).get(ID);
+	}
+	
+	
+	@Test
+	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
+	void verify_links() throws Exception {
+		when(repo.findById(ID)).thenReturn(Optional.of(entity));
+
+		String policyNum = entity.getPolicy().getId();
+		mockMvc.perform(get(URL+ID))
+				.andExpect(responseBody().hasLink("self", "/preneed/policies/"+policyNum+"/payments/"+ID))
+				.andExpect(responseBody().hasLink("all", "/preneed/policies/"+policyNum+"/payments"))
+				.andExpect(responseBody().hasLink("paymentDetails", "/preneed/policies/"+policyNum
+						+"/payments/"+ID+"/payment-details"))
+				.andExpect(responseBody().hasLink("policy", "/preneed/policies/"+policyNum))
+				.andExpect(responseBody().hasLink("branch", "/branches/1"))
+				.andExpect(jsonPath("policyPaymentDetails").doesNotHaveJsonPath());
 	}
 	
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_with_unkown_id_throws_notFound() throws Exception {
 		var unkownId = 122423L;
-		String exMsg = ExceptionSupplier.notFound(PolicyPayment.class, unkownId).get().getMessage();
-		
-		when(repo.findById(anyLong())).thenReturn(Optional.ofNullable(null));
-		
-	    var result = mockMvc.perform(get(URL+unkownId))
-	    		.andExpect(status().isNotFound());
-	    Expectations.forObjectNotFound(result, exMsg);
-	    
-	    verify(service).get(unkownId);
+		mockMvc.perform(get(URL+unkownId))
+			.andExpect(responseBody().notFound(PolicyPayment.class, unkownId));
+
+		verify(service).get(unkownId);
 	}
 	
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
 	void get_all() throws Exception {
-
 		var url = URL+"?page=0&size=20&sort=createdAt,desc";
-		
 		var list = Arrays.asList(entity);
 		var pageRequest = PageRequestHelper.from(url);
-		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
 		
-	    ResultActions result = mockMvc.perform(get(url))
-	    		.andExpect(status().isOk())
-	    		.andDo(print());
-	    expect.forPage(result, list, "policyPayments", url);
+		when(repo.findAll(pageRequest)).thenReturn(new PageImpl<>(list));
+		var viewModel = modelMapper.map(entity);
+		
+		mockMvc.perform(get(url))
+			.andExpect(status().isOk())
+			.andExpect(responseBody().isPagedModel())
+			.andExpect(responseBody().pageSize().isEqualTo(1))
+			.andExpect(responseBody().pagedModel("policyPayments").contains(viewModel))
+			.andReturn();
 	    
-	    verify(service).all(pageRequest);
+		verify(service).all(pageRequest);
+		verify(repo).findAll(pageRequest);
 	}
 	
 	@Test
@@ -151,64 +156,61 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
+		entity = newEntity();
 		Policy policy = entity.getPolicy();
-		when(policyRepo.findById(anyString())).thenReturn(Optional.of(policy));
+		when(policyRepo.findById(policy.getId())).thenReturn(Optional.of(policy));
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
-		PolicyPaymentDTO dto = MappersForTests.INSTANCE.map(entity);
-		var result = post(mockMvc, URL, dto);
-		result.andDo(print());
-		result.andExpect(status().isCreated());
-		expect.forEntity(result, entity)
-			.andExpect(jsonPath("_links.policy.href", 
-					endsWith("/preneed/policies/"+entity.getPolicy().getId())));
+		var dto = modelMapper.toDTO(entity);
+		var viewModel = modelMapper.map(entity);
 		
-		verify(service).save(any(PolicyPayment.class), eq(policy.getId()));
+		post(mockMvc, URL, dto)
+			.andExpect(status().isCreated())
+			.andExpect(responseBody().isEqualTo(viewModel));
+
+//		verify(repo).save(entity); TODO
 	}
 
 
 	@Test
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save_fails_because_of_invalid_field() throws Exception {
-		String exMsg = "Invalid input for 'Payment Date'";
-		
-		entity.setPaymentDate(null);
-		
-		var result = post(mockMvc, URL, entity);
-		
-	   Expectations.forInvalidFields(result, exMsg);
-	   
-	   verify(service, times(0)).save(any(PolicyPayment.class), anyString());
+		entity.setAmountTendered(new BigDecimal("-2"));
+		String policyId = entity.getPolicy().getId();
+
+		post(mockMvc, URL, entity)
+			.andExpect(responseBody().containsErrorFor("amountTendered"));
+
+		verify(service, times(0)).save(any(PolicyPayment.class), policyId);
 	}
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		when(repo.existsById(ID)).thenReturn(true);
+		var dto = modelMapper.toDTO(entity);
+		var viewModel = modelMapper.map(entity);
+		
+		when(repo.findById(ID)).thenReturn(Optional.of(entity));
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
-		var result = put(mockMvc, URL+ID, entity);
-		result.andDo(print());
-		
-		result.andExpect(status().isOk());
-		expect.forEntity(result, entity);
-		
+		put(mockMvc, URL+ID, dto)
+			.andExpect(status().isOk())
+			.andExpect(responseBody().isEqualTo(viewModel));
+
 		verify(service).update(eq(ID), any(PolicyPayment.class));
+		verify(repo).save(entity);
 	}
 	
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update_fails_if_any_field_is_invalid() throws Exception {
-		String exMsg = "Invalid input for 'Amount Tendered'";
-		when(repo.existsById(ID)).thenReturn(true);
-		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
-		
 		entity.setAmountTendered(new BigDecimal("-2"));
-
-		var result = put(mockMvc, URL+ID, MappersForTests.INSTANCE.map(entity));
-		Expectations.forInvalidFields(result, exMsg);
-
-		verify(service, times(0)).update(anyLong(), any(PolicyPayment.class));
+		String policyId = entity.getPolicy().getId();
+		
+		put(mockMvc, URL+ID, entity)
+			.andExpect(responseBody().containsErrorFor("amountTendered"));
+		
+		verify(service, times(0)).save(any(PolicyPayment.class), eq(policyId));
 	}
 	
 	@Test
@@ -263,10 +265,20 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	}
 	
 	
-	private PolicyPayment createEntity() throws Exception {
+	private PolicyPayment persistedEntity() {
+		return policyPaymentMother()
+				.build();
+	}
+	
+	private PolicyPayment newEntity() {
+		return policyPaymentMother()
+				.noBranchNoID()
+				.build();
+	}
+	
+	private PolicyPaymentMother policyPaymentMother() {
 		return new PolicyPaymentMother(PolicyMother.of(PlanType.Plan_C, 43))
 				.id(ID)
-				.withPremiumForCurrentMonth()
-				.build();
+				.withPremiumForCurrentMonth();
 	}
 }

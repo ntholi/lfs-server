@@ -106,6 +106,10 @@ public class ResponseBodyMatchers {
 		return mvcResult -> {
 			String json = mvcResult.getResponse().getContentAsString();
 			ErrorResult response = objectMapper.readValue(json, ErrorResult.class);
+			assertThat(response).withFailMessage("Expecting response (ErrorResult) "
+					+ "not to be null for fieldName '%s'", fieldName).isNotNull();
+			assertThat(response.getFieldErrors()).withFailMessage("Expecting response.getFieldErrors() "
+					+ "not to be null for fieldName '%s'", fieldName).isNotNull();
 			List<String> fieldWithErrors = response.getFieldErrors()
 					.stream()
 					.map(InvalidFieldError::getFieldName)

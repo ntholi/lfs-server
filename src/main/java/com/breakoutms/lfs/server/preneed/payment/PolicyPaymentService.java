@@ -19,6 +19,7 @@ import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
+import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
@@ -29,6 +30,7 @@ import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+import com.breakoutms.lfs.server.products.ProductMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -164,14 +166,14 @@ public class PolicyPaymentService {
 	}
 
 	@Transactional
-	public PolicyPayment update(Long id, PolicyPayment entity) {
-		if(entity == null) {
+	public PolicyPayment update(Long id, PolicyPayment updatedEntity) {
+		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Policy Payment").get();
 		}
-		if(!repo.existsById(id)) {
-			throw ExceptionSupplier.notFound("Policy Payment", id).get();
-		}
-		entity.setId(id);
+		var entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.notFound("Policy Payment", id));
+		
+		PreneedMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 
