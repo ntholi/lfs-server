@@ -49,7 +49,7 @@ import com.github.database.rider.junit5.DBUnitExtension;
 @ActiveProfiles("test")
 @DBUnit(allowEmptyFields = true) 
 @DataSet({"funeral_scheme.xml", "policy.xml"})
-public class PolicyPaymentServiceIntegrationTest {
+class PolicyPaymentServiceIntegrationTest {
 
 	@Autowired BranchRepository branchRepo;
 	@Autowired FuneralSchemeRepository funeralSchemeRepo;

@@ -44,7 +44,7 @@ import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 @ExtendWith(MockitoExtension.class)
-public class PolicyPaymentServiceUnitTest {
+class PolicyPaymentServiceUnitTest {
 
 	@Mock private PolicyPaymentRepository repo;
 	@Mock private PolicyRepository policyRepo;
@@ -93,7 +93,7 @@ public class PolicyPaymentServiceUnitTest {
 	@Test
 	void update() throws Exception {
 		var id = entity.getId();
-		when(repo.existsById(id)).thenReturn(true);
+		when(repo.findById(id)).thenReturn(Optional.of(entity));
 		when(repo.save(any(PolicyPayment.class))).thenReturn(entity);
 
 		PolicyPayment response = service.update(id, entity);
@@ -107,7 +107,7 @@ public class PolicyPaymentServiceUnitTest {
 		var unknownId = 123456L;
 		String exMsg = ExceptionSupplier.notFound(PolicyPayment.class, unknownId).get().getMessage();
 		
-		when(repo.existsById(unknownId)).thenReturn(false);
+		when(repo.findById(unknownId)).thenReturn(Optional.empty());
 
 		Throwable thrown = catchThrowable(() -> {
 			service.update(unknownId, new PolicyPayment());
