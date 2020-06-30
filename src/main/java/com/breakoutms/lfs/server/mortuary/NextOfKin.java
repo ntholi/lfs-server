@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,6 +21,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Audited
 @Data
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(

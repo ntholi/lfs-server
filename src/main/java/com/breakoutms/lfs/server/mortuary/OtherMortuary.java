@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
@@ -13,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Audited
 @Data
 @NoArgsConstructor
 @GenericGenerator(
