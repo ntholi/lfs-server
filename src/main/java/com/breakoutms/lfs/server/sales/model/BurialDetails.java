@@ -18,7 +18,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.mortuary.Corpse;
+import com.breakoutms.lfs.server.mortuary.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;

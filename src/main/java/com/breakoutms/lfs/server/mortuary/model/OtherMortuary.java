@@ -1,9 +1,12 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.envers.Audited;
@@ -28,6 +31,9 @@ public class OtherMortuary {
 	@Id
 	@GeneratedValue(generator = "other_mortuary_id")
 	private Integer id;
+	
+	@NotBlank 
+	@Size(min = 1, max = 50)
 	@Column(length = 50)
 	private String name;
 	

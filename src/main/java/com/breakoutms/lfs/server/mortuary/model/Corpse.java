@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +32,6 @@ import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.transport.Transport;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -122,7 +121,6 @@ public class Corpse extends AuditableEntity<String> {
 	
 	@ManyToOne(cascade=CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JoinColumn(name="transport_id")
 	private Transport transport;
 	
 	@Column(length = 80)
@@ -136,7 +134,6 @@ public class Corpse extends AuditableEntity<String> {
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name="from_other_mortuary_id")
 	@JsonProperty("transferredFrom")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private OtherMortuary transferredFrom;
 
 	@Override
