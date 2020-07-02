@@ -1,7 +1,9 @@
 package com.breakoutms.lfs.server.mortuary;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.model.NextOfKin;
+import com.breakoutms.lfs.server.mortuary.model.OtherMortuary;
 
 import lombok.AllArgsConstructor;
 
@@ -17,6 +21,7 @@ import lombok.AllArgsConstructor;
 public class CorpseService {
 
 	private final CorpseRepository repo;
+	private final OtherMortuaryRepository otherMortuaryRepo;
 	
 	public Optional<Corpse> get(String id) {
 		return repo.findById(id);
@@ -39,11 +44,36 @@ public class CorpseService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Corpse", id));
 		
+		if(entity.getTransferredFrom() != null) {
+			OtherMortuary om = entity.getTransferredFrom();
+			if(om.getId() == null && StringUtils.isNotBlank(om.getName())) {
+				Optional<OtherMortuary> obj = otherMortuaryRepo.findFirstByName(om.getName());
+				if(obj.isPresent()) {
+					entity.setTransferredFrom(obj.get());
+				}
+			}
+			else if(!otherMortuaryRepo.existsById(om.getId())) {
+				om.setId(null);
+			}
+		}
+		
 		CorpseMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 
 	public void delete(String id) {
 		repo.deleteById(id);
+	}
+	
+	public List<NextOfKin> getNextOfKins(String tagNo) {
+		return repo.findNextOfKins(tagNo);
+	}
+	
+	public List<OtherMortuary> getOtherMortuaries(){
+		return otherMortuaryRepo.findAll();
+	}
+
+	public Optional<OtherMortuary> getTransforedFrom(int id) {
+		return otherMortuaryRepo.findById(id);
 	}
 }

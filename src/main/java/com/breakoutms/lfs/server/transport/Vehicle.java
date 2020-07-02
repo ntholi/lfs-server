@@ -27,10 +27,6 @@ import lombok.NoArgsConstructor;
 @Where(clause = AuditableEntity.CLAUSE)
 public class Vehicle extends AuditableEntity<String>{
 
-	public enum Owner {
-		LFS, Own, Police, Other;
-	}
-
 	@Id
 	private String registrationNumber;
 	@Enumerated(EnumType.STRING)

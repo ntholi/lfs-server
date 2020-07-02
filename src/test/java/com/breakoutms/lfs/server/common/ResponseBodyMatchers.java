@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -105,7 +106,13 @@ public class ResponseBodyMatchers {
 	public ResultMatcher containsErrorFor(String fieldName) {
 		return mvcResult -> {
 			String json = mvcResult.getResponse().getContentAsString();
-			ErrorResult response = objectMapper.readValue(json, ErrorResult.class);
+			ErrorResult response = null;
+			try {
+				response = objectMapper.readValue(json, ErrorResult.class);
+			} catch (Exception e) {
+				System.err.println("Unable to parse JSON Response: '"+json+"'");
+			}
+			assertNotNull(response);
 			assertThat(response).withFailMessage("Expecting response (ErrorResult) "
 					+ "not to be null for fieldName '%s'", fieldName).isNotNull();
 			assertThat(response.getFieldErrors()).withFailMessage("Expecting response.getFieldErrors() "

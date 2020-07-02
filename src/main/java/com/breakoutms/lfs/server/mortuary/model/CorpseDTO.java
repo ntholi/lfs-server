@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
+import com.breakoutms.lfs.server.transport.Owner;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,7 +66,7 @@ public class CorpseDTO {
 	
 	private String driversName;
 	
-	private String vehicleOwner;
+	private Owner vehicleOwner;
 	
 	private String registrationNumber;
 	

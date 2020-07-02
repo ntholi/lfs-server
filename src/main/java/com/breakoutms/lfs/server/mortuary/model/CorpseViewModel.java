@@ -8,6 +8,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.server.core.entity.District;
 import com.breakoutms.lfs.server.core.entity.Gender;
+import com.breakoutms.lfs.server.transport.Owner;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,7 +50,7 @@ public class CorpseViewModel extends RepresentationModel<CorpseViewModel>{
 	
 	private String driversName;
 	
-	private String vehicleOwner;
+	private Owner vehicleOwner;
 	
 	private String registrationNumber;
 	

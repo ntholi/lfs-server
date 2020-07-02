@@ -29,8 +29,21 @@ public abstract class CorpseMapper {
 		return null;
 	}
 	
+	@Mapping(target = "driversName",  source = "transport.driver")
+	@Mapping(target = "vehicleOwner",  source = "transport.vehicle.owner")
+	@Mapping(target = "registrationNumber",  source = "transport.vehicle.registrationNumber")
+	protected abstract CorpseDTO toDTO(Corpse entity);
+	
+	@Mapping(target = "driversName",  source = "transport.driver")
+	@Mapping(target = "vehicleOwner",  source = "transport.vehicle.owner")
+	@Mapping(target = "registrationNumber",  source = "transport.vehicle.registrationNumber")
 	public abstract CorpseViewModel map(Corpse entity);
+	
+	@Mapping(target = "transport.driver",  source = "driversName")
+	@Mapping(target = "transport.vehicle.owner",  source = "vehicleOwner")
+	@Mapping(target = "transport.vehicle.registrationNumber",  source = "registrationNumber")
 	public abstract Corpse map(CorpseDTO dto);
+	
 	protected abstract Corpse copy(Corpse product);
 	
 	@Mapping(target = "id", ignore = true)
@@ -38,6 +51,4 @@ public abstract class CorpseMapper {
 	@Mapping(target = "createdBy", ignore = true)
 	@Mapping(target = "branch", ignore = true)
 	protected abstract void update(Corpse updateEntity, @MappingTarget Corpse saved);
-	
-	protected abstract CorpseDTO toDTO(Corpse entity);
 }

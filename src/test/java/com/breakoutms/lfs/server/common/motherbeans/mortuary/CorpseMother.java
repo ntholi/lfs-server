@@ -22,4 +22,15 @@ public class CorpseMother extends AuditableMother<Corpse, String>{
 		entity.setSurname(surname);
 		return this;
 	}
+	
+	@Override
+	public CorpseMother removeIDs() {
+		entity.setTagNo(null);
+		entity.getTransferredFrom().setId(null);
+		entity.getTransport().setId(null);
+		if(entity.getNextOfKins() != null) {
+			entity.getNextOfKins().forEach(it -> it.setId(null));
+		}
+		return this;
+	}
 }

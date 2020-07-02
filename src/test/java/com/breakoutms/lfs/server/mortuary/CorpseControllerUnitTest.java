@@ -38,17 +38,18 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 @Import(GeneralConfigurations.class)
 public class CorpseControllerUnitTest implements ControllerUnitTest {
 
-	private static final String DEFAULT_ROLE = "ROLE_PRODUCTS";
+	private static final String DEFAULT_ROLE = "ROLE_MORTUARY";
 
 	@Autowired private MockMvc mockMvc;
 	@MockBean private CorpseRepository repo;
+	@MockBean private OtherMortuaryRepository otherMortuaryRepo;
 	@SpyBean private CorpseService service;
 	@MockBean private UserDetailsServiceImpl requiredBean;
 	private CorpseMapper modelMapper = CorpseMapper.INSTANCE;
 
 	private final String ID = "7";
 	private Corpse entity = persistedEntity();
-	private final String URL = "/products/";
+	private final String URL = "/mortuary/corpses/";
 
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})
