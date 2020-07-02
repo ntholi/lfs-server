@@ -28,8 +28,8 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.core.entity.District;
-import com.breakoutms.lfs.server.core.entity.Gender;
+import com.breakoutms.lfs.server.core.enums.District;
+import com.breakoutms.lfs.server.core.enums.Gender;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.fasterxml.jackson.annotation.JsonProperty;

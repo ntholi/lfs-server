@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.core.enums.VehicleOwner;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,7 @@ public class Vehicle extends AuditableEntity<String>{
 	@Id
 	private String registrationNumber;
 	@Enumerated(EnumType.STRING)
-	private Owner owner;
+	private VehicleOwner owner;
 	
 	@Override
 	public String getId() {

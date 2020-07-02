@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.core.entity;
+package com.breakoutms.lfs.server.core.enums;
 
 public enum District {
 	Berea("Berea"),

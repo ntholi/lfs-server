@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
-import com.breakoutms.lfs.server.core.entity.District;
+import com.breakoutms.lfs.server.core.enums.District;
 import com.breakoutms.lfs.server.util.BeanUtil;
 
 import lombok.Data;

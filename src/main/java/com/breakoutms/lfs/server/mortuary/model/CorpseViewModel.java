@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.core.entity.District;
-import com.breakoutms.lfs.server.core.entity.Gender;
-import com.breakoutms.lfs.server.transport.Owner;
+import com.breakoutms.lfs.server.core.enums.District;
+import com.breakoutms.lfs.server.core.enums.Gender;
+import com.breakoutms.lfs.server.core.enums.VehicleOwner;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,7 +50,7 @@ public class CorpseViewModel extends RepresentationModel<CorpseViewModel>{
 	
 	private String driversName;
 	
-	private Owner vehicleOwner;
+	private VehicleOwner vehicleOwner;
 	
 	private String registrationNumber;
 	
