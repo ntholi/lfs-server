@@ -74,6 +74,7 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 		return this;
 	}
 
+	@Override
 	public SalesMother id(Integer id) {
 		entity.setId(id);
 		return this;

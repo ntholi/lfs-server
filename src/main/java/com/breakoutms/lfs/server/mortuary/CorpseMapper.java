@@ -15,14 +15,14 @@ public abstract class CorpseMapper {
 
 	public static final CorpseMapper INSTANCE = Mappers.getMapper(CorpseMapper.class);
 
-	public OtherMortuary map(String name) {
+	protected OtherMortuary map(String name) {
 		if(name != null && !name.isBlank()) {
 			return new OtherMortuary(name);
 		}
 		return null;
 	}
 	
-	public String map(OtherMortuary entity) {
+	protected String map(OtherMortuary entity) {
 		if(entity != null) {
 			return entity.getName();
 		}

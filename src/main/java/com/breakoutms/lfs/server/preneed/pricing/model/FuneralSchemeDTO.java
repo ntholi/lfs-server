@@ -1,20 +1,13 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import com.breakoutms.lfs.server.sales.model.PaymentMode;
-import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -13,7 +13,6 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.model.OtherMortuary;
-
 import lombok.AllArgsConstructor;
 
 @Service
