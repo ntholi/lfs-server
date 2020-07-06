@@ -47,10 +47,8 @@ public class CorpseDTO {
 	
 	private List<NextOfKin> nextOfKins;
 	
-	@PastOrPresent
 	private LocalDate dateOfDeath;
 	
-	@PastOrPresent
 	@NotNull
 	private LocalDateTime arrivalDate;
 	

@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
@@ -98,10 +99,9 @@ public class Corpse extends AuditableEntity<String> {
 			orphanRemoval=true)
 	private List<NextOfKin> nextOfKins;
 	
-	@PastOrPresent
 	private LocalDate dateOfDeath;
-	
-	@PastOrPresent
+
+	@NotNull
 	private LocalDateTime arrivalDate;
 	
 	@Column(length = 100)
