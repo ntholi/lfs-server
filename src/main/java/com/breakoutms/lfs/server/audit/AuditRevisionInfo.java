@@ -34,8 +34,8 @@ public class AuditRevisionInfo {
 	@RevisionNumber
 	private Long id;
 	
-	@NotNull
-	@Column(nullable = false, columnDefinition = "SMALLINT UNSIGNED")
+//	@NotNull THIS WAS COMMENTED ONLY FOR TESTING PURPOSES, PLEASE PLEASE REMOVE IT NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//	@Column(nullable = false, columnDefinition = "SMALLINT UNSIGNED")
 	private Integer userId;
 	
 	@RevisionTimestamp
