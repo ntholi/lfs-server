@@ -46,7 +46,7 @@ public interface ControllerUnitTest extends SecuredWebTest {
 	public default Optional<Branch> branch() {
 		Branch branch = new Branch();
 		branch.setId(1);
-		branch.setDistrict(District.Maseru);
+		branch.setDistrict(District.MASERU);
 		branch.setName("Maseru");
 		branch.setSyncNumber((short)256);
 		return Optional.of(branch);
