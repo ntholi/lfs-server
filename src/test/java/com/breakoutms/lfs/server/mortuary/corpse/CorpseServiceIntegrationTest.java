@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.common.motherbeans.mortuary.CorpseMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 

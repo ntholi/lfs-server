@@ -1,31 +1,42 @@
-package com.breakoutms.lfs.server.mortuary.model;
+package com.breakoutms.lfs.server.mortuary.corpse.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import com.breakoutms.lfs.server.core.enums.District;
 import com.breakoutms.lfs.server.core.enums.Gender;
 import com.breakoutms.lfs.server.core.enums.VehicleOwner;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "products")
-public class CorpseViewModel extends RepresentationModel<CorpseViewModel>{
-	
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class CorpseDTO {
+
 	private String tagNo;
 	
+	@Size(min = 2, max = 60)
+	@Nullable
 	private String names;
 	
+	@Size(min = 2, max = 50)
+	@Nullable
 	private String surname;
 	
 	private Gender gender;
 	
+	@PastOrPresent
 	private LocalDate dateOfBirth;
 	
 	private String phycialAddress;
@@ -33,9 +44,12 @@ public class CorpseViewModel extends RepresentationModel<CorpseViewModel>{
 	private District district;
 	
 	private String chief;
-
+	
+	private List<NextOfKin> nextOfKins;
+	
 	private LocalDate dateOfDeath;
 	
+	@NotNull
 	private LocalDateTime arrivalDate;
 	
 	private String causeOfDeath;

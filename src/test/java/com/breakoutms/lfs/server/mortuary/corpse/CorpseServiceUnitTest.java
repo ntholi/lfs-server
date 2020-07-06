@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import com.breakoutms.lfs.server.common.motherbeans.mortuary.CorpseMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 
 @ExtendWith(MockitoExtension.class)
 public class CorpseServiceUnitTest {

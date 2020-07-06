@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 import static com.breakoutms.lfs.server.common.ResponseBodyMatchers.responseBody;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +29,7 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.mortuary.CorpseMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 

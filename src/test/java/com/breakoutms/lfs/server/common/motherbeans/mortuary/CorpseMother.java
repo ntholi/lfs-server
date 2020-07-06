@@ -1,7 +1,7 @@
 package com.breakoutms.lfs.server.common.motherbeans.mortuary;
 
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 
 public class CorpseMother extends AuditableMother<Corpse, String>{
 

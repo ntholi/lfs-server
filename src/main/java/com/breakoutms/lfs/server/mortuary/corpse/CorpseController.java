@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
-import com.breakoutms.lfs.server.mortuary.model.CorpseDTO;
-import com.breakoutms.lfs.server.mortuary.model.CorpseViewModel;
-import com.breakoutms.lfs.server.mortuary.model.NextOfKin;
-import com.breakoutms.lfs.server.mortuary.model.OtherMortuary;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
+import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
+import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.security.Domain;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.Vehicle;

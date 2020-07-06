@@ -1,11 +1,13 @@
-package com.breakoutms.lfs.server.mortuary.model;
+package com.breakoutms.lfs.server.mortuary.released.model;
+
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -14,6 +16,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;
@@ -28,25 +31,24 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "other_mortuary_id",          
+        name = "released_corpse_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
 @SQLDelete(sql = "UPDATE sales SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-public class OtherMortuary extends AuditableEntity<Integer> {
+public class ReleasedCorpse extends AuditableEntity<Integer> {
 
 	@Id
-	@GeneratedValue(generator = "other_mortuary_id")
+	@GeneratedValue(generator = "released_corpse_id")
 	private Integer id;
-	
-	@NotBlank 
-	@Size(min = 1, max = 50)
+	@ManyToOne
+	private Corpse corpse;
+	@NotBlank
+	private LocalDateTime date;
 	@Column(length = 50)
-	private String name;
-	
-	public OtherMortuary(String name) {
-		this.name = name;
-	}
+	private String dressedBy;
+	@Column(length = 50)
+	private String coffinedBy;
 }

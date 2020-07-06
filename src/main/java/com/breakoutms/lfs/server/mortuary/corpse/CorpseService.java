@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
-import com.breakoutms.lfs.server.mortuary.model.NextOfKin;
-import com.breakoutms.lfs.server.mortuary.model.OtherMortuary;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
+import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
+
 import lombok.AllArgsConstructor;
 
 @Service

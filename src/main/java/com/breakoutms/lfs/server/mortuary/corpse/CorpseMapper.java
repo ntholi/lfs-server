@@ -1,14 +1,14 @@
-package com.breakoutms.lfs.server.mortuary;
+package com.breakoutms.lfs.server.mortuary.corpse;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
-import com.breakoutms.lfs.server.mortuary.model.CorpseDTO;
-import com.breakoutms.lfs.server.mortuary.model.CorpseViewModel;
-import com.breakoutms.lfs.server.mortuary.model.OtherMortuary;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
+import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 
 @Mapper(componentModel="spring")
 public abstract class CorpseMapper {

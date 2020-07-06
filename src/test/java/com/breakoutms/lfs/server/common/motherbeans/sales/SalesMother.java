@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
-import com.breakoutms.lfs.server.mortuary.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductType;
 import com.breakoutms.lfs.server.sales.model.BurialDetails;

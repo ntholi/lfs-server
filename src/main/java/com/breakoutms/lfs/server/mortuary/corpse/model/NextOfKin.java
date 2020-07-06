@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary.model;
+package com.breakoutms.lfs.server.mortuary.corpse.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
