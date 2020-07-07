@@ -78,14 +78,6 @@ public class ReleasedCorpseController implements ViewModelController<ReleasedCor
 		);
 	}
 	
-	@GetMapping("/lookup")
-	public ResponseEntity<CollectionModel<CorpseLookupProjection>> lookup(String names) {
-		var list = corpseService.lookup(names);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(CollectionModel.of(list));
-	}
-	
 	@Override
 	public ReleasedCorpseViewModel toViewModel(ReleasedCorpse entity) {
 		ReleasedCorpseViewModel dto = ReleasedCorpseMapper.INSTANCE.map(entity);

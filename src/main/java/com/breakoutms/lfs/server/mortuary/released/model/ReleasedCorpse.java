@@ -18,6 +18,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,7 +46,7 @@ public class ReleasedCorpse extends AuditableEntity<Integer> {
 	private Integer id;
 	@ManyToOne
 	private Corpse corpse;
-	@NotBlank
+	@NotNull
 	private LocalDateTime date;
 	@Column(length = 50)
 	private String dressedBy;
