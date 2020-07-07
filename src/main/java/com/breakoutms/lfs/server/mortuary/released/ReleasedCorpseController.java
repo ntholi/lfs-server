@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,7 @@ import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
-import com.breakoutms.lfs.server.mortuary.corpse.CorpseService;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
-import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseDTO;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseViewModel;
@@ -40,8 +37,7 @@ import lombok.val;
 @RequestMapping("/"+Domain.Const.MORTUARY+"/released-corpses")
 @AllArgsConstructor
 public class ReleasedCorpseController implements ViewModelController<ReleasedCorpse, ReleasedCorpseViewModel> {
-
-	private final CorpseService corpseService;
+	
 	private final ReleasedCorpseService service;
 	private final PagedResourcesAssembler<ReleasedCorpseViewModel> pagedAssembler;
 

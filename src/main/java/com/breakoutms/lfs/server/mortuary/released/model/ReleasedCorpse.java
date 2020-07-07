@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -44,7 +44,8 @@ public class ReleasedCorpse extends AuditableEntity<Integer> {
 	@Id
 	@GeneratedValue(generator = "released_corpse_id")
 	private Integer id;
-	@ManyToOne
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Corpse corpse;
 	@NotNull
 	private LocalDateTime date;
