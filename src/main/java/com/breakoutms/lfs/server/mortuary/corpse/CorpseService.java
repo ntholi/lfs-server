@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 
@@ -75,5 +76,9 @@ public class CorpseService {
 
 	public Optional<OtherMortuary> getTransforedFrom(int id) {
 		return otherMortuaryRepo.findById(id);
+	}
+
+	public List<CorpseLookupProjection> lookup(String names) {
+		return repo.lookup(names);
 	}
 }

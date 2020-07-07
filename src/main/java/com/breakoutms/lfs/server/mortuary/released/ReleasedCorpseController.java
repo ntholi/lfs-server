@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,9 @@ import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
+import com.breakoutms.lfs.server.mortuary.corpse.CorpseService;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseDTO;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseViewModel;
@@ -38,6 +41,7 @@ import lombok.val;
 @AllArgsConstructor
 public class ReleasedCorpseController implements ViewModelController<ReleasedCorpse, ReleasedCorpseViewModel> {
 
+	private final CorpseService corpseService;
 	private final ReleasedCorpseService service;
 	private final PagedResourcesAssembler<ReleasedCorpseViewModel> pagedAssembler;
 
@@ -72,6 +76,14 @@ public class ReleasedCorpseController implements ViewModelController<ReleasedCor
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
+	}
+	
+	@GetMapping("/lookup")
+	public ResponseEntity<CollectionModel<CorpseLookupProjection>> lookup(String names) {
+		var list = corpseService.lookup(names);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(CollectionModel.of(list));
 	}
 	
 	@Override
