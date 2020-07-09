@@ -16,7 +16,8 @@ public abstract class ReleasedCorpseMapper {
 
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
 	protected abstract ReleasedCorpse map(ReleasedCorpseDTO dto);
-	protected abstract ReleasedCorpseViewModel map(ReleasedCorpse ReleasedCorpse);
+	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	protected abstract ReleasedCorpseViewModel map(ReleasedCorpse releasedCorpse);
 	protected abstract ReleasedCorpseDTO toDTO(ReleasedCorpse entity);
 
 	@Mapping(target = "id", ignore = true)
