@@ -21,10 +21,12 @@ public class ResponseHelper {
 		ResponseEntity<D> getResponse(
 			@NotNull final ViewModelController<T, D> controller,
 			@NotNull final Optional<T> entityOptional, 
+			//TODO: DELETE THE NOT FOUND EXCEPTION
+			//TODO: IF NOT FOUND, IT SHOULD RETURN ONLY RETURN NO-CONTENT
 			@NotNull final Supplier<RuntimeException> notFoundExceptionSupplier) {
 		return entityOptional
 				.map(o -> ResponseEntity.ok(controller.toViewModel(o)))
-				.orElseThrow(notFoundExceptionSupplier);
+				.orElse(ResponseEntity.noContent().build());
 	}
 
 	public static <T extends Entity<?>,  D extends RepresentationModel<? extends D>> 

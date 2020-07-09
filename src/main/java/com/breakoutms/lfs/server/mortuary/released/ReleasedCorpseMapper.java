@@ -14,6 +14,7 @@ public abstract class ReleasedCorpseMapper {
 
 	public static final ReleasedCorpseMapper INSTANCE = Mappers.getMapper(ReleasedCorpseMapper.class);
 
+	@Mapping(source = "tagNo", target = "corpse.tagNo")
 	protected abstract ReleasedCorpse map(ReleasedCorpseDTO dto);
 	protected abstract ReleasedCorpseViewModel map(ReleasedCorpse ReleasedCorpse);
 	protected abstract ReleasedCorpseDTO toDTO(ReleasedCorpse entity);
