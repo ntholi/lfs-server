@@ -31,7 +31,7 @@ public interface FuneralSchemeRepository extends JpaRepository<FuneralScheme, In
 	List<Premium> getPremiums(Integer id);
 	
 	@Query("FROM Premium e WHERE e.funeralScheme = :funeralScheme "
-			+ "AND (:age >= e.minmumAge AND :age <= e.maximumAge) "
+			+ "AND (:age >= e.minimumAge AND :age <= e.maximumAge) "
 			+ "AND e.deleted=false")
 	Optional<Premium> findPremium(FuneralScheme funeralScheme, int age);
 }

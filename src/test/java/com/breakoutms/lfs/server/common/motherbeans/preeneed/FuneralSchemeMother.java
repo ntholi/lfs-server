@@ -60,21 +60,21 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.id(1)
 						.coverAmount(money(5000))
 						.maximumAge(40)
-						.minmumAge(10)
+						.minimumAge(10)
 						.premiumAmount(money(30))
 						.funeralScheme(entity).build(),
 					Premium.builder()
 						.id(2)
 						.coverAmount(money(5000))
 						.maximumAge(65)
-						.minmumAge(41)
+						.minimumAge(41)
 						.premiumAmount(money(40))
 						.funeralScheme(entity).build(),
 					Premium.builder()
 						.id(3)
 						.coverAmount(money(5000))
 						.maximumAge(75)
-						.minmumAge(66)
+						.minimumAge(66)
 						.premiumAmount(money(120))
 						.funeralScheme(entity).build()
 			));
@@ -83,19 +83,19 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 						.id(1)
 						.coverAmount(money(750))
 						.maximumAge(5)
-						.minmumAge(0)
+						.minimumAge(0)
 						.funeralScheme(entity).build(),
 					DependentBenefit.builder()
 						.id(2)
 						.coverAmount(money(1500))
 						.maximumAge(13)
-						.minmumAge(6)
+						.minimumAge(6)
 						.funeralScheme(entity).build(),
 					DependentBenefit.builder()
 						.id(3)
 						.coverAmount(money(3000))
 						.maximumAge(18)
-						.minmumAge(14)
+						.minimumAge(14)
 						.funeralScheme(entity).build()
 			));
 			entity.setBenefits(Sets.newHashSet(
@@ -157,14 +157,14 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.id(4)
 					.coverAmount(money(15000))
 					.maximumAge(40)
-					.minmumAge(10)
+					.minimumAge(10)
 					.premiumAmount(money(200))
 					.funeralScheme(entity).build(),
 				Premium.builder()
 					.id(5)
 					.coverAmount(money(15000))
 					.maximumAge(65)
-					.minmumAge(41)
+					.minimumAge(41)
 					.premiumAmount(money(220))
 					.funeralScheme(entity).build()
 		));
@@ -173,19 +173,19 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 					.id(4)
 					.coverAmount(money(2000))
 					.maximumAge(5)
-					.minmumAge(0)
+					.minimumAge(0)
 					.funeralScheme(entity).build(),
 				DependentBenefit.builder()
 					.id(5)
 					.coverAmount(money(5000))
 					.maximumAge(13)
-					.minmumAge(6)
+					.minimumAge(6)
 					.funeralScheme(entity).build(),
 				DependentBenefit.builder()
 					.id(6)
 					.coverAmount(money(7500))
 					.maximumAge(18)
-					.minmumAge(14)
+					.minimumAge(14)
 					.funeralScheme(entity).build()
 		));
 		entity.setBenefits(Sets.newHashSet(
@@ -260,7 +260,7 @@ public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>
 		if(funeralScheme != null && funeralScheme.getPremiums() != null) {
 			return funeralScheme.getPremiums()
 				.stream()
-				.filter(fs -> age >= fs.getMinmumAge() && age <= fs.getMaximumAge())
+				.filter(fs -> age >= fs.getMinimumAge() && age <= fs.getMaximumAge())
 				.findFirst();	
 		}
 		return Optional.empty();

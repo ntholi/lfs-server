@@ -217,7 +217,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		mockMvc.perform(get(URL+"/"+ID+"/dependent-benefits"))
 		.andDo(print())
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("_embedded.dependentBenefits[0].minmumAge").value(value.get(0).getMinmumAge()))
+		.andExpect(jsonPath("_embedded.dependentBenefits[0].minimumAge").value(value.get(0).getMinimumAge()))
 		.andExpect(jsonPath("_embedded.dependentBenefits[2].maximumAge").value(value.get(2).getMaximumAge()))
 		.andExpect(jsonPath("_embedded.dependentBenefits[0].funeralScheme").doesNotExist())
 		.andExpect(jsonPath("_links.self.href", endsWith(entity.getId()+"/dependent-benefits")));

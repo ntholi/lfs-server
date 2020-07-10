@@ -20,17 +20,17 @@ public class DependentBenefitValidations extends ValidationTest<DependentBenefit
 	private DependentBenefitBuilder builder = DependentBenefit.builder();
 	
 	@Test
-	void minmumAge() {
-		assertThat(validate(builder.minmumAge(-1).build()))
-			.containsKey("minmumAge")
+	void minimumAge() {
+		assertThat(validate(builder.minimumAge(-1).build()))
+			.containsKey("minimumAge")
 			.containsValue(negative)
 			.size().isEqualTo(1);
-		assertThat(validate(builder.minmumAge(256).build()))
-			.containsKey("minmumAge")
+		assertThat(validate(builder.minimumAge(256).build()))
+			.containsKey("minimumAge")
 			.containsValue(max)
 			.size().isEqualTo(1);
 		
-		assertThat(validate(builder.minmumAge(1).build())).isEmpty();
+		assertThat(validate(builder.minimumAge(1).build())).isEmpty();
 	}
 	
 	@Test

@@ -46,7 +46,7 @@ public class Premium extends AuditableEntity<Integer> {
 	@Min(value = 0L, message = "{validation.number.negative}") 
 	@Max(255)
 	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
-	private int minmumAge;
+	private int minimumAge;
 	
 	@Min(value = 0L, message = "{validation.number.negative}") 
 	@Max(255)
@@ -71,7 +71,7 @@ public class Premium extends AuditableEntity<Integer> {
 	private FuneralScheme funeralScheme;
 
 	public boolean isInAgeRange(int age) {
-		return age >= minmumAge && age <= maximumAge;
+		return age >= minimumAge && age <= maximumAge;
 	}
 	
 	public boolean isInAgeRange(LocalDate dateOfBirth) {

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class DependentBenefitViewModel extends RepresentationModel<DependentBenefitViewModel> {
 
 	private Integer id;
-	private int minmumAge;
+	private int minimumAge;
 	private int maximumAge;
 	private BigDecimal coverAmount;
 }

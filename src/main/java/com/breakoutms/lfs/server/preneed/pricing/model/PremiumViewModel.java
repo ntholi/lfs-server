@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class PremiumViewModel extends RepresentationModel<PremiumViewModel> {
 
 	private Integer id;
-	private int minmumAge;
+	private int minimumAge;
 	private int maximumAge;
 	private BigDecimal premiumAmount;
 	private BigDecimal coverAmount;

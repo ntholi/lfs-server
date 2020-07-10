@@ -44,7 +44,7 @@ public class DependentBenefit extends AuditableEntity<Integer> {
 	@Min(value = 0L, message = "{validation.number.negative}") 
 	@Max(255)
 	@Column(nullable=false, columnDefinition = "TINYINT UNSIGNED")
-	private int minmumAge;
+	private int minimumAge;
 	
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Max(255)
