@@ -59,7 +59,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private final Integer ID = 7;
 	private final FuneralScheme entity = persistedEntity();
-	private final String URL = "/preneed/funeral-schemes/";
+	private final String URL = "/admin/funeral-schemes/";
 
 	@Test
 	@WithMockUser(authorities = {READ, DEFAULT_ROLE})

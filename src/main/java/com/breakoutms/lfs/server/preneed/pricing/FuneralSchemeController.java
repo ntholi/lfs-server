@@ -41,7 +41,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.PRENEED+"/funeral-schemes")
+@RequestMapping("/"+Domain.Const.ADMIN+"/funeral-schemes")
 @AllArgsConstructor
 public class FuneralSchemeController implements ViewModelController<FuneralScheme, FuneralSchemeViewModel> {
 
