@@ -3,8 +3,8 @@ package com.breakoutms.lfs.server.exceptions;
 import java.util.List;
 import java.util.StringJoiner;
 
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 
 public class PaymentAlreadyMadeException extends RuntimeException {
 
@@ -16,7 +16,7 @@ public class PaymentAlreadyMadeException extends RuntimeException {
 
 	protected static String getMessage(List<Period> periods) {
 		StringJoiner joiner = new StringJoiner(",");
-		joiner.add(Type.PREMIUM+" already paid for period: ");
+		joiner.add(PolicyPaymentType.PREMIUM+" already paid for period: ");
 		for(Period period: periods) {
 			joiner.add(period.name());
 		}

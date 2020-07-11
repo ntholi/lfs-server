@@ -6,6 +6,8 @@ import java.time.Month;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,12 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 public class PolicyPaymentDetailsDTO {
 	
-	public enum Type{
-		PREMIUM, PENALTY, REGISTRATION, UPGRADE_FEE
-	}
-	
 	@NotNull
-	private Type type;
+	private PolicyPaymentType policyPaymentType;
 	
 	private Month month;
 	

@@ -41,6 +41,7 @@ import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
@@ -218,9 +219,9 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	void get_policyPaymentInfo() throws Exception {
 		BigDecimal premium = entity.getPolicy().getPremiumAmount();
 		List<PolicyPaymentDetails> value = List.of(
-			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
+			new PolicyPaymentDetails(1L, PolicyPaymentType.PREMIUM, 
 					Period.of(LocalDate.now()), premium, entity, false, null, null),
-			new PolicyPaymentDetails(1L, PolicyPaymentDetails.Type.PREMIUM, 
+			new PolicyPaymentDetails(1L, PolicyPaymentType.PREMIUM, 
 					Period.of(LocalDate.now().minusMonths(1)), premium, entity, false, null, null)
 		);
 		when(repo.getPaymentDetails(anyLong())).thenReturn(value);

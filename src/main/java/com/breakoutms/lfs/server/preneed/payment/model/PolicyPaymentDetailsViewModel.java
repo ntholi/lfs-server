@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class PolicyPaymentDetailsViewModel extends RepresentationModel<PolicyPaymentDetailsViewModel> {
 
 	private Long id;
-	private PolicyPaymentDetails.Type type;
+	private PolicyPaymentType type;
 	private Period period;
 	private BigDecimal amount;
 }

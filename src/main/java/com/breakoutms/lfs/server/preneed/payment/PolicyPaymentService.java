@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
@@ -23,13 +24,13 @@ import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails.Type;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -154,7 +155,7 @@ public class PolicyPaymentService {
 		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
 		Set<String> premiumIds = new HashSet<>();
 		for (PolicyPaymentDetails it: payments) {
-			if(it.getType() == Type.PREMIUM) {
+			if(it.getType() == PolicyPaymentType.PREMIUM) {
 				final String premiumId = generatePremiumId(policyNumber, it);
 				it.setPremiumId(premiumId);
 				premiumIds.add(premiumId);
@@ -184,9 +185,9 @@ public class PolicyPaymentService {
 	}
 
 	protected String generatePremiumId(String policyNumber, PolicyPaymentDetails premium) {
-		if(premium.getType() != Type.PREMIUM) {
+		if(premium.getType() != PolicyPaymentType.PREMIUM) {
 			throw new IllegalArgumentException("PolicyPaymentDetails: '"+premium
-					+" should be of type "+Type.PREMIUM);
+					+" should be of type "+PolicyPaymentType.PREMIUM);
 		}
 		Period period = premium.getPeriod();
 		Objects.requireNonNull(period, "Period for PREMIUM cannot be null");
@@ -220,7 +221,7 @@ public class PolicyPaymentService {
 		
 		return populateOwedPeriods(currentPeriod, lastPaid)
 				.stream()
-				.map(it -> new PolicyPaymentDetails(Type.PREMIUM, stdPremium, it, policy))
+				.map(it -> new PolicyPaymentDetails(PolicyPaymentType.PREMIUM, stdPremium, it, policy))
 				.collect(Collectors.toList());
 	}
 	

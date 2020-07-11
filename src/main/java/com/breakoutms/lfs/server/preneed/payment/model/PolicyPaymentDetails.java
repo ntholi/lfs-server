@@ -29,6 +29,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,10 +81,6 @@ import lombok.ToString;
 @SQLDelete(sql = "UPDATE policy_payment_details SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class PolicyPaymentDetails extends AuditableEntity<Long> {
-
-	public enum Type{
-		PREMIUM, PENALTY, REGISTRATION, UPGRADE_FEE
-	}
 	
 	@Id
 	@GeneratedValue(generator = "policy_payment_details_id")
@@ -92,7 +89,7 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition = "CHAR(15)")
-	private Type type;
+	private PolicyPaymentType type;
 	
 	@NotNull
 	@Embedded
@@ -123,13 +120,13 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@JoinColumn(nullable = false, name = "policy_number")
 	private Policy policy;
 	
-	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period) {
+	public PolicyPaymentDetails(PolicyPaymentType type, BigDecimal amount, Period period) {
 		this.type = type;
 		this.amount = amount;
 		this.period = period;
 	}
 	
-	public PolicyPaymentDetails(Type type, BigDecimal amount, Period period, Policy policy) {
+	public PolicyPaymentDetails(PolicyPaymentType type, BigDecimal amount, Period period, Policy policy) {
 		this.type = type;
 		this.amount = amount;
 		this.period = period;
@@ -137,23 +134,23 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	}
 	
 	public boolean isPenalty() {
-		return type != null && type == Type.PENALTY;
+		return type != null && type == PolicyPaymentType.PENALTY;
 	}
 	
 	public boolean isPremium() {
-		return type != null && type == Type.PREMIUM;
+		return type != null && type == PolicyPaymentType.PREMIUM;
 	}
 	
 	public boolean isRegistration() {
-		return type != null && type == Type.REGISTRATION;
+		return type != null && type == PolicyPaymentType.REGISTRATION;
 	}
 	
 	public static PolicyPaymentDetails premiumOf(Period period, BigDecimal amount) {
-		return new PolicyPaymentDetails(Type.PREMIUM, amount, period);
+		return new PolicyPaymentDetails(PolicyPaymentType.PREMIUM, amount, period);
 	}
 	
 	public static PolicyPaymentDetails penaltyOf(BigDecimal amount) {
-		return new PolicyPaymentDetails(Type.PENALTY, amount, null);
+		return new PolicyPaymentDetails(PolicyPaymentType.PENALTY, amount, null);
 	}
 	
 	public static PolicyPaymentDetails premiumFor(Policy policy, Period period) {

@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 public class PolicyPaymentViewModel extends RepresentationModel<PolicyPaymentViewModel> {
 	
 	private Long id;
+	private String policyNumber;
 	private LocalDateTime paymentDate;
 	private BigDecimal amountTendered;
 	private BigDecimal change;

@@ -73,6 +73,7 @@ public abstract class PreneedMapper {
 	@Mapping(source = "month", target = "period.month")
 	@Mapping(source = "year", target = "period.year")
 	public abstract PolicyPaymentDetails map(PolicyPaymentDetailsDTO dto);
+	@Mapping(source = "policy.policyNumber", target = "policyNumber")
 	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
 	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
 	public abstract List<PolicyPaymentDetailsViewModel> map(List<PolicyPaymentDetails> list);
