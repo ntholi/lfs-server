@@ -42,7 +42,6 @@ import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanTy
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
-import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
@@ -67,7 +66,7 @@ public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 	@MockBean private UnpaidPolicyPaymentRepository unpaidRepo;
 	@MockBean private PolicyPaymentDetailsRepository paymentDetailsRepo;
 	
-	private PreneedMapper modelMapper = PreneedMapper.INSTANCE;
+	private PolicyPaymentMapper modelMapper = PolicyPaymentMapper.INSTANCE;
 	
 	private PolicyPayment entity = persistedEntity();
 	private final long ID = 5L;

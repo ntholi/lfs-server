@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
 import com.breakoutms.lfs.server.user.model.LoginResponseDto;
@@ -28,8 +32,8 @@ public class UserService {
 	private final UserRepository userRepo;
 	private final RoleRepository roleRepo;
 	private final PrivilegeRepository privilegeRepo;
-//	private final AuthenticationManager authenticationManager;
-//	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
 
 
@@ -48,7 +52,7 @@ public class UserService {
 			throw new UsernameNotFoundException(error);
 		}
 		User user = userOp.get();
-//		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		String token = jwtProvider.createToken(user);
 		return LoginResponseDto.builder()
 				.accessToken(token)
@@ -64,7 +68,7 @@ public class UserService {
 			throw new UserAlreadyExistsException("Username '"+user.getUsername()+"' already exists");
 		}
 		String password = user.getPassword();
-//		user.setPassword(passwordEncoder.encode(password));
+		user.setPassword(passwordEncoder.encode(password));
 		user.setRoles(getRoles(user));
 		
 		return userRepo.save(user);

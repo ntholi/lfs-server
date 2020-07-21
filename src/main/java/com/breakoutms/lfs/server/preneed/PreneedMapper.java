@@ -1,18 +1,10 @@
 package com.breakoutms.lfs.server.preneed;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsDTO;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
@@ -55,27 +47,9 @@ public abstract class PreneedMapper {
 	@Mapping(target = "age", ignore = true)
 	public abstract void update(Policy updatedEntity, @MappingTarget Policy saved);
 	
-	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
-	@Mapping(target = "branch", ignore = true)
-	@Mapping(target = "policy", ignore = true)
-	public abstract void update(PolicyPayment updatedEntity, @MappingTarget PolicyPayment saved);
-	
-	
 	public abstract PolicyViewModel map(Policy policy);
 	@Mapping(target = "funeralScheme", ignore = true)
 	public abstract Policy map(PolicyDTO dto);
 	@Mapping(source = "funeralScheme.name", target = "funeralScheme")
 	public abstract PolicyDTO toDTO(Policy entity);
-	
-	public abstract PolicyPayment map(PolicyPaymentDTO dto);
-	@Mapping(source = "month", target = "period.month")
-	@Mapping(source = "year", target = "period.year")
-	public abstract PolicyPaymentDetails map(PolicyPaymentDetailsDTO dto);
-	@Mapping(source = "policy.policyNumber", target = "policyNumber")
-	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
-	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
-	public abstract List<PolicyPaymentDetailsViewModel> map(List<PolicyPaymentDetails> list);
-	public abstract PolicyPaymentDTO toDTO(PolicyPayment entity);
 }

@@ -21,8 +21,6 @@ public abstract class MappersForTests {
 
 	public abstract PolicyPaymentDTO map(PolicyPayment policyPayment);
 	
-	@Mapping(source = "period.month", target = "month")
-	@Mapping(source = "period.year", target = "year")
 	public abstract PolicyPaymentDetailsDTO map(PolicyPaymentDetails policyPaymentDetails);
 
 }

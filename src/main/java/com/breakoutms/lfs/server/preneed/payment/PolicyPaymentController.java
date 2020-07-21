@@ -21,18 +21,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
-import com.breakoutms.lfs.server.preneed.policy.PreneedMapper;
 import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
@@ -58,14 +60,14 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(@PathVariable String policyNumber, 
 			Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
+				pagedAssembler, 
 				service.all(pageable));
 	}
 
 	@PostMapping("{policyNumber}/payments")
 	public ResponseEntity<PolicyPaymentViewModel> save(@PathVariable String policyNumber,
 			@Valid @RequestBody PolicyPaymentDTO dto) {
-		PolicyPayment entity = PreneedMapper.INSTANCE.map(dto);
+		PolicyPayment entity = PolicyPaymentMapper.INSTANCE.map(dto);
 		
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity, policyNumber)), 
@@ -77,7 +79,7 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	public ResponseEntity<PolicyPaymentViewModel> update(@PathVariable String policyNumber,
 			@PathVariable Long id, 
 			@Valid @RequestBody PolicyPaymentDTO dto) {
-		PolicyPayment entity = PreneedMapper.INSTANCE.map(dto);
+		PolicyPayment entity = PolicyPaymentMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
@@ -89,7 +91,7 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 			@PathVariable String policyNumber, @PathVariable Long policyPaymentId) {
 		List<PolicyPaymentDetailsViewModel> list = new ArrayList<>();
 		for (var entity: service.getPaymentDetails(policyPaymentId)) {
-			var viewModel = PreneedMapper.INSTANCE.map(entity);
+			var viewModel = PolicyPaymentMapper.INSTANCE.map(entity);
 			viewModel.add(linkTo(methodOn(getClass()).get(policyNumber, policyPaymentId)).withRel("policyPayment"));
 			list.add(viewModel);
 		}
@@ -97,14 +99,28 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		var result = new CollectionModel<>(list,
+		var result = CollectionModel.of(list,
 				linkTo(methodOn(getClass()).getPaymentDetails(policyNumber, policyPaymentId)).withSelfRel());
 		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("{policyNumber}/payments/inquire")
+	public ResponseEntity<EntityModel<PolicyPaymentInquiry>> getPolicyPaymentInquiry(
+			@PathVariable String policyNumber, 
+			@RequestParam(required = false) String period){
+		Period currentPeriod = Period.fromOrdinal(period);
+		if(currentPeriod == null) {
+			currentPeriod = Period.now();
+		}
+		PolicyPaymentInquiry inquiry = service.getPolicyPaymentInquiry(policyNumber, currentPeriod);
+		return ResponseEntity.ok(
+				EntityModel.of(inquiry,
+						linkTo(methodOn(PolicyController.class).get(policyNumber)).withRel("policy")));
 	}
 
 	@Override
 	public PolicyPaymentViewModel toViewModel(PolicyPayment entity) {
-		PolicyPaymentViewModel viewModel = PreneedMapper.INSTANCE.map(entity);
+		PolicyPaymentViewModel viewModel = PolicyPaymentMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		val policyPaymentId = entity.getId();
 		val policyNumber = entity.getPolicy() != null ? entity.getPolicy().getPolicyNumber() : "";

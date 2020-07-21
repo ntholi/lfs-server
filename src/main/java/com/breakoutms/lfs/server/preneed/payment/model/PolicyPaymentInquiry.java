@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.hateoas.CollectionModel;
 
-import com.breakoutms.lfs.server.preneed.PreneedMapper;
+import com.breakoutms.lfs.server.preneed.payment.PolicyPaymentMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,14 +19,16 @@ public class PolicyPaymentInquiry {
 
 	private String policyNumber;
 	private String policyHolder;
+	private Integer funeralScheme;
 	private BigDecimal premium;
 	private Period lastPayedPeriod;
+	private Period nextPaymentPeriod;
 	private BigDecimal penaltyDue;
 	private BigDecimal premiumDue;
 	private BigDecimal paymentDue;
 	private List<PolicyPaymentDetails> payments;
 	
 	public CollectionModel<PolicyPaymentDetailsViewModel> getPayments(){
-		return CollectionModel.of(PreneedMapper.INSTANCE.map(payments));
+		return CollectionModel.of(PolicyPaymentMapper.INSTANCE.map(payments));
 	}
 }

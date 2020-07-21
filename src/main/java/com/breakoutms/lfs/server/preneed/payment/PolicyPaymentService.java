@@ -19,8 +19,8 @@ import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
+import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.exceptions.PaymentAlreadyMadeException;
-import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
@@ -53,7 +53,7 @@ public class PolicyPaymentService {
 	@Transactional
 	public PolicyPaymentInquiry getPolicyPaymentInquiry(String policyNumber, Period currentPeriod) {
 		Policy policy = policyRepo.findById(policyNumber)
-				.orElseThrow(() -> new InvalidOperationException(
+				.orElseThrow(() -> new ObjectNotFoundException(
 						"Unable to get payment details for unknown policy number '"
 						+ policyNumber+"'"));
 		List<PolicyPaymentDetails> paymentDetails = getOwedPayments(policy, currentPeriod);
@@ -63,6 +63,8 @@ public class PolicyPaymentService {
 				.sorted()
 				.findFirst()
 				.map(Period::previous).orElse(null);
+		
+		Period nextPaymentPeriod = lastPeriod.plusMonths(2); // LAST PERIOD + CURRENT = NEXT PAYMENT PERIOD
 		
 		BigDecimal penaltyDue = paymentDetails.stream()
 				.filter(PolicyPaymentDetails::isPenalty)
@@ -83,7 +85,9 @@ public class PolicyPaymentService {
 				.policyNumber(policyNumber)
 				.policyHolder(policy.getFullName())
 				.premium(policy.getPremiumAmount())
+				.funeralScheme(policy.getFuneralScheme().getId())
 				.lastPayedPeriod(lastPeriod)
+				.nextPaymentPeriod(nextPaymentPeriod)
 				.penaltyDue(penaltyDue)
 				.premiumDue(premiumDue)
 				.paymentDue(paymentDue)
@@ -124,6 +128,8 @@ public class PolicyPaymentService {
 		Policy policy = policyRepo.findById(policyNumber)
 				.orElseThrow(ExceptionSupplier.policyNotFound(policyNumber));
 		
+		addAssociations(entity);
+		
 		if(policy.getStatus() == PolicyStatus.DEACTIVATED) {
 			//TODO: Add logic for re-activating deactivated policy
 			Period period = getLastPayedPeriod(policy);
@@ -151,6 +157,13 @@ public class PolicyPaymentService {
 		return repo.save(entity);
 	}
 
+	private void addAssociations(PolicyPayment entity) {
+		if(entity != null && entity.getPolicyPaymentDetails() != null) {
+			entity.getPolicyPaymentDetails().forEach(it ->
+				it.setPolicyPayment(entity));
+		}
+	}
+
 	protected List<Period> getAlreadyPaidPremiums(final PolicyPayment entity, String policyNumber) {
 		Set<PolicyPaymentDetails> payments = entity.getPolicyPaymentDetails();
 		Set<String> premiumIds = new HashSet<>();
@@ -172,7 +185,9 @@ public class PolicyPaymentService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Policy Payment", id));
 		
-		PreneedMapper.INSTANCE.update(updatedEntity, entity);
+		addAssociations(updatedEntity);
+		
+		PolicyPaymentMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 

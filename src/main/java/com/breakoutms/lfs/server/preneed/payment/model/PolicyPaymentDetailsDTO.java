@@ -1,7 +1,6 @@
 package com.breakoutms.lfs.server.preneed.payment.model;
 
 import java.math.BigDecimal;
-import java.time.Month;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -17,11 +16,9 @@ import lombok.NoArgsConstructor;
 public class PolicyPaymentDetailsDTO {
 	
 	@NotNull
-	private PolicyPaymentType policyPaymentType;
+	private PolicyPaymentType type;
 	
-	private Month month;
-	
-	private Integer year;
+	private Period period;
 	
 	@Min(value = 0L, message = "{validation.number.negative}")
 	private BigDecimal amount;
