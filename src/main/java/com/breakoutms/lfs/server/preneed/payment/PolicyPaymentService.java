@@ -15,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
+import com.breakoutms.lfs.common.PolicyPaymentType;
 import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;

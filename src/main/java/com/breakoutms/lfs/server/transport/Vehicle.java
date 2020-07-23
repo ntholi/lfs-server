@@ -9,8 +9,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.core.enums.VehicleOwner;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

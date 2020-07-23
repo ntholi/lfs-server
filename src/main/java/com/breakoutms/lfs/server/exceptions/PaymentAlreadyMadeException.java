@@ -3,7 +3,7 @@ package com.breakoutms.lfs.server.exceptions;
 import java.util.List;
 import java.util.StringJoiner;
 
-import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
+import com.breakoutms.lfs.common.PolicyPaymentType;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 
 public class PaymentAlreadyMadeException extends RuntimeException {

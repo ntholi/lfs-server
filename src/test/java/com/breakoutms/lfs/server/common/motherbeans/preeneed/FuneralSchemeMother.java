@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.common.motherbeans.preeneed;
 
 import java.util.Optional;
 
+import com.breakoutms.lfs.common.ProductType;
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -9,7 +10,6 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductible;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
-import com.breakoutms.lfs.server.products.model.ProductType;
 import com.google.common.collect.Sets;
 
 public class FuneralSchemeMother extends AuditableMother<FuneralScheme, Integer>{

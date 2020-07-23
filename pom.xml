@@ -72,6 +72,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.breakoutms.lfs.common</groupId>
+			<artifactId>lfs-common</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>

@@ -8,8 +8,8 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.core.enums.District;
-import com.breakoutms.lfs.server.core.enums.Gender;
+import com.breakoutms.lfs.common.District;
+import com.breakoutms.lfs.common.Gender;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

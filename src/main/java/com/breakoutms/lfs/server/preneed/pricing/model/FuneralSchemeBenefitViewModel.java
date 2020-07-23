@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import com.breakoutms.lfs.common.ProductType;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefit.Deductable;
-import com.breakoutms.lfs.server.products.model.ProductType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
+import com.breakoutms.lfs.common.PolicyPaymentType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

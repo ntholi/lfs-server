@@ -34,6 +34,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.breakoutms.lfs.common.PolicyPaymentType;
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
@@ -41,7 +42,6 @@ import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.core.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;

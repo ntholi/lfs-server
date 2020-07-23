@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.core.enums.District;
-import com.breakoutms.lfs.server.core.enums.Gender;
-import com.breakoutms.lfs.server.core.enums.VehicleOwner;
+import com.breakoutms.lfs.common.District;
+import com.breakoutms.lfs.common.Gender;
+import com.breakoutms.lfs.common.VehicleOwner;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

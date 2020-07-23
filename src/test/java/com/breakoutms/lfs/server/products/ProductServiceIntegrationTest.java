@@ -16,12 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.common.ProductType;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
-import com.breakoutms.lfs.server.products.model.ProductType;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 
