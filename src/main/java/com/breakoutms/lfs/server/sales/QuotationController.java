@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.breakoutms.lfs.common.Domain;
 import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
-import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
 

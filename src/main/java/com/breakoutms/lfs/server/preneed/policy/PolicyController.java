@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.breakoutms.lfs.common.Domain;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
+import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
-import com.breakoutms.lfs.server.security.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
