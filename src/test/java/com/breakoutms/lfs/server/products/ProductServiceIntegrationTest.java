@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.common.ProductType;
+import com.breakoutms.lfs.common.enums.ProductType;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;

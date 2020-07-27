@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.products;
 
-import com.breakoutms.lfs.common.ProductType;
+import com.breakoutms.lfs.common.enums.ProductType;
 import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductDTO;

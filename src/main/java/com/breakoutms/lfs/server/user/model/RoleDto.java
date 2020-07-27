@@ -2,8 +2,8 @@ package com.breakoutms.lfs.server.user.model;
 
 import java.util.stream.Collectors;
 
-import com.breakoutms.lfs.common.Domain;
-import com.breakoutms.lfs.common.PrivilegeType;
+import com.breakoutms.lfs.common.enums.Domain;
+import com.breakoutms.lfs.common.enums.PrivilegeType;
 
 import lombok.Data;
 

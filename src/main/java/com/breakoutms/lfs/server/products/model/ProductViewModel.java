@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.common.ProductType;
+import com.breakoutms.lfs.common.enums.ProductType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

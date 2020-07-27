@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.breakoutms.lfs.common.PolicyPaymentType;
+import com.breakoutms.lfs.common.enums.PolicyPaymentType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

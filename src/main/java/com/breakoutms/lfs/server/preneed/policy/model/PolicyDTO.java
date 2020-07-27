@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
-import com.breakoutms.lfs.common.District;
-import com.breakoutms.lfs.common.Gender;
+import com.breakoutms.lfs.common.enums.District;
+import com.breakoutms.lfs.common.enums.Gender;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

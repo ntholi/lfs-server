@@ -28,8 +28,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
-import com.breakoutms.lfs.common.District;
-import com.breakoutms.lfs.common.Gender;
+import com.breakoutms.lfs.common.enums.District;
+import com.breakoutms.lfs.common.enums.Gender;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.transport.Transport;

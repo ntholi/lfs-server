@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.security;
 
-import static com.breakoutms.lfs.common.Domain.ADMIN;
+import static com.breakoutms.lfs.common.enums.Domain.ADMIN;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.breakoutms.lfs.common.Domain;
+import com.breakoutms.lfs.common.enums.Domain;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 import lombok.AllArgsConstructor;

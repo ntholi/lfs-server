@@ -9,7 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
-import com.breakoutms.lfs.common.VehicleOwner;
+import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 
 import lombok.AllArgsConstructor;
