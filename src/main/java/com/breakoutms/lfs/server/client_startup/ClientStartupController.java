@@ -1,7 +1,5 @@
 package com.breakoutms.lfs.server.client_startup;
 
-import java.util.Optional;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +12,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ClientStartupController {
 
+	private StartupDataService service;
+	
 	@GetMapping
 	public ResponseEntity<StartupData> get() {
-		StartupData data = new StartupData();
-		data.setName("Hello World");
-		return ResponseEntity.of(Optional.of(data));
+		return ResponseEntity.of(service.get());
 	}
 }
