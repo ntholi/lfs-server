@@ -56,6 +56,13 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 				ExceptionSupplier.notFound("Policy Payment", id));
 	}
 	
+	@GetMapping("payments")
+	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(Pageable pageable) {
+		return ResponseHelper.pagedGetResponse(this, 
+				pagedAssembler, 
+				service.all(pageable));
+	}
+	
 	@GetMapping("{policyNumber}/payments")
 	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(@PathVariable String policyNumber, 
 			Pageable pageable) {
