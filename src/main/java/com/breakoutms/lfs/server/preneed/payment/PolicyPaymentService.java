@@ -64,7 +64,8 @@ public class PolicyPaymentService {
 				.findFirst()
 				.map(Period::previous).orElse(null);
 		
-		Period nextPaymentPeriod = lastPeriod == null? null: lastPeriod.plusMonths(2); // LAST PERIOD + CURRENT = NEXT PAYMENT PERIOD
+		Period nextPaymentPeriod = lastPeriod == null? Period.now() : 
+			lastPeriod.plusMonths(2); // LAST PERIOD + CURRENT = NEXT PAYMENT PERIOD
 		
 		BigDecimal penaltyDue = paymentDetails.stream()
 				.filter(PolicyPaymentDetails::isPenalty)
