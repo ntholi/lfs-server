@@ -57,7 +57,7 @@ import lombok.NoArgsConstructor;
         @Index(columnList = "names", name = "index_corpse_names"),
         @Index(columnList = "surname", name = "index_corpse_surname")
 })
-@SQLDelete(sql = "UPDATE corpse SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE corpse SET deleted=true WHERE id=?")//TODO: IS IT WHERE tagNo=? OR WHERE id=?
 @Where(clause = AuditableEntity.CLAUSE)
 public class Corpse extends AuditableEntity<String> {
 	
