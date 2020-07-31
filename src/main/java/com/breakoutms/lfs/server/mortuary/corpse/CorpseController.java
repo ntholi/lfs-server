@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -103,6 +104,10 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	
 	@GetMapping("/corpses-lookup")
 	public ResponseEntity<CollectionModel<CorpseLookupProjection>> lookup(String names) {
+		if(StringUtils.isBlank(names)) {
+			return ResponseEntity.noContent()
+					.build();
+		}
 		//TODO: IT HAS TO BE PAGABLE
 //		return ResponseHelper.pagedGetResponse(this, 
 //				pagedAssembler,
