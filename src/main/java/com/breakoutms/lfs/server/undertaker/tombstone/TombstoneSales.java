@@ -2,32 +2,28 @@ package com.breakoutms.lfs.server.undertaker.tombstone;
 
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 
-@Entity
 public class TombstoneSales {
 
 	private Long id;
-	@OneToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	@JoinColumn(name="corpse")
+	
+	@OneToOne(fetch = FetchType.LAZY, 
+			cascade = CascadeType.PERSIST)
 	private Corpse corpse;
 
 	@OneToOne
 	private Product product;
 	
-	@ManyToOne
-	@Cascade(CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, 
+			cascade = CascadeType.ALL)
 	private Quotation quotation;
 	
 	private LocalDate erectionDate;

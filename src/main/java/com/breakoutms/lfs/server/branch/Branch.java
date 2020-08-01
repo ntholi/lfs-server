@@ -11,12 +11,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.envers.Audited;
+
 import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.server.util.BeanUtil;
 
 import lombok.Data;
 
 @Entity
+@Audited
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_branch_name", unique=true)
 })

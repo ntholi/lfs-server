@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -27,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Where(clause = AuditableEntity.CLAUSE)
 public class TransferRequest extends UndertakerRequest {
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="transfer_to_branch_id")
 	private Branch transferTo;

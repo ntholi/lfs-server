@@ -55,10 +55,10 @@ public class ProductController implements ViewModelController<Product, ProductVi
 				service.all(pageable));
 	}
 
-	@PostMapping
 	//@Valid has been omitted here but used manual validation because ProductDTO
 	//can be mapped into any subclass of Product where each subclass has it's own
 	//validation requirements
+	@PostMapping
 	public ResponseEntity<ProductViewModel> save(@RequestBody ProductDTO dto) throws MethodArgumentNotValidException {
 		Product entity = ProductFactory.get(dto);
 		validate("save", entity);
@@ -68,8 +68,8 @@ public class ProductController implements ViewModelController<Product, ProductVi
 		);
 	}
 
-	@PutMapping("/{id}")
 	//@Valid has been omitted here but used manual validation
+	@PutMapping("/{id}")
 	public ResponseEntity<ProductViewModel> update(@PathVariable Integer id, 
 			@RequestBody ProductDTO dto) throws MethodArgumentNotValidException {
 		Product entity = ProductFactory.get(dto);
