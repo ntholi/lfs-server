@@ -1,5 +1,5 @@
 package com.breakoutms.lfs.server.exceptions;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,7 +88,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex);
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
 		
-		ErrorResult body = new ErrorResult(LocalDateTime.now(), errorCode.getCode(), 
+		ErrorResult body = new ErrorResult(new Date().getTime(), errorCode.getCode(), 
 				getErrorName(rootCause), rootCause.getMessage(), null);
 		return new ResponseEntity<>(body, status);
 	}
@@ -123,7 +123,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 				.map(x -> new InvalidFieldError(x.getField(), x.getDefaultMessage()))
 				.collect(Collectors.toList());
 		
-		ErrorResult errorResult = new ErrorResult(LocalDateTime.now(), status.value(), 
+		ErrorResult errorResult = new ErrorResult(new Date().getTime(), status.value(), 
 				error, message, fieldErrors);
 		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
 	}
@@ -132,7 +132,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class ErrorResult {
-		private LocalDateTime timestamp;
+		private long timestamp;
 		private int status;
 		private String error;
 		private String message;
