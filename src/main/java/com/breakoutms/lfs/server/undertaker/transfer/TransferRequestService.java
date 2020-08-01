@@ -1,21 +1,37 @@
 package com.breakoutms.lfs.server.undertaker.transfer;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestRepository;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestService;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 
+import lombok.AllArgsConstructor;
+
 @Service
-public class TransferRequestService extends UndertakerRequestService<TransferRequest> {
+@AllArgsConstructor
+public class TransferRequestService {
 
-	public TransferRequestService(UndertakerRequestRepository<TransferRequest> repo) {
-		super(repo);
+	private final TransferRequestRepository repo;
+
+	public Optional<TransferRequest> get(Long id) {
+		return repo.findById(id);
 	}
-
+	
+	public Page<TransferRequest> all(Pageable pageable) {
+		return repo.findAll(pageable);
+	}
+	
+	@Transactional
+	public TransferRequest save(final TransferRequest entity) {
+		return repo.save(entity);
+	}
+	
 	@Transactional
 	public TransferRequest update(Long id, TransferRequest updatedEntity) {
 		if(updatedEntity == null) {
@@ -26,5 +42,9 @@ public class TransferRequestService extends UndertakerRequestService<TransferReq
 		
 		UndertakerRequestMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
+	}
+	
+	public void delete(Long id) {
+		repo.deleteById(id);
 	}
 }

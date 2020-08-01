@@ -33,7 +33,9 @@ public abstract class UndertakerRequestMapper {
 	@Mapping(target = "branch", ignore = true)
 	public abstract void update(TransferRequest updateEntity, @MappingTarget TransferRequest saved);
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "transferTo", target = "transferTo.name")
 	public abstract TransferRequest map(TransferRequestDTO dto);
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "transferTo.name", target = "transferTo")
 	public abstract TransferRequestViewModel map(TransferRequest entity);
 }

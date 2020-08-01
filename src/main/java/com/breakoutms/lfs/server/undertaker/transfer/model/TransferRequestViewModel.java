@@ -2,7 +2,6 @@ package com.breakoutms.lfs.server.undertaker.transfer.model;
 
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestViewModel;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +15,7 @@ import lombok.NoArgsConstructor;
 @Relation(collectionRelation = "TransferRequests")
 public class TransferRequestViewModel extends UndertakerRequestViewModel<TransferRequestViewModel>{
 
+	private Long id;
+	private String tagNo;
 	private String transferTo;
 }

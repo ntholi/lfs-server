@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.undertaker.transfer.model;
 
-import com.breakoutms.lfs.common.enums.RequestPerson;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TransferRequestDTO {
 	
+	private Long id;
+	@NotNull
+	private String tagNo;
+	@NotNull
 	private String transferTo;
 }
