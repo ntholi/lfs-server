@@ -1,8 +1,9 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.undertaker.postmortem.model;
 
 import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestViewModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

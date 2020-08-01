@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.undertaker.postmortem.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,8 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest.RequestType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

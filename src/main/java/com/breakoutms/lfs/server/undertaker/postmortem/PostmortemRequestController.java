@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker;
+package com.breakoutms.lfs.server.undertaker.postmortem;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -26,9 +26,10 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
-import com.breakoutms.lfs.server.undertaker.model.PostmortemRequest;
-import com.breakoutms.lfs.server.undertaker.model.PostmortemRequestDTO;
-import com.breakoutms.lfs.server.undertaker.model.PostmortemRequestViewModel;
+import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
+import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
+import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestDTO;
+import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestViewModel;
 
 import lombok.AllArgsConstructor;
 import lombok.val;

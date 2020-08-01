@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.undertaker.postmortem.model;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
 
