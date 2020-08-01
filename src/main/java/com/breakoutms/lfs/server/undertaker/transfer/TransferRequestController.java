@@ -44,7 +44,7 @@ public class TransferRequestController
 	private final PagedResourcesAssembler<TransferRequestViewModel> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TransferRequestViewModel> get(@PathVariable Long id) {
+	public ResponseEntity<TransferRequestViewModel> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("TransferRequest", id));
@@ -67,7 +67,7 @@ public class TransferRequestController
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<TransferRequestViewModel> update(@PathVariable Long id, 
+	public ResponseEntity<TransferRequestViewModel> update(@PathVariable Integer id, 
 			@Valid @RequestBody TransferRequestDTO dto) {
 		TransferRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(

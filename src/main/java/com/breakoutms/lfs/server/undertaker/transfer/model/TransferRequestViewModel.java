@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=true)
 @Relation(collectionRelation = "TransferRequests")
 public class TransferRequestViewModel extends UndertakerRequestViewModel<TransferRequestViewModel>{
-
-	private Long id;
-	private String tagNo;
+	
 	private String transferTo;
 }

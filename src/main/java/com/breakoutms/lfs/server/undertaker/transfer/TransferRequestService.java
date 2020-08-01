@@ -19,7 +19,7 @@ public class TransferRequestService {
 
 	private final TransferRequestRepository repo;
 
-	public Optional<TransferRequest> get(Long id) {
+	public Optional<TransferRequest> get(Integer id) {
 		return repo.findById(id);
 	}
 	
@@ -33,7 +33,7 @@ public class TransferRequestService {
 	}
 	
 	@Transactional
-	public TransferRequest update(Long id, TransferRequest updatedEntity) {
+	public TransferRequest update(Integer id, TransferRequest updatedEntity) {
 		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Transfer Request").get();
 		}
@@ -44,7 +44,7 @@ public class TransferRequestService {
 		return repo.save(entity);
 	}
 	
-	public void delete(Long id) {
+	public void delete(Integer id) {
 		repo.deleteById(id);
 	}
 }

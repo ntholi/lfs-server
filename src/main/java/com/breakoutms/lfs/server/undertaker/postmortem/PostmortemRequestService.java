@@ -19,7 +19,7 @@ public class PostmortemRequestService {
 
 	private final PostmortemRequestRepository repo;
 
-	public Optional<PostmortemRequest> get(Long id) {
+	public Optional<PostmortemRequest> get(Integer id) {
 		return repo.findById(id);
 	}
 	
@@ -33,7 +33,7 @@ public class PostmortemRequestService {
 	}
 
 	@Transactional
-	public PostmortemRequest update(Long id, PostmortemRequest updatedEntity) {
+	public PostmortemRequest update(Integer id, PostmortemRequest updatedEntity) {
 		if(updatedEntity == null) {
 			throw ExceptionSupplier.nullUpdate("Postmortem Request").get();
 		}

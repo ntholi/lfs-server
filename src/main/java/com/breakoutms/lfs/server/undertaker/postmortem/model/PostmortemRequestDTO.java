@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostmortemRequestDTO {
 	
-	private Long id;
+	private Integer id;
 	@NotNull
 	private String tagNo;
 	private RequestPerson requestedBy;

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TransferRequestDTO {
 	
-	private Long id;
+	private Integer id;
 	@NotNull
 	private String tagNo;
 	@NotNull

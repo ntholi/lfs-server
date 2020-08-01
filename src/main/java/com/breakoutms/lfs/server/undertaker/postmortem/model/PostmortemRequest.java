@@ -14,7 +14,6 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest.RequestType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

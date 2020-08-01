@@ -44,7 +44,7 @@ public class PostmortemRequestController
 	private final PagedResourcesAssembler<PostmortemRequestViewModel> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PostmortemRequestViewModel> get(@PathVariable Long id) {
+	public ResponseEntity<PostmortemRequestViewModel> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("PostmortemRequest", id));
@@ -67,7 +67,7 @@ public class PostmortemRequestController
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<PostmortemRequestViewModel> update(@PathVariable Long id, 
+	public ResponseEntity<PostmortemRequestViewModel> update(@PathVariable Integer id, 
 			@Valid @RequestBody PostmortemRequestDTO dto) {
 		PostmortemRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
