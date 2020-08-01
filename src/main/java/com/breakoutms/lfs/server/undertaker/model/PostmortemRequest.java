@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 
 import lombok.AllArgsConstructor;
@@ -27,12 +28,6 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class PostmortemRequest extends UndertakerRequest {
-
-	enum RequestPerson {
-		Police,
-		Relatives,
-		Other
-	}
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 15)

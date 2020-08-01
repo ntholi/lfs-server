@@ -1,6 +1,6 @@
 package com.breakoutms.lfs.server.undertaker.model;
 
-import com.breakoutms.lfs.server.undertaker.model.PostmortemRequest.RequestPerson;
+import com.breakoutms.lfs.common.enums.RequestPerson;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
