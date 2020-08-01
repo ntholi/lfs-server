@@ -1,17 +1,25 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.undertaker.transfer.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest.RequestType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +35,7 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class TransferRequest extends UndertakerRequest {
-
+	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="transfer_to_branch_id")
