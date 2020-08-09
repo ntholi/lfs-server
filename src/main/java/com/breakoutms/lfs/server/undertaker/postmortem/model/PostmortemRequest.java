@@ -42,7 +42,8 @@ public class PostmortemRequest extends UndertakerRequest {
 	
 	@NotBlank
 	@Size(max = 50)
-	@Column(nullable=false, length = 50)
+	@Column(length = 50) 
+	//nullable=false is leftout because UndertakerRequest uses SINGLE_TABLE strategy
 	private String location;
 	
 	public String requestDetails() {

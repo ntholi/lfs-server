@@ -16,6 +16,9 @@ import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
 @Repository
 public interface FuneralSchemeRepository extends JpaRepository<FuneralScheme, Integer> {
 
+	@Query("select name from FuneralScheme")
+	List<String> findAllNames();
+	
 	Optional<FuneralScheme> findByName(String name);
 	
 	@Query("FROM PenaltyDeductible e WHERE e.funeralScheme.id = :id AND e.deleted=false")

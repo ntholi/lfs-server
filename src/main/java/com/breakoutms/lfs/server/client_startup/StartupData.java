@@ -8,4 +8,5 @@ import lombok.Data;
 public class StartupData {
 	
 	private List<String> funeralSchemes;
+	private List<String> branches;
 }
