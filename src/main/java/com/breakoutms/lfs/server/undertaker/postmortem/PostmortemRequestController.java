@@ -35,7 +35,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.UNDERTAKER+"/postmortem-request")
+@RequestMapping("/"+Domain.Const.UNDERTAKER+"/postmortem-requests")
 @AllArgsConstructor
 public class PostmortemRequestController 
 		implements ViewModelController<PostmortemRequest, PostmortemRequestViewModel> {

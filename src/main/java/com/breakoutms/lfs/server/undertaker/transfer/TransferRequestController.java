@@ -35,7 +35,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.UNDERTAKER+"/transfer-request")
+@RequestMapping("/"+Domain.Const.UNDERTAKER+"/transfer-requests")
 @AllArgsConstructor
 public class TransferRequestController 
 		implements ViewModelController<TransferRequest, TransferRequestViewModel> {

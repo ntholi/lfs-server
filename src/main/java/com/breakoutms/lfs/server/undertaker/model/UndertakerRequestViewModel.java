@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 public class UndertakerRequestViewModel<T extends UndertakerRequestViewModel<T>>  extends RepresentationModel<T> {
 
 	private Long id;
-
 	private String tagNo;
-	
-	private boolean opened;
+	private boolean seen;
+	private boolean processed;
 }

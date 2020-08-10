@@ -23,4 +23,5 @@ public class PostmortemRequestDTO {
 	private String phoneNumber;
 	@NotNull
 	private String location;
+	private boolean seen;
 }

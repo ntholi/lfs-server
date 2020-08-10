@@ -18,4 +18,5 @@ public class TransferRequestDTO {
 	private String tagNo;
 	@NotNull
 	private String transferTo;
+	private boolean seen;
 }
