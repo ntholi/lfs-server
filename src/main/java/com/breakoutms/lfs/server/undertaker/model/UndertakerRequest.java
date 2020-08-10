@@ -16,6 +16,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.enums.RequestType;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
@@ -40,19 +41,6 @@ import lombok.NoArgsConstructor;
 @Where(clause = AuditableEntity.CLAUSE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class UndertakerRequest extends AuditableEntity<Integer>{
-	public enum RequestType{
-		Postmortem,
-		Transfer;
-		
-		@Override
-		public String toString() {
-			if(ordinal() == 0) {
-				return "Postmortem Request";
-			}
-			return "Transfer Request";
-		}
-	}
-	
 	@Id
 	@GeneratedValue(generator = "undertaker_request_id")
 	private Integer id;

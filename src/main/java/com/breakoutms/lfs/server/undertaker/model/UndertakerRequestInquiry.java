@@ -3,7 +3,7 @@ package com.breakoutms.lfs.server.undertaker.model;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest.RequestType;
+import com.breakoutms.lfs.common.enums.RequestType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +20,7 @@ public class UndertakerRequestInquiry extends RepresentationModel<UndertakerRequ
 	private Integer id;
 	private String tagNo;
 	private boolean seen;
+	private boolean processed;
 	private RequestPerson requestedBy;
 	private String requestPerson;
 	private String phoneNumber;

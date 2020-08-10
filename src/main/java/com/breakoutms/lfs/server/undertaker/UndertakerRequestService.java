@@ -17,7 +17,7 @@ public class UndertakerRequestService {
 	private UndertakerRequestRepository repo;
 
 	public Page<UndertakerRequest> all(Pageable p) {
-		Sort sort = p.getSort().and(Sort.by("processed").descending());
+		Sort sort = p.getSort().and(Sort.by("processed").ascending());
 		PageRequest pageRequest = PageRequest.of(p.getPageNumber(), 
 				p.getPageSize(), sort);
 		

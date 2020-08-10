@@ -41,6 +41,7 @@ public class UndertakerRequestController {
 		inquiry.setId(uRequest.getId());
 		inquiry.setSeen(uRequest.isSeen());
 		inquiry.setTagNo(uRequest.getCorpse().getTagNo());
+		inquiry.setProcessed(uRequest.isProcessed());
 		if (uRequest instanceof PostmortemRequest) {
 			PostmortemRequest request = (PostmortemRequest) uRequest;
 			inquiry.setRequestedBy(request.getRequestedBy());
