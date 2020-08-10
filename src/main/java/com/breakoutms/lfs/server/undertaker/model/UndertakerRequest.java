@@ -63,7 +63,8 @@ public abstract class UndertakerRequest extends AuditableEntity<Integer>{
 	@JoinColumn(nullable = false)
 	private Corpse corpse;
 	
-	private boolean opened;
+	private boolean seen;
+	private boolean processed;
 
 	public abstract RequestType getRequestType();
 }
