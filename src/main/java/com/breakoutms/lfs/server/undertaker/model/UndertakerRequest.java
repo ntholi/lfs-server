@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.undertaker.model;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,6 +41,10 @@ import lombok.NoArgsConstructor;
 })
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
+@DiscriminatorColumn(
+	    discriminatorType = DiscriminatorType.STRING,
+	    name = "request_type"
+)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class UndertakerRequest extends AuditableEntity<Integer>{
 	@Id

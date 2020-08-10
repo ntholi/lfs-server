@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.undertaker.postmortem.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
+@DiscriminatorValue("Postmortem")
 public class PostmortemRequest extends UndertakerRequest {
 	
 	@Enumerated(EnumType.STRING)

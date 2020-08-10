@@ -1,5 +1,8 @@
 package com.breakoutms.lfs.server.undertaker;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -42,6 +45,8 @@ public class UndertakerRequestController {
 		inquiry.setSeen(uRequest.isSeen());
 		inquiry.setTagNo(uRequest.getCorpse().getTagNo());
 		inquiry.setProcessed(uRequest.isProcessed());
+		inquiry.setDate(uRequest.getCreatedAt());
+		inquiry.setRequestType(uRequest.getRequestType());
 		if (uRequest instanceof PostmortemRequest) {
 			PostmortemRequest request = (PostmortemRequest) uRequest;
 			inquiry.setRequestedBy(request.getRequestedBy());

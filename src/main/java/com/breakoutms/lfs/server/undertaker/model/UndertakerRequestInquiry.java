@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.undertaker.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.hateoas.RepresentationModel;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
@@ -27,4 +29,5 @@ public class UndertakerRequestInquiry extends RepresentationModel<UndertakerRequ
 	private String location;
 	private String transferTo;
 	private RequestType requestType;
+	private LocalDateTime date;
 }

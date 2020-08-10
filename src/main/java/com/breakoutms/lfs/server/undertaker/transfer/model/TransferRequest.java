@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.undertaker.transfer.model;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
+@DiscriminatorValue("Transfer")
 public class TransferRequest extends UndertakerRequest {
 	
 	@NotNull
