@@ -132,7 +132,8 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class ErrorResult {
-		private long timestamp;
+		private long timestamp; //TODO: Change back to LocalDateTime, long doesn't work for 
+		//TODO: spring initiated errors, like a 404
 		private int status;
 		private String error;
 		private String message;
