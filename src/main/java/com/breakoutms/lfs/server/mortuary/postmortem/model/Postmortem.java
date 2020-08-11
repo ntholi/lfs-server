@@ -56,13 +56,13 @@ public class Postmortem extends AuditableEntity<Integer> {
 	private LocalDateTime date;
 	
 	@ManyToOne(fetch = FetchType.LAZY,
-			cascade = CascadeType.PERSIST) 
+			cascade = CascadeType.ALL) 
 	private Transport transport;
 	
 	private LocalDateTime returnedTime;
 	
 	@ManyToOne(fetch = FetchType.LAZY,
-			cascade = CascadeType.PERSIST) 
+			cascade = CascadeType.ALL) 
 	private Transport returnTransport;
 	
 	@NotNull

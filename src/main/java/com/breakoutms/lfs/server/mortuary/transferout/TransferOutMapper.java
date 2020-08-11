@@ -25,7 +25,7 @@ public abstract class TransferOutMapper {
 	@Mapping(source = "transport.vehicle.owner",  target = "vehicleOwner")
 	@Mapping(source = "transport.vehicle.registrationNumber",  target = "registrationNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "requestId.id", target = "transferRequestId")
+	@Mapping(source = "transferRequest.id", target = "requestId")
 	protected abstract TransferOutViewModel map(TransferOut transferOut);
 
 	@Mapping(target = "id", ignore = true)

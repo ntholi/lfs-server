@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.mortuary.transferout.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,7 +60,7 @@ public class TransferOut extends AuditableEntity<Integer> {
 	
 	private TransferStatus status;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Transport transport;
 	
 	@Column(length = 50)
