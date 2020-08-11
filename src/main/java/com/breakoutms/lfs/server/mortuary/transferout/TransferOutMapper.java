@@ -18,14 +18,14 @@ public abstract class TransferOutMapper {
 	@Mapping(source = "vehicleOwner",  target = "transport.vehicle.owner")
 	@Mapping(source = "registrationNumber",  target = "transport.vehicle.registrationNumber")
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
-	@Mapping(source = "transferRequestId", target = "transferRequest.id")
+	@Mapping(source = "requestId", target = "transferRequest.id")
 	protected abstract TransferOut map(TransferOutDTO dto);
 	
 	@Mapping(source = "transport.driver",  target = "driversName")
 	@Mapping(source = "transport.vehicle.owner",  target = "vehicleOwner")
 	@Mapping(source = "transport.vehicle.registrationNumber",  target = "registrationNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "transferRequest.id", target = "transferRequestId")
+	@Mapping(source = "requestId.id", target = "transferRequestId")
 	protected abstract TransferOutViewModel map(TransferOut transferOut);
 
 	@Mapping(target = "id", ignore = true)

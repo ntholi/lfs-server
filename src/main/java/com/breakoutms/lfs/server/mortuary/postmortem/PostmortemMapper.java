@@ -21,7 +21,7 @@ public abstract class PostmortemMapper {
 	@Mapping(source = "returnTransportOwner",  target = "returnTransport.vehicle.owner")
 	@Mapping(source = "returnTransportRegNumber",  target = "returnTransport.vehicle.registrationNumber")
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
-	@Mapping(source = "postmortemRequestId", target = "postmortemRequest.id")
+	@Mapping(source = "requestId", target = "postmortemRequest.id")
 	public abstract Postmortem map(PostmortemDTO dto);
 	
 	@Mapping(source = "transport.driver",  target = "driversName")
@@ -31,7 +31,7 @@ public abstract class PostmortemMapper {
 	@Mapping(source = "returnTransport.vehicle.owner",  target = "returnTransportOwner")
 	@Mapping(source = "returnTransport.vehicle.registrationNumber",  target = "returnTransportRegNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "postmortemRequest.id", target = "postmortemRequestId")
+	@Mapping(source = "postmortemRequest.id", target = "requestId")
 	public abstract PostmortemViewModel map(Postmortem entity);
 	
 	@Mapping(target = "id", ignore = true)

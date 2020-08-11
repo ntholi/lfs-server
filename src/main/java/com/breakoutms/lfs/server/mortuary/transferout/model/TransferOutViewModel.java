@@ -24,5 +24,5 @@ public class TransferOutViewModel extends RepresentationModel<TransferOutViewMod
 	private VehicleOwner vehicleOwner;
 	private String registrationNumber;
 	private String assistedBy;
-	private Integer transferRequestId;
+	private Integer requestId;
 }

@@ -43,5 +43,5 @@ public class PostmortemDTO {
 	
 	private String returnTransportDriver;
 	@NotNull
-	private Integer postmortemRequestId;
+	private Integer requestId;
 }

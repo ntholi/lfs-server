@@ -28,5 +28,5 @@ public class TransferOutDTO {
 	private String registrationNumber;
 	private String assistedBy;
 	@NotNull
-	private Integer transferRequestId;
+	private Integer requestId;
 }
