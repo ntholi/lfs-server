@@ -1,11 +1,12 @@
 package com.breakoutms.lfs.server.undertaker;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -23,20 +24,39 @@ import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/"+Domain.Const.UNDERTAKER+"/undertaker-requests")
+@RequestMapping("/"+Domain.Const.UNDERTAKER)
 @AllArgsConstructor
 public class UndertakerRequestController {
 
 	private final UndertakerRequestService service;
 	private final PagedResourcesAssembler<UndertakerRequestInquiry> assembler;
 
-	@GetMapping
+	@GetMapping("/requests")
 	public ResponseEntity<PagedModel<EntityModel<UndertakerRequestInquiry>>> inquire(Pageable pageable) {
 		Page<UndertakerRequest> page = service.all(pageable);
 		if(page.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(assembler.toModel(page.map(this::map)), HttpStatus.OK);
+	}
+	
+	@GetMapping("/requests-lookup")
+	public ResponseEntity<CollectionModel<UndertakerRequestInquiry>> lookup(String names) {
+		if(StringUtils.isBlank(names)) {
+			return ResponseEntity.noContent()
+					.build();
+		}
+		var list = service.lookup(names);
+		if(list.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return ResponseEntity.ok(
+					CollectionModel.of(
+						list.stream()
+							.map(this::map)
+							.collect(Collectors.toList())
+					)
+				);
 	}
 
 	private UndertakerRequestInquiry map(UndertakerRequest uRequest) {
@@ -47,6 +67,7 @@ public class UndertakerRequestController {
 		inquiry.setProcessed(uRequest.isProcessed());
 		inquiry.setDate(uRequest.getCreatedAt());
 		inquiry.setRequestType(uRequest.getRequestType());
+		inquiry.setCorpseNames(uRequest.getCorpse().getFullName());
 		if (uRequest instanceof PostmortemRequest) {
 			PostmortemRequest request = (PostmortemRequest) uRequest;
 			inquiry.setRequestedBy(request.getRequestedBy());

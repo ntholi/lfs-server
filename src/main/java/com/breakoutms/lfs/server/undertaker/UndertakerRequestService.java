@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.undertaker;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +24,9 @@ public class UndertakerRequestService {
 				p.getPageSize(), sort);
 		
 		return repo.findAll(pageRequest);
+	}
+
+	public List<UndertakerRequest> lookup(String names) {
+		return repo.lookup(names);
 	}
 }

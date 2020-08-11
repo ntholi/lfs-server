@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.mortuary.corpse.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
@@ -135,9 +137,15 @@ public class Corpse extends AuditableEntity<String> {
 	@JoinColumn(name="from_other_mortuary_id")
 	@JsonProperty("transferredFrom")
 	private OtherMortuary transferredFrom;
-
+	
 	@Override
 	public String getId() {
 		return tagNo;
+	}
+	
+	public String getFullName() {
+	    return Stream.of(names, surname)
+	    		.filter(it -> it != null && !it.isBlank())
+	    		.collect(Collectors.joining(" "));
 	}
 }

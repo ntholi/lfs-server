@@ -21,6 +21,7 @@ public class UndertakerRequestInquiry extends RepresentationModel<UndertakerRequ
 
 	private Integer id;
 	private String tagNo;
+	private String corpseNames;
 	private boolean seen;
 	private boolean processed;
 	private RequestPerson requestedBy;
