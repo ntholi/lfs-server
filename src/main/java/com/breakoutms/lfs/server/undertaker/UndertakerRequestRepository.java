@@ -10,9 +10,10 @@ import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 
 public interface UndertakerRequestRepository extends JpaRepository<UndertakerRequest, Integer>{
 
-	@Query("from UndertakerRequest where CONCAT(corpse.names, ' ', corpse.surname) "
+	@Query("from UndertakerRequest where processed = false "
+			+ " AND (CONCAT(corpse.names, ' ', corpse.surname) "
 			+ " like %:fullnames% "
-			+ " OR CONCAT(corpse.surname, ' ', corpse.names) like %:fullnames%")
+			+ " OR CONCAT(corpse.surname, ' ', corpse.names) like %:fullnames%)")
 	List<UndertakerRequest> lookup(@Param("fullnames") String fullnames);
 
 }

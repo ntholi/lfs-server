@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
-import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.common.enums.VehicleOwner;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +20,6 @@ public class PostmortemDTO {
 	private Integer id;
 	@NotNull
 	private String tagNo;
-	private RequestPerson requestedBy;
-	private String requestPerson;
-	private String phoneNumber;
-	@NotNull
-	private String location;
 
 	private LocalDateTime date;
 
