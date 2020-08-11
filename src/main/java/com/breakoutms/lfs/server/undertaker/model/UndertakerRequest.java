@@ -58,6 +58,7 @@ public abstract class UndertakerRequest extends AuditableEntity<Integer>{
 	private Corpse corpse;
 	
 	private boolean seen;
+	
 	private boolean processed;
 
 	public abstract RequestType getRequestType();

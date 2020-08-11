@@ -23,7 +23,7 @@ public class UndertakerRequestService {
 		PageRequest pageRequest = PageRequest.of(p.getPageNumber(), 
 				p.getPageSize(), sort);
 		
-		return repo.findAll(pageRequest);
+		return repo.findByProcessed(pageRequest, false);
 	}
 
 	public List<UndertakerRequest> lookup(String names) {
