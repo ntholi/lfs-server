@@ -18,12 +18,14 @@ public abstract class TransferOutMapper {
 	@Mapping(source = "vehicleOwner",  target = "transport.vehicle.owner")
 	@Mapping(source = "registrationNumber",  target = "transport.vehicle.registrationNumber")
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "transferRequestId", target = "transferRequest.id")
 	protected abstract TransferOut map(TransferOutDTO dto);
 	
 	@Mapping(source = "transport.driver",  target = "driversName")
 	@Mapping(source = "transport.vehicle.owner",  target = "vehicleOwner")
 	@Mapping(source = "transport.vehicle.registrationNumber",  target = "registrationNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "transferRequest.id", target = "transferRequestId")
 	protected abstract TransferOutViewModel map(TransferOut transferOut);
 
 	@Mapping(target = "id", ignore = true)
@@ -31,5 +33,6 @@ public abstract class TransferOutMapper {
 	@Mapping(target = "createdAt", ignore = true)
 	@Mapping(target = "createdBy", ignore = true)
 	@Mapping(target = "branch", ignore = true)
+	@Mapping(target = "transferRequest", ignore = true)
 	protected abstract void update(TransferOut updateEntity, @MappingTarget TransferOut saved);
 }

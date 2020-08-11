@@ -13,12 +13,6 @@ import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemViewModel;
 public abstract class PostmortemMapper {
 
 	public static final PostmortemMapper INSTANCE = Mappers.getMapper(PostmortemMapper.class);
-	
-	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
-	@Mapping(target = "branch", ignore = true)
-	public abstract void update(Postmortem updateEntity, @MappingTarget Postmortem saved);
 
 	@Mapping(source = "driversName",  target = "transport.driver")
 	@Mapping(source = "vehicleOwner",  target = "transport.vehicle.owner")
@@ -27,6 +21,7 @@ public abstract class PostmortemMapper {
 	@Mapping(source = "returnTransportOwner",  target = "returnTransport.vehicle.owner")
 	@Mapping(source = "returnTransportRegNumber",  target = "returnTransport.vehicle.registrationNumber")
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "postmortemRequestId", target = "postmortemRequest.id")
 	public abstract Postmortem map(PostmortemDTO dto);
 	
 	@Mapping(source = "transport.driver",  target = "driversName")
@@ -36,5 +31,13 @@ public abstract class PostmortemMapper {
 	@Mapping(source = "returnTransport.vehicle.owner",  target = "returnTransportOwner")
 	@Mapping(source = "returnTransport.vehicle.registrationNumber",  target = "returnTransportRegNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "postmortemRequest.id", target = "postmortemRequestId")
 	public abstract PostmortemViewModel map(Postmortem entity);
+	
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "branch", ignore = true)
+	@Mapping(target = "postmortemRequest", ignore = true)
+	public abstract void update(Postmortem updateEntity, @MappingTarget Postmortem saved);
 }

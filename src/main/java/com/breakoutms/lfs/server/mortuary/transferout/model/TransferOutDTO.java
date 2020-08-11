@@ -27,5 +27,6 @@ public class TransferOutDTO {
 	private VehicleOwner vehicleOwner;
 	private String registrationNumber;
 	private String assistedBy;
+	@NotNull
 	private Integer transferRequestId;
 }

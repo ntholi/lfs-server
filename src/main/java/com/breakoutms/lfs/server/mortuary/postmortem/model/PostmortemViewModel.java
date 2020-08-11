@@ -33,4 +33,5 @@ public class PostmortemViewModel extends RepresentationModel<PostmortemViewModel
 	private String returnTransportDriver;
 	private VehicleOwner returnTransportOwner;
 	private String returnTransportRegNumber;
+	private Integer postmortemRequestId;
 }
