@@ -5,6 +5,7 @@ import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductDTO;
 import com.breakoutms.lfs.server.products.model.ProductViewModel;
+import com.breakoutms.lfs.server.products.model.TransportPrice;
 
 public interface ProductFactory {
 
@@ -13,6 +14,9 @@ public interface ProductFactory {
 		if(type == ProductType.COFFIN_CASKET) {
 			return ProductMapper.INSTANCE.mapCoffin(dto);
 		}
+		else if(type == ProductType.TRANSPORT) {
+			return ProductMapper.INSTANCE.mapTransport(dto);
+		}
 		return ProductMapper.INSTANCE.map(dto);
 	}
 
@@ -20,6 +24,9 @@ public interface ProductFactory {
 		ProductType type = entity.getProductType();
 		if(type == ProductType.COFFIN_CASKET) {
 			return ProductMapper.INSTANCE.mapCoffin((Coffin)entity);
+		}
+		else if(type == ProductType.TRANSPORT) {
+			return ProductMapper.INSTANCE.mapTransport((TransportPrice)entity);
 		}
 		return ProductMapper.INSTANCE.map(entity);
 	}

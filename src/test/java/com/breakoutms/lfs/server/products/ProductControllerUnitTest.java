@@ -31,8 +31,8 @@ import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
 import com.breakoutms.lfs.server.config.GeneralConfigurations;
-import com.breakoutms.lfs.server.preneed.pricing.model.CoffinViewModel;
 import com.breakoutms.lfs.server.products.model.Coffin;
+import com.breakoutms.lfs.server.products.model.CoffinViewModel;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
