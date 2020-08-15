@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.common.enums.ProductType;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.products.model.Product;
 
@@ -20,6 +21,18 @@ public class ProductService {
 	
 	public Optional<Product> get(Integer id) {
 		return repo.findById(id);
+	}
+	
+	public Page<Product> all(String productType, Pageable pageable) {
+		Page<Product> page;
+		productType = productType.replace(",", "");
+		if(productType.equalsIgnoreCase("All")) {
+			page = repo.findAll(pageable);
+		}
+		else {
+			page = repo.findByProductType(pageable, ProductType.fromString(productType));
+		}
+		return page;
 	}
 	
 	public Page<Product> all(Pageable pageable) {

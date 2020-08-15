@@ -49,10 +49,11 @@ public class ProductController implements ViewModelController<Product, ProductVi
 	}
 
 	@GetMapping 
-	public ResponseEntity<PagedModel<EntityModel<ProductViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<ProductViewModel>>> all(String productType, 
+			Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.all(productType, pageable));
 	}
 
 	//@Valid has been omitted here but used manual validation because ProductDTO
