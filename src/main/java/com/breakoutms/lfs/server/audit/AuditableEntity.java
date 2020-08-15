@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,7 +34,8 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	
 	public static final String CLAUSE = "deleted = false";
 	
-	@NotNull
+	//I've Disabled @NotNull so that validations for Product can be validated
+	//in the controller
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true)
 	private Branch branch;
