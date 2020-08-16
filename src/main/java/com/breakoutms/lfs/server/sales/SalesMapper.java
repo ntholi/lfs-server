@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
 import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 
@@ -66,5 +67,7 @@ public abstract class SalesMapper {
 	
 	@Mapping(source = "product.name", target = "productName")
 	protected abstract SalesProductViewModel map(SalesProduct salesProduct);
-
+	
+	@Mapping(source = "productId", target = "product.id")
+	protected abstract SalesProduct map(SalesProductDTO dto);
 }

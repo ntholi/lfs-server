@@ -59,6 +59,7 @@ public class SalesProduct extends AuditableEntity<Long>{
 	@Column(nullable=false, precision = 9, scale = 2)
 	private BigDecimal cost;
     
+	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Product product;
 	

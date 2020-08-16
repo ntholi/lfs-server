@@ -54,7 +54,7 @@ public class SalesDTO {
 	@Size(min = 2, max = 150)
 	private String physicalAddress;
 	
-	private List<SalesProduct> salesProducts;
+	private List<SalesProductDTO> salesProducts;
 
 	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
