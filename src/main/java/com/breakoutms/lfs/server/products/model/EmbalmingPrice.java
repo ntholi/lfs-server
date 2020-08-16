@@ -33,9 +33,9 @@ import lombok.NoArgsConstructor;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE coffin SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE embalming_price SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@PrimaryKeyJoinColumn(name = "embalming_price_id")
+@PrimaryKeyJoinColumn(name = "product_id")
 public class EmbalmingPrice extends Product{
 	
 	@NotNull

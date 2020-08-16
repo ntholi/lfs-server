@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "transportPrices")
+@Relation(collectionRelation = "coffinPrices")
 public class CoffinViewModel extends ProductViewModel{
 
 	private String category;
