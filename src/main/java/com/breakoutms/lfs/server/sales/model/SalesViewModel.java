@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import com.breakoutms.lfs.common.enums.PaymentMode;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
