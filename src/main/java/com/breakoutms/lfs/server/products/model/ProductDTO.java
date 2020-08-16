@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.products.model;
 
 import java.math.BigDecimal;
 
+import com.breakoutms.lfs.common.enums.EmbalmingType;
 import com.breakoutms.lfs.common.enums.ProductType;
 import com.breakoutms.lfs.common.enums.TransportType;
 
@@ -31,4 +32,6 @@ public class ProductDTO {
 	private String from;
 	
 	private String to;
+	
+	private EmbalmingType embalmingType;
 }

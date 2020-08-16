@@ -7,6 +7,8 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.CoffinViewModel;
+import com.breakoutms.lfs.server.products.model.EmbalmingPrice;
+import com.breakoutms.lfs.server.products.model.EmbalmingPriceModel;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductDTO;
 import com.breakoutms.lfs.server.products.model.ProductViewModel;
@@ -36,4 +38,7 @@ public abstract class ProductMapper {
 	
 	protected abstract TransportPrice mapTransport(ProductDTO entity);
 	protected abstract TransportPriceViewModel mapTransport(TransportPrice entity);
+	
+	protected abstract EmbalmingPrice mapEmbalmingPrice(ProductDTO entity);
+	public abstract EmbalmingPriceModel mapEmbalmingPrice(EmbalmingPrice entity);
 }

@@ -69,8 +69,8 @@ public class Product extends AuditableEntity<Integer>{
 	@Column(nullable=false, precision = 9, scale = 2)
 	private BigDecimal price;
 	
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 30)
 	private ProductType productType;
 	
