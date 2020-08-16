@@ -24,15 +24,12 @@ public class ProductService {
 	}
 	
 	public Page<Product> all(String productType, Pageable pageable) {
-		Page<Product> page;
-		productType = productType.replace(",", "");
-		if(productType.equalsIgnoreCase("All")) {
-			page = repo.findAll(pageable);
+		String[] arr = productType.split(",");
+		ProductType[] types = new ProductType[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			types[i] = ProductType.fromString(arr[i]);
 		}
-		else {
-			page = repo.findByProductType(pageable, ProductType.fromString(productType));
-		}
-		return page;
+		return repo.findByProductTypeIn(pageable, types);
 	}
 	
 	public Page<Product> all(Pageable pageable) {
