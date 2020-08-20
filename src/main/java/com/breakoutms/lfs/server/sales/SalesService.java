@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.sales.model.BurialDetails;
+import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
@@ -55,6 +57,26 @@ public class SalesService {
 			List<SalesProduct> salesProducts = quot.getSalesProducts();
 			if(salesProducts != null) {
 				salesProducts.forEach(it -> it.setQuotation(quot));
+			}
+		}
+		BurialDetails bd = sales.getBurialDetails();
+		if (bd.getId() == null 
+				&& bd.getBurialPlace() == null
+				&& (bd.getCorpse() == null || bd.getCorpse().getId() == null)
+				&& bd.getLeavingTime() == null
+				&& bd.getPhysicalAddress() == null
+				&& bd.getRoadStatus() == null
+				&& bd.getServiceTime() == null) {
+			sales.setBurialDetails(null);
+		}
+		Quotation q = sales.getQuotation();
+		if(q.getId() == null
+				&& q.getCustomer() != null) {
+			Customer c = q.getCustomer();
+			if(c.getId() == null 
+					&& c.getNames() == null
+					&& c.getPhoneNumber() == null) {
+				q.setCustomer(null);
 			}
 		}
 	}
