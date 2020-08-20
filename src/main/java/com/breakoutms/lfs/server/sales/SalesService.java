@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.sales.model.BurialDetails;
 import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Quotation;
@@ -68,6 +69,12 @@ public class SalesService {
 				&& bd.getRoadStatus() == null
 				&& bd.getServiceTime() == null) {
 			sales.setBurialDetails(null);
+		}
+		if(bd.getCorpse() != null) {
+			Corpse corpse = bd.getCorpse();
+			if(corpse.getId() == null) {
+				bd.setCorpse(null);
+			}
 		}
 		Quotation q = sales.getQuotation();
 		if(q.getId() == null
