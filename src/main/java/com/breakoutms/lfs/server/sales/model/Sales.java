@@ -25,6 +25,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.common.enums.PaymentMode;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.sun.istack.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,7 +76,7 @@ public class Sales extends AuditableEntity<Integer> {
 	@Column(nullable=false, precision = 9, scale = 2)
 	private BigDecimal payableAmount;
 	
-	@NotNull
+	@Nullable
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	@Column(nullable=false, precision = 9, scale = 2)

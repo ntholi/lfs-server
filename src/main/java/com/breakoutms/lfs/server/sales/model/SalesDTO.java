@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,7 +27,7 @@ public class SalesDTO {
 	
 	private String tagNo;
 	
-	@NotBlank
+	@Nullable
 	@Size(min = 2, max = 60)
 	@Column(length = 60)
 	private String customerNames;
@@ -56,7 +55,6 @@ public class SalesDTO {
 	
 	private List<SalesProductDTO> salesProducts;
 
-	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	private BigDecimal totalCost;
@@ -66,7 +64,7 @@ public class SalesDTO {
 	@Digits(integer = 7, fraction = 2)
 	private BigDecimal payableAmount;
 	
-	@NotNull
+	@Nullable
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	private BigDecimal topup;
