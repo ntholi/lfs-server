@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.products;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class ProductService {
 	}
 	
 	public Page<Product> all(String productType, Pageable pageable) {
+		if(StringUtils.isBlank(productType) 
+				|| productType.equalsIgnoreCase("ALL")) {
+			return repo.findAll(pageable);
+		}
 		String[] arr = productType.split(",");
 		ProductType[] types = new ProductType[arr.length];
 		for (int i = 0; i < arr.length; i++) {
