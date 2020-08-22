@@ -1,19 +1,17 @@
 package com.breakoutms.lfs.server.preneed.deceased;
 
+import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
-import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
-import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientDTO;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 
@@ -42,10 +40,11 @@ public class DeceasedClientService {
 	}
 	
 	@Transactional(readOnly = true)
-	public DeceasedClientDTO enquire(Policy policy, Corpse corpse) {
-		DeceasedClientDTO res = new DeceasedClientDTO();
-		
-		return res;
+	public List<CorpseLookupProjection> lookup(String policyNumber) {
+		Policy policy = policyRepo.findById(policyNumber)
+				.orElseThrow(ExceptionSupplier.policyNotFound(policyNumber));
+		String names = policy.getFullName();
+		return corpseRepo.lookup(names);
 	}
 	
 	@Transactional
