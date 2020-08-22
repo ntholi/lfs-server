@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemDTO;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemViewModel;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.val;

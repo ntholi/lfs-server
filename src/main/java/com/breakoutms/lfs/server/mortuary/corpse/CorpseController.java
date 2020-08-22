@@ -53,14 +53,14 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 				ExceptionSupplier.notFound("Corpse", id));
 	}
 
-	@GetMapping("/corpses/") 
+	@GetMapping("/corpses") 
 	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
 				service.all(pageable));
 	}
 
-	@PostMapping("/corpses/")
+	@PostMapping("/corpses")
 	public ResponseEntity<CorpseViewModel> save(@Valid @RequestBody CorpseDTO dto) {
 		Corpse entity = map(dto);
 		return new ResponseEntity<>(
@@ -79,7 +79,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 		);
 	}
 	
-	@GetMapping("/corpses/{tagNo}/next-of-kins/")
+	@GetMapping("/corpses/{tagNo}/next-of-kins")
 	public ResponseEntity<List<NextOfKin>> getNextOfKins(@PathVariable String tagNo) {
 		var list =  service.getNextOfKins(tagNo);
 		return list.isEmpty()? 
