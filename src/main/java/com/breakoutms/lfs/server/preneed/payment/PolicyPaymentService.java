@@ -56,13 +56,15 @@ public class PolicyPaymentService {
 				.orElseThrow(() -> new ObjectNotFoundException(
 						"Unable to get payment details for unknown policy number '"
 						+ policyNumber+"'"));
-		List<PolicyPaymentDetails> paymentDetails = getOwedPayments(policy, currentPeriod);
-		Period lastPeriod = paymentDetails.stream()
-				.map(PolicyPaymentDetails::getPeriod)
-				.filter(Objects::nonNull)
-				.sorted()
-				.findFirst()
-				.map(Period::previous).orElse(null);
+		
+		Period lastPeriod = getLastPayedPeriod(policy);
+		List<PolicyPaymentDetails> paymentDetails = getOwedPayments(policy, currentPeriod, lastPeriod);
+//		Period lastPeriod = paymentDetails.stream()
+//				.map(PolicyPaymentDetails::getPeriod)
+//				.filter(Objects::nonNull)
+//				.sorted()
+//				.findFirst()
+//				.map(Period::previous).orElse(null);
 		
 		Period nextPaymentPeriod = lastPeriod == null? Period.now() : 
 			lastPeriod.plusMonths(2); // LAST PERIOD + CURRENT = NEXT PAYMENT PERIOD
@@ -105,6 +107,12 @@ public class PolicyPaymentService {
 	}
 	
 	public List<PolicyPaymentDetails> getOwedPayments(Policy policy, Period currentPeriod) {
+		Period lastPaid = getLastPayedPeriod(policy);
+		return getOwedPayments(policy, currentPeriod, lastPaid);
+	}
+	
+	public List<PolicyPaymentDetails> getOwedPayments(Policy policy, Period currentPeriod, 
+			Period lastPaidPeriod) {
 		List<PolicyPaymentDetails> list = new ArrayList<>();
 
 		for (UnpaidPolicyPayment item : owedRepo.findByPolicy(policy)) {
@@ -112,11 +120,9 @@ public class PolicyPaymentService {
 				list.add(item.getPolicyPaymentDetails());
 			}
 		}
+		list.addAll(getOwedPremiums(policy, currentPeriod, lastPaidPeriod));
 		
-		Period lastPaid = getLastPayedPeriod(policy);
-		list.addAll(getOwedPremiums(policy, currentPeriod, lastPaid));
-		
-		BigDecimal penaltyDue = calculatePenaltyDue(policy, currentPeriod, lastPaid);
+		BigDecimal penaltyDue = calculatePenaltyDue(policy, currentPeriod, lastPaidPeriod);
 		if(penaltyDue != null && penaltyDue.signum() > 0) {
 			PolicyPaymentDetails item = PolicyPaymentDetails.penaltyOf(penaltyDue);
 			item.setPolicy(policy);
