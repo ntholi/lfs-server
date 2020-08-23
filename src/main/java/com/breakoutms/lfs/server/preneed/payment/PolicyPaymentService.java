@@ -50,7 +50,7 @@ public class PolicyPaymentService {
 		return repo.findAll(pageable);
 	}
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	public PolicyPaymentInquiry getPolicyPaymentInquiry(String policyNumber, Period currentPeriod) {
 		Policy policy = policyRepo.findById(policyNumber)
 				.orElseThrow(() -> new ObjectNotFoundException(
@@ -96,7 +96,7 @@ public class PolicyPaymentService {
 				.build();
 	}
 	
-	protected List<PolicyPaymentDetails> getOwedPayments(String policyNumber, Period currentPeriod) {
+	public List<PolicyPaymentDetails> getOwedPayments(String policyNumber, Period currentPeriod) {
 		Policy policy = policyRepo.findById(policyNumber)
 				.orElseThrow(() -> new InvalidOperationException(
 						"Unable to determine owed premiums for unknown policy number '"
@@ -104,7 +104,7 @@ public class PolicyPaymentService {
 		return getOwedPayments(policy, currentPeriod);
 	}
 	
-	protected List<PolicyPaymentDetails> getOwedPayments(Policy policy, Period currentPeriod) {
+	public List<PolicyPaymentDetails> getOwedPayments(Policy policy, Period currentPeriod) {
 		List<PolicyPaymentDetails> list = new ArrayList<>();
 
 		for (UnpaidPolicyPayment item : owedRepo.findByPolicy(policy)) {
@@ -211,7 +211,7 @@ public class PolicyPaymentService {
 		return policyNumber+String.valueOf(period.ordinal());
 	}
 	
-	private Period getLastPayedPeriod(Policy policy) {
+	public Period getLastPayedPeriod(Policy policy) {
 		Optional<Period> periodOpt = paymentDetailsRepo.getLastPayedPeriod(policy.getId());
 		Period period = null;
 		if(periodOpt.isPresent()){

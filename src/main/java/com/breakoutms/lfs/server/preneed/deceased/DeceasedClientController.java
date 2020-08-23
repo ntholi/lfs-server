@@ -30,6 +30,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientDTO;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientViewModel;
+import com.breakoutms.lfs.server.preneed.deceased.model.Payout;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
 
 import lombok.AllArgsConstructor;
@@ -86,6 +87,11 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
+	}
+	
+	@GetMapping("{policyNumber}/payout")
+	public ResponseEntity<Payout> getPayout(@PathVariable String policyNumber){
+		return ResponseEntity.ok(service.getPayout(policyNumber));
 	}
 	
 	@GetMapping("/deceased-client-lookup")

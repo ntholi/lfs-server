@@ -24,6 +24,4 @@ public class DeceasedClientDTO{
 	
 	@Digits(integer = 8, fraction = 2)
 	private BigDecimal payout;
-
-	private String messages;
 }

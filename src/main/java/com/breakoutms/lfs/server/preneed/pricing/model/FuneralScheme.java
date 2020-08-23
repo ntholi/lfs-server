@@ -1,6 +1,8 @@
 package com.breakoutms.lfs.server.preneed.pricing.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -61,6 +63,11 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private int monthsBeforeActive;
 	
+	@Min(value = 0L, message = "{validation.number.negative}")
+	@Max(255)
+	@Column(columnDefinition = "SMALLINT UNSIGNED")
+	private int monthsBeforeDeactivated;
+	
 	//Whether or not registration fee includes first premium
 	private boolean includesFirstPremium;
 	
@@ -114,18 +121,20 @@ public class FuneralScheme extends AuditableEntity<Integer> {
 //		return null;
 //	}
 //	
-//	public double getPenaltyDeductableByMonths(int unpaidMonths) {
-//		double amount = 0;
-//		FuneralSchemeDAO dao = new FuneralSchemeDAO();
-//		for(PenaltyDeductable pd: dao.getPenaltyDeductables(this)) {
-//			if(pd.getMonths() == unpaidMonths) {
-//				return pd.getAmount();
-//			}
-//			if(unpaidMonths > pd.getMonths()) {
-//				amount = -1;
-//			}
-//		}
-//		
-//		return amount;
-//	}
+	public BigDecimal getPenaltyDeductableByMonths(int unpaidMonths) {
+		BigDecimal amount = new BigDecimal(0);
+		var deductables = new ArrayList<>(getPenaltyDeductibles());
+		Collections.sort(deductables, 
+				(a, b) -> a.getAmount().compareTo(b.getAmount()));
+		System.out.println("\n\n\n\n\n*********************************Sorted: "+ deductables);
+		System.out.println("*********************************\n\n\n\n\n");
+		
+		for (var deductable : deductables) {
+			if(deductable.getMonths() == unpaidMonths) {
+				amount = deductable.getAmount();
+			}
+		}
+		
+		return amount;
+	}
 }
