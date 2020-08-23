@@ -52,8 +52,6 @@ public class DeceasedClient extends AuditableEntity<Long> {
 
 	@ManyToOne
 	private Corpse corpse;
-
-	private boolean isDependent;
 	
 	@ManyToOne
 	private Dependent dependent;

@@ -18,8 +18,6 @@ public class DeceasedClientDTO{
 	
 	private String tagNo;
 	
-	private boolean isDependent;
-	
 	private String dependentId;
 	
 	@Digits(integer = 8, fraction = 2)

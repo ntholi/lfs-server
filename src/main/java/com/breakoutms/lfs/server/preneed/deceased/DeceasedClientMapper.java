@@ -1,7 +1,5 @@
 package com.breakoutms.lfs.server.preneed.deceased;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -23,9 +21,14 @@ public abstract class DeceasedClientMapper {
 	@Mapping(target = "policy", ignore = true)
 	public abstract void update(DeceasedClient updatedEntity, @MappingTarget DeceasedClient saved);
 	
+	@Mapping(source = "policyNumber", target = "policy.policyNumber")
+	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "dependentId", target = "dependent.id")
 	public abstract DeceasedClient map(DeceasedClientDTO dto);
 	
 	@Mapping(source = "policy.policyNumber", target = "policyNumber")
+	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "dependent.id", target = "dependentId")
 	public abstract DeceasedClientViewModel map(DeceasedClient entity);
 	
 	public abstract DeceasedClientDTO toDTO(DeceasedClient entity);
