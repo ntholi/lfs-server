@@ -130,7 +130,7 @@ public class Period implements Comparable<Period>{
 		if(year == null && month == null) {
 			return null;
 		}
-		String y = String.valueOf(year).substring(2);
+		String y = String.valueOf(year);
 		String m = String.format("%02d", month.getValue());
 		return Integer.valueOf(y + m);
 	}

@@ -2,7 +2,9 @@ package com.breakoutms.lfs.server.preneed.payment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -59,15 +61,14 @@ public class PolicyPaymentService {
 		
 		Period lastPeriod = getLastPayedPeriod(policy);
 		List<PolicyPaymentDetails> paymentDetails = getOwedPayments(policy, currentPeriod, lastPeriod);
-//		Period lastPeriod = paymentDetails.stream()
-//				.map(PolicyPaymentDetails::getPeriod)
-//				.filter(Objects::nonNull)
-//				.sorted()
-//				.findFirst()
-//				.map(Period::previous).orElse(null);
-		
-		Period nextPaymentPeriod = lastPeriod == null? Period.now() : 
-			lastPeriod.plusMonths(2); // LAST PERIOD + CURRENT = NEXT PAYMENT PERIOD
+
+		Period nextPaymentPeriod = paymentDetails.stream()
+				.map(PolicyPaymentDetails::getPeriod)
+				.filter(Objects::nonNull)
+				.sorted()
+				.reduce((first, second) -> second)
+				.map(Period::next)
+				.orElse(Period.now());
 		
 		BigDecimal penaltyDue = paymentDetails.stream()
 				.filter(PolicyPaymentDetails::isPenalty)
