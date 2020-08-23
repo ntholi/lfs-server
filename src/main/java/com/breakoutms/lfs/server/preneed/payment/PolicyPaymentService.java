@@ -108,7 +108,9 @@ public class PolicyPaymentService {
 		List<PolicyPaymentDetails> list = new ArrayList<>();
 
 		for (UnpaidPolicyPayment item : owedRepo.findByPolicy(policy)) {
-			list.add(item.getPolicyPaymentDetails());
+			if(!list.contains(item.getPolicyPaymentDetails())) {
+				list.add(item.getPolicyPaymentDetails());
+			}
 		}
 		
 		Period lastPaid = getLastPayedPeriod(policy);
