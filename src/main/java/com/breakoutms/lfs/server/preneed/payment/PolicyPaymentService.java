@@ -146,10 +146,13 @@ public class PolicyPaymentService {
 					+ "last premium payment was for period "+period;
 			throw new AccountNotActiveException(msg);
 		}
-		
+		List<Period> paidPeriods = entity.getPolicyPaymentDetails()
+				.stream()
+				.map(PolicyPaymentDetails::getPeriod)
+				.collect(Collectors.toList());
 		List<UnpaidPolicyPayment> notPaid = getOwedPayments(policy, Period.now())
 				.stream()
-				.filter(it -> !entity.getPolicyPaymentDetails().contains(it))
+				.filter(it -> !paidPeriods.contains(it.getPeriod()))
 				.map(UnpaidPolicyPayment::new)
 				.collect(Collectors.toList());
 		if(!notPaid.isEmpty()) {
