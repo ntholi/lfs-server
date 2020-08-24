@@ -30,7 +30,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DeceasedClientService {
 
-
 	private final DeceasedClientRepository repo;
 	private final PolicyRepository policyRepo;
 	private final PolicyPaymentService policyPaymentService;
@@ -106,7 +105,7 @@ public class DeceasedClientService {
 		
 		return new Payout(payoutAmount, null);
 	}
-
+	
 	public void delete(Long id) {
 		repo.deleteById(id);
 	}

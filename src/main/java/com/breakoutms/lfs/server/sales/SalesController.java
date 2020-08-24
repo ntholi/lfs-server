@@ -24,9 +24,11 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
+import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 
 import lombok.AllArgsConstructor;
@@ -71,6 +73,18 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
+	}
+	
+	@GetMapping("inquire/{tagNo}")
+	public ResponseEntity<EntityModel<SalesInquiry>> getPolicyPaymentInquiry(
+			@PathVariable String tagNo){
+		SalesInquiry inquiry = service.salesInquiry(tagNo);
+		if(inquiry == null) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(
+				EntityModel.of(inquiry,
+						linkTo(methodOn(CorpseController.class).get(tagNo)).withRel("corpse")));
 	}
 	
 	@Override
