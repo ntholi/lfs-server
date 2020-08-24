@@ -110,7 +110,7 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	
 	private boolean markedAsPaid;
 	
-	@Column(columnDefinition = "CHAR(14)")
+	@Column(columnDefinition = "CHAR(16)")
 	private String premiumId;
 	
 	// Has been added for faster lookup, allowing lookup by policy 
