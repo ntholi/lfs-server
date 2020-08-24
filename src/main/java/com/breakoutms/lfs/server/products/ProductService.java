@@ -26,7 +26,7 @@ public class ProductService {
 	
 	public Page<Product> all(String productType, Pageable pageable) {
 		if(StringUtils.isBlank(productType) 
-				|| productType.equalsIgnoreCase("ALL")) {
+				|| productType.strip().equalsIgnoreCase("ALL")) {
 			return repo.findAll(pageable);
 		}
 		String[] arr = productType.split(",");

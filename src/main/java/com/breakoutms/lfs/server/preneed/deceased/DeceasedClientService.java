@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,30 @@ public class DeceasedClientService {
 	
 	@Transactional
 	public DeceasedClient save(final DeceasedClient entity, String policyNumber) {
+		setAssociations(entity);
 		return repo.save(entity);
+	}
+
+	@Transactional
+	public DeceasedClient update(Long id, DeceasedClient updatedEntity) {
+		if(updatedEntity == null) {
+			throw ExceptionSupplier.nullUpdate("Deceased Client").get();
+		}
+		var entity = repo.findById(id)
+				.orElseThrow(ExceptionSupplier.notFound("Deceased Client", id));
+		
+		setAssociations(updatedEntity);
+		DeceasedClientMapper.INSTANCE.update(updatedEntity, entity);
+		return repo.save(entity);
+	}
+	
+	private void setAssociations(DeceasedClient entity) {
+		if(StringUtils.isBlank(entity.getDependent().getId())) {
+			entity.setDependent(null);
+		}
+		if(StringUtils.isBlank(entity.getPolicy().getPolicyNumber())) {
+			entity.setPolicy(null);
+		}
 	}
 	
 	@Transactional(readOnly = true)
@@ -69,6 +93,8 @@ public class DeceasedClientService {
 			return payout;
 		}
 		
+		//TODO: ADD MESSAGES
+		
 		List<PolicyPaymentDetails> owedPayments = policyPaymentService
 				.getOwedPayments(policy, Period.now())
 				.stream()
@@ -76,21 +102,9 @@ public class DeceasedClientService {
 				.collect(Collectors.toList());
 		int unpaidMonths = owedPayments.size();
 		BigDecimal deductable = scheme.getPenaltyDeductableByMonths(unpaidMonths);
-		payoutAmount = payoutAmount.min(deductable);
+		payoutAmount = payoutAmount.subtract(deductable);
 		
 		return new Payout(payoutAmount, null);
-	}
-	
-	@Transactional
-	public DeceasedClient update(Long id, DeceasedClient updatedEntity) {
-		if(updatedEntity == null) {
-			throw ExceptionSupplier.nullUpdate("Deceased Client").get();
-		}
-		var entity = repo.findById(id)
-				.orElseThrow(ExceptionSupplier.notFound("Deceased Client", id));
-		
-		DeceasedClientMapper.INSTANCE.update(updatedEntity, entity);
-		return repo.save(entity);
 	}
 
 	public void delete(Long id) {
