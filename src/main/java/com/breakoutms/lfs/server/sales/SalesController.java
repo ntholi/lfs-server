@@ -76,8 +76,7 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	}
 	
 	@GetMapping("inquire/{tagNo}")
-	public ResponseEntity<EntityModel<SalesInquiry>> getPolicyPaymentInquiry(
-			@PathVariable String tagNo){
+	public ResponseEntity<EntityModel<SalesInquiry>> inquire(@PathVariable String tagNo){
 		SalesInquiry inquiry = service.salesInquiry(tagNo);
 		if(inquiry == null) {
 			return ResponseEntity.noContent().build();
