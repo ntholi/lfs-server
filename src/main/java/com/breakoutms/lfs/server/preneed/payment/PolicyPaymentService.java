@@ -2,9 +2,7 @@ package com.breakoutms.lfs.server.preneed.payment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +25,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry.FuneralSchmeDetais;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
@@ -83,20 +82,34 @@ public class PolicyPaymentService {
 		BigDecimal paymentDue = paymentDetails.stream()
 				.map(PolicyPaymentDetails::getAmount)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
-				
+		
+		FuneralSchmeDetais funeralSchmeDetais = funeralScemeDetails(policy);
 		
 		return PolicyPaymentInquiry.builder()
 				.policyNumber(policyNumber)
 				.policyHolder(policy.getFullName())
-				.premium(policy.getPremiumAmount())
-				.funeralScheme(policy.getFuneralScheme().getId())
 				.lastPayedPeriod(lastPeriod)
 				.nextPaymentPeriod(nextPaymentPeriod)
 				.penaltyDue(penaltyDue)
 				.premiumDue(premiumDue)
 				.paymentDue(paymentDue)
+				.funeralSchmeDetais(funeralSchmeDetais)
 				.payments(paymentDetails)
 				.build();
+	}
+
+	//TODO: This has to be catched, the MEMORY footprint here
+	//TODO: THE MEMORE FOOTPRINT HERE IS PROBABLY OVER
+	private FuneralSchmeDetais funeralScemeDetails(Policy policy) {
+		FuneralSchmeDetais funeralSchmeDetais = new FuneralSchmeDetais();
+		FuneralScheme scheme = policy.getFuneralScheme();
+		funeralSchmeDetais.setId(scheme.getId());
+		funeralSchmeDetais.setName(scheme.getName());
+		funeralSchmeDetais.setPenalty(scheme.getPenaltyFee());
+		funeralSchmeDetais.setPremium(policy.getPremiumAmount());
+		funeralSchmeDetais.setRegistration(scheme.getRegistrationFee());
+//		funeralSchmeDetais.setUpgradeFee(upgrade); TODO:
+		return funeralSchmeDetais;
 	}
 	
 	public List<PolicyPaymentDetails> getOwedPayments(String policyNumber, Period currentPeriod) {
