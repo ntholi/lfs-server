@@ -28,6 +28,7 @@ public class ResponseHelper {
 				.map(o -> ResponseEntity.ok(controller.toViewModel(o)))
 				.orElse(ResponseEntity.noContent().build());
 	}
+	
 
 	public static <T extends Entity<?>,  D extends RepresentationModel<? extends D>> 
 		ResponseEntity<PagedModel<EntityModel<D>>> pagedGetResponse(

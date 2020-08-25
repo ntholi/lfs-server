@@ -23,11 +23,11 @@ import com.breakoutms.lfs.common.enums.Domain;
 import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
-import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
+import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 
@@ -43,12 +43,17 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	private final PagedResourcesAssembler<SalesViewModel> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<SalesViewModel> get(@PathVariable Integer id) {
-		return ResponseHelper.getResponse(this, 
-				service.get(id), 
-				ExceptionSupplier.notFound("Sales", id));
+	public ResponseEntity<SalesEagerResponse> get(@PathVariable Integer id) {
+		return service.get(id)
+				.map(o -> ResponseEntity.ok(toEagerResponse(o)))
+				.orElse(ResponseEntity.noContent().build());
 	}
 	
+	private SalesEagerResponse toEagerResponse(Sales entity) {
+		SalesEagerResponse response = SalesMapper.INSTANCE.eager(entity);
+		return response;
+	}
+
 	@GetMapping
 	public ResponseEntity<PagedModel<EntityModel<SalesViewModel>>> all(Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
@@ -89,6 +94,10 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	@Override
 	public SalesViewModel toViewModel(Sales entity) {
 		SalesViewModel dto = SalesMapper.INSTANCE.map(entity);
+		return addLinks(entity, dto);
+	}
+
+	private <T extends SalesViewModel> T addLinks(Sales entity, T dto) {
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Quotation quotation = entity.getQuotation();

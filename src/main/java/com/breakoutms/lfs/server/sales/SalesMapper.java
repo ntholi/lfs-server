@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
+import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
 import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
@@ -40,6 +41,18 @@ public abstract class SalesMapper {
 	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
 	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
 	protected abstract SalesViewModel map(Sales sales);
+	
+	@Mapping(source = "quotation.id", target = "quotationNo")
+	@Mapping(source = "quotation.customer.names", target = "customerNames")
+	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
+	@Mapping(source = "burialDetails.corpse.tagNo", target = "tagNo")
+	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
+	@Mapping(source = "burialDetails.serviceTime", target = "serviceTime")
+	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
+	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
+	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
+	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
+	public abstract SalesEagerResponse eager(Sales entity);
 
 	@Mapping(source = "quotation.customer.names", target = "customerNames")
 	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
