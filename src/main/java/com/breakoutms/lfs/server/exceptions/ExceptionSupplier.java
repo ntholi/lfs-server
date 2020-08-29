@@ -8,6 +8,7 @@ public final class ExceptionSupplier {
 
 	private static final String NOT_FOUND = "' not found";
 	private static final String NO_POLICY_ERROR = "Policy Number '%s' not found";
+	private static final String NO_CORPSE_ERROR = "Corpse with tag number '%s' not found";
 
 	private ExceptionSupplier() {}
 	
@@ -31,6 +32,11 @@ public final class ExceptionSupplier {
 	public static Supplier<RuntimeException> policyNotFound(String policyNumber){
 		return () ->
 			new ObjectNotFoundException(String.format(NO_POLICY_ERROR, policyNumber));
+	}
+	
+	public static Supplier<RuntimeException> corpseNoteFound(String tagNo) {
+		return () ->
+		new ObjectNotFoundException(String.format(NO_CORPSE_ERROR, tagNo));
 	}
 	
 	public static Supplier<RuntimeException> nullUpdate(String objectName){

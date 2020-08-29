@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
@@ -80,8 +81,8 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 		);
 	}
 	
-	@GetMapping("inquire/{tagNo}")
-	public ResponseEntity<EntityModel<SalesInquiry>> inquire(@PathVariable String tagNo){
+	@GetMapping("inquire")
+	public ResponseEntity<EntityModel<SalesInquiry>> inquire(String tagNo){
 		SalesInquiry inquiry = service.salesInquiry(tagNo);
 		if(inquiry == null) {
 			return ResponseEntity.noContent().build();

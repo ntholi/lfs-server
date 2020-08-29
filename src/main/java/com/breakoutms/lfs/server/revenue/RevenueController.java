@@ -80,7 +80,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 		);
 	}
 	
-	@GetMapping("inquire/{tagNo}")
+	@GetMapping("inquire/{quotationNo}")
 	public ResponseEntity<EntityModel<RevenueInquiry>> inquire(@PathVariable Integer quotationNo){
 		RevenueInquiry inquiry = service.revenueInquiry(quotationNo);
 		if(inquiry == null) {

@@ -41,6 +41,10 @@ public class SalesService {
 
 	@Transactional
 	public Sales save(final Sales sales) {
+		Corpse corpse = sales.getBurialDetails().getCorpse();
+		if(corpse != null && !corpseRepo.existsById(corpse.getId())) {
+			throw ExceptionSupplier.corpseNoteFound(corpse.getTagNo()).get();
+		}
 		setAssociations(sales);
 		return repo.save(sales);
 	}
