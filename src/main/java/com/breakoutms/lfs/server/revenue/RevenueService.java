@@ -11,11 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
 import com.breakoutms.lfs.server.preneed.deceased.DeceasedClientRepository;
-import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.sales.SalesRepository;
-import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +23,6 @@ import lombok.AllArgsConstructor;
 public class RevenueService {
 
 	private final RevenueRepository repo;
-	private final DeceasedClientRepository deceasedRepo;
-	private final CorpseRepository corpseRepo;
 	private final SalesRepository salesRepo;
 
 	public Optional<Revenue> get(Integer id) {
@@ -56,10 +52,21 @@ public class RevenueService {
 	}
 	
 	public RevenueInquiry revenueInquiry(Integer quotationNo) {
-		var sales = salesRepo.findByQuotationId(quotationNo);
-//		Optional<DeceasedClient> client = deceasedRepo.findByCorpseTagNo(tagNo);
-
-		return null;
+		var sales = salesRepo.findByQuotationId(quotationNo)
+				.orElseThrow(ExceptionSupplier.notFound("Quotation", quotationNo));
+		RevenueInquiry result = new RevenueInquiry();
+		var burial = sales.getBurialDetails();
+		if(burial != null) {
+			var corpse = burial.getCorpse();
+			result.setCorpse(corpse != null? corpse.getFullName() : "");
+		}
+		var quot = sales.getQuotation();
+		if(quot != null) {
+			var customer = quot.getCustomer();
+			result.setCustomerNames(customer != null? customer.getNames() : "");
+			result.setSalesProducts(RevenueMapper.INSTANCE.map(quot.getSalesProducts()));
+		}
+		return result;
 	}
 
 	public void delete(Integer id) {

@@ -21,7 +21,7 @@ public class RevenueViewModel extends RepresentationModel<RevenueViewModel>{
 
 	private Integer receiptNo;
 
-	private Integer quotationId;
+	private Integer quotationNo;
 	
 	private BigDecimal balance;
 

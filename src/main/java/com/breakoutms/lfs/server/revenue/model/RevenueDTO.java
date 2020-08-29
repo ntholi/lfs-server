@@ -20,7 +20,7 @@ public class RevenueDTO {
 
 	private Integer receiptNo;
 
-	private Integer quotationId;
+	private Integer quotationNo;
 	
 	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")

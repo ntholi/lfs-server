@@ -35,7 +35,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.SALES)
+@RequestMapping("/"+Domain.Const.REVENUE)
 @AllArgsConstructor
 public class RevenueController implements ViewModelController<Revenue, RevenueViewModel> {
 
@@ -51,7 +51,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	
 	private RevenueEagerResponse toEagerResponse(Revenue entity) {
 		RevenueEagerResponse response = RevenueMapper.INSTANCE.eager(entity);
-		return response;
+		return addLinks(entity, response);
 	}
 
 	@GetMapping
