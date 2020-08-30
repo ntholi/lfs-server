@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.revenue;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,11 @@ public class RevenueService {
 			var customer = quot.getCustomer();
 			result.setCustomerNames(customer != null? customer.getNames() : "");
 			result.setSalesProducts(RevenueMapper.INSTANCE.map(quot.getSalesProducts()));
+			var balance = quot.getSalesProducts()
+					.stream()
+					.map(SalesProduct::getCost)
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
+			result.setBalance(balance);
 		}
 		return result;
 	}
