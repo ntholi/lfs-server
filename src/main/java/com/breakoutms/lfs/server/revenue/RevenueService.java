@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
+import com.breakoutms.lfs.server.sales.QuotationRepository;
 import com.breakoutms.lfs.server.sales.SalesRepository;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
@@ -23,6 +24,7 @@ public class RevenueService {
 
 	private final RevenueRepository repo;
 	private final SalesRepository salesRepo;
+	private final QuotationRepository quotationRepository;
 
 	public Optional<Revenue> get(Integer id) {
 		return repo.findById(id);
@@ -34,6 +36,7 @@ public class RevenueService {
 
 	@Transactional
 	public Revenue save(final Revenue revenue) {
+		setAssociations(revenue);
 		return repo.save(revenue);
 	}
 
@@ -45,11 +48,20 @@ public class RevenueService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Revenue", id));
 
+		setAssociations(updatedEntity);
 		RevenueMapper.INSTANCE.update(updatedEntity, entity);
 
 		return repo.save(entity);
 	}
 	
+	private void setAssociations(Revenue entity) {
+		var qId = entity.getQuotation().getId();
+		var quotation = quotationRepository.findById(qId)
+				.orElseThrow(ExceptionSupplier.notFound("Quotation", qId));
+		entity.setQuotation(quotation);
+	}
+
+	@Transactional(readOnly = true)
 	public RevenueInquiry revenueInquiry(Integer quotationNo) {
 		var sales = salesRepo.findByQuotationId(quotationNo)
 				.orElseThrow(ExceptionSupplier.notFound("Quotation", quotationNo));
