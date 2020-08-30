@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.revenue;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,7 @@ public interface RevenueRepository extends JpaRepository<Revenue, Integer>{
 
 	@Query("from SalesProduct where quotation.id = :quotationNo")
 	List<SalesProduct> getRevenueProducts(int quotationNo);
+	
+	List<Revenue> findByQuotationId(Integer id, Sort sort);
 
 }

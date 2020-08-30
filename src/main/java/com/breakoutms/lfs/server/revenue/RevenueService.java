@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.sales.QuotationRepository;
 import com.breakoutms.lfs.server.sales.SalesRepository;
+import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
 import lombok.AllArgsConstructor;
@@ -63,26 +66,47 @@ public class RevenueService {
 
 	@Transactional(readOnly = true)
 	public RevenueInquiry revenueInquiry(Integer quotationNo) {
+		Sort sort = Sort.by(Direction.DESC, "createdAt");
+		List<Revenue> list = repo.findByQuotationId(quotationNo, sort);
+		RevenueInquiry inquiry;
+		if(!list.isEmpty()) {
+			var revenue = list.get(0);
+			inquiry = new RevenueInquiry();
+			inquiry.setBalance(revenue.getBalance());
+			Quotation quotation = revenue.getQuotation();
+			if(quotation != null) {
+				var customer = quotation.getCustomer();
+				inquiry.setCustomerNames(customer != null? customer.getNames() : "");
+				inquiry.setSalesProducts(RevenueMapper.INSTANCE.map(quotation.getSalesProducts()));
+			}
+		}
+		else {
+			inquiry = buildInquiryFromSales(quotationNo);
+		}
+		return inquiry;
+	}
+
+	private RevenueInquiry buildInquiryFromSales(Integer quotationNo) {
 		var sales = salesRepo.findByQuotationId(quotationNo)
 				.orElseThrow(ExceptionSupplier.notFound("Quotation", quotationNo));
-		RevenueInquiry result = new RevenueInquiry();
+		RevenueInquiry inquiry = new RevenueInquiry();
 		var burial = sales.getBurialDetails();
 		if(burial != null) {
 			var corpse = burial.getCorpse();
-			result.setCorpse(corpse != null? corpse.getFullName() : "");
+			inquiry.setCorpse(corpse != null? corpse.getFullName() : "");
 		}
-		var quot = sales.getQuotation();
-		if(quot != null) {
-			var customer = quot.getCustomer();
-			result.setCustomerNames(customer != null? customer.getNames() : "");
-			result.setSalesProducts(RevenueMapper.INSTANCE.map(quot.getSalesProducts()));
-			var balance = quot.getSalesProducts()
+		if(sales.getQuotation() != null) {
+			var quotation = sales.getQuotation();
+			var customer = quotation.getCustomer();
+			inquiry.setCustomerNames(customer != null? customer.getNames() : "");
+			inquiry.setSalesProducts(RevenueMapper.INSTANCE.map(quotation.getSalesProducts()));
+			var balance = quotation.getSalesProducts()
 					.stream()
 					.map(SalesProduct::getCost)
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
-			result.setBalance(balance);
+			inquiry.setBalance(balance);
 		}
-		return result;
+		return inquiry;
 	}
 
 	public void delete(Integer id) {

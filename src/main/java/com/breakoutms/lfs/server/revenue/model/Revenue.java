@@ -73,6 +73,12 @@ public class Revenue extends AuditableEntity<Integer> {
 	@Digits(integer = 7, fraction = 2)
 	@Column(name = "change_amount", nullable=false, precision = 9, scale = 2)
 	private BigDecimal change;
+	
+	@NotNull
+	@Min(value = 0L, message = "{validation.number.negative}")
+	@Digits(integer = 8, fraction = 2)
+	@Column(nullable=false, precision = 10, scale = 2)
+	private BigDecimal amountPaid;
 
 	@Override
 	public Integer getId() {
