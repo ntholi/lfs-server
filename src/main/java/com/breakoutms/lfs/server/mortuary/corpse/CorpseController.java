@@ -120,7 +120,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 					ResponseEntity.ok(CollectionModel.of(list));
 	}
 	
-	@GetMapping("/corpse-reports")
+	@GetMapping("/corpse-report")
 	public ResponseEntity<Iterable<CorpseReport>> reports() {
 		var list = service.getCorpseReport();
 		return list.isEmpty()? 
