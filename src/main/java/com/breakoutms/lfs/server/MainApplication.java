@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server;
 
+import java.util.Locale;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
@@ -91,6 +93,7 @@ public class MainApplication implements CommandLineRunner{
 //		repo.save(corpse);
 	}
 	public static void main(String[] args) {
+		Locale.setDefault(new Locale("en", "LS"));
 		SpringApplication.run(MainApplication.class, args);
 	}
 }

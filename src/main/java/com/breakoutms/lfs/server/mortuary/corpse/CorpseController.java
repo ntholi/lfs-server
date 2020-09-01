@@ -31,6 +31,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
+import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.Vehicle;
 
@@ -117,6 +118,14 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(CollectionModel.of(list));
+	}
+	
+	@GetMapping("/corpse-reports")
+	public ResponseEntity<Iterable<CorpseReport>> reports() {
+		var list = service.getCorpseReport();
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(list);
 	}
 	
 	@Override

@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.mortuary.corpse;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,10 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
+import com.breakoutms.lfs.server.mortuary.corpse.model.QCorpse;
+import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import lombok.AllArgsConstructor;
 
@@ -23,6 +29,7 @@ public class CorpseService {
 
 	private final CorpseRepository repo;
 	private final OtherMortuaryRepository otherMortuaryRepo;
+	private final EntityManager entityManager;
 	
 	public Optional<Corpse> get(String id) {
 		return repo.findById(id);
@@ -80,5 +87,15 @@ public class CorpseService {
 
 	public List<CorpseLookupProjection> lookup(String names) {
 		return repo.lookup(names);
+	}
+
+	public List<CorpseReport> getCorpseReport() {
+		QCorpse corpse = QCorpse.corpse;
+		var query = new JPAQuery<CorpseReport>(entityManager)
+				.from(corpse)
+				.select(Projections.bean(CorpseReport.class, corpse.tagNo, 
+						corpse.surname, corpse.names, corpse.arrivalDate, 
+						corpse.dateOfDeath, corpse.causeOfDeath));
+		return query.fetch();
 	}
 }

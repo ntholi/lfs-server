@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
+import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
 
 @Repository
 public interface CorpseRepository extends JpaRepository<Corpse, String>{
