@@ -18,7 +18,7 @@ public class StartupDataService {
 
 	public Optional<StartupData> get() {
 		StartupData data = new StartupData();
-		data.setBranches(branchRepo.findAllBranchNames());
+		data.setBranches(branchRepo.findAll());
 		data.setFuneralSchemes(funeralSchemeRepo.findAllNames());
 		
 		return Optional.of(data);
