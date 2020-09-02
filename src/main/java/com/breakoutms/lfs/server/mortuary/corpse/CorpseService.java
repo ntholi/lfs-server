@@ -100,6 +100,12 @@ public class CorpseService {
 						corpse.dateOfDeath, corpse.causeOfDeath))
 				.where(corpse.createdAt.after(from.atStartOfDay()))
 				.where(corpse.createdAt.before(to.atTime(LocalTime.MAX)));
+		if(branch != null) {
+			query = query.where(corpse.branch.id.eq(branch));
+		}
+		if(user != null) {
+			query = query.where(corpse.createdBy.eq(user));
+		}
 		return query.fetch();
 	}
 }
