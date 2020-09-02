@@ -97,7 +97,8 @@ public class CorpseService {
 				.from(corpse)
 				.select(Projections.bean(CorpseReport.class, corpse.tagNo, 
 						corpse.surname, corpse.names, corpse.arrivalDate, 
-						corpse.dateOfDeath, corpse.causeOfDeath))
+						corpse.dateOfDeath, corpse.causeOfDeath,
+						corpse.shelfNumber, corpse.fridgeNumber))
 				.where(corpse.createdAt.after(from.atStartOfDay()))
 				.where(corpse.createdAt.before(to.atTime(LocalTime.MAX)));
 		if(branch != null) {

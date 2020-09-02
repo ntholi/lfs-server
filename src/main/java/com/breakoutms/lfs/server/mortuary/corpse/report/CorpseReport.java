@@ -2,7 +2,6 @@ package com.breakoutms.lfs.server.mortuary.corpse.report;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,7 +19,9 @@ public class CorpseReport {
 	@JsonIgnore private String surname;
 	@JsonIgnore private LocalDateTime arrivalDate;
 	@JsonIgnore private LocalDate dateOfDeath;
-	private String causeOfDeath;
+	private String causeOfDeath = "";
+	private String fridgeNumber = "";
+	private String shelfNumber = "";
 	
 	public String getFullName() {
 	    return Stream.of(names, surname)

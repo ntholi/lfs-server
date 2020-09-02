@@ -18,7 +18,7 @@ public interface Format {
 	
 	public static String date(TemporalAccessor date, DateTimeFormatter formatter) {
 		if(date == null) {
-			return null;
+			return "";
 		}
 		return formatter.format(date);
 	}
