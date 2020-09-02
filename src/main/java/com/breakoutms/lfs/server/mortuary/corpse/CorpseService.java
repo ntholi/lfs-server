@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.mortuary.corpse;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,13 +91,15 @@ public class CorpseService {
 		return repo.lookup(names);
 	}
 
-	public List<CorpseReport> getCorpseReport() {
+	public List<CorpseReport> getCorpseReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
 		QCorpse corpse = QCorpse.corpse;
 		var query = new JPAQuery<CorpseReport>(entityManager)
 				.from(corpse)
 				.select(Projections.bean(CorpseReport.class, corpse.tagNo, 
 						corpse.surname, corpse.names, corpse.arrivalDate, 
-						corpse.dateOfDeath, corpse.causeOfDeath));
+						corpse.dateOfDeath, corpse.causeOfDeath))
+				.where(corpse.createdAt.after(from.atStartOfDay()))
+				.where(corpse.createdAt.before(to.atTime(LocalTime.MAX)));
 		return query.fetch();
 	}
 }
