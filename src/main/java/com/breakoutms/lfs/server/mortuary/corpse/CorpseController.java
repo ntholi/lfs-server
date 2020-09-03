@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.mortuary.corpse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -34,6 +35,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
+import com.breakoutms.lfs.server.reports.Report;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.Vehicle;
 
@@ -123,13 +125,12 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 	
 	@GetMapping("/corpse-report")
-	public ResponseEntity<Iterable<CorpseReport>> reports(String from, String to, 
+	public Map<String, Object> reports(String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {
-		var list = service.getCorpseReport(LocalDate.parse(from), LocalDate.parse(to), branch, user);
-		return list.isEmpty()? 
-				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
-					ResponseEntity.ok(list);
+		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
+		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
+		return service.getCorpseReport(fromDate, toDate, branch, user);
 	}
 	
 	@Override

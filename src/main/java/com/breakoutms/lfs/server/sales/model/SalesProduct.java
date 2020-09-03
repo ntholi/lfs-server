@@ -24,6 +24,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.products.model.Product;
+import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -70,6 +71,13 @@ public class SalesProduct extends AuditableEntity<Long>{
 	@JsonIgnore
 	@EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "quotation_id", nullable = false)
+	@JoinColumn(nullable = false)
     private Quotation quotation;
+	
+	//Has been added to make generating revenue reports faster
+	@ToString.Exclude
+	@JsonIgnore
+	@EqualsAndHashCode.Exclude
+	@ManyToOne(fetch = FetchType.LAZY)
+    private Revenue revenue;
 }

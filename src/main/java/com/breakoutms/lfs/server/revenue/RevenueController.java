@@ -3,8 +3,12 @@ package com.breakoutms.lfs.server.revenue;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.time.LocalDate;
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
@@ -28,6 +33,7 @@ import com.breakoutms.lfs.server.revenue.model.RevenueDTO;
 import com.breakoutms.lfs.server.revenue.model.RevenueEagerResponse;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
+import com.breakoutms.lfs.server.revenue.report.RevenueReport;
 import com.breakoutms.lfs.server.sales.QuotationController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 
@@ -87,6 +93,15 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(EntityModel.of(inquiry));
+	}
+	
+	@GetMapping("/reports/revenue-report")
+	public Map<String, Object> reports(String from, String to, 
+			@RequestParam(required = false) Integer branch, 
+			@RequestParam(required = false) Integer user) {
+		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
+		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
+		return service.getRevenueReport(fromDate, toDate, branch, user);
 	}
 	
 	@Override

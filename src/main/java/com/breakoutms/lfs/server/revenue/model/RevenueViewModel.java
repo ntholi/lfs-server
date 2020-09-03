@@ -30,4 +30,6 @@ public class RevenueViewModel extends RepresentationModel<RevenueViewModel>{
 	private BigDecimal amountTendered;
 
 	private BigDecimal change;
+	
+	private BigDecimal amountPaid;
 }

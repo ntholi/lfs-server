@@ -1,8 +1,13 @@
 package com.breakoutms.lfs.server.revenue;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +17,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
+import com.breakoutms.lfs.server.reports.Report;
+import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
+import com.breakoutms.lfs.server.revenue.report.RevenueReport;
 import com.breakoutms.lfs.server.sales.QuotationRepository;
 import com.breakoutms.lfs.server.sales.SalesRepository;
+import com.breakoutms.lfs.server.sales.model.QQuotation;
+import com.breakoutms.lfs.server.sales.model.QSalesProduct;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.report.SalesProductReport;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
+import static com.querydsl.core.group.GroupBy.*;
+
 
 import lombok.AllArgsConstructor;
 
@@ -28,6 +44,7 @@ public class RevenueService {
 	private final RevenueRepository repo;
 	private final SalesRepository salesRepo;
 	private final QuotationRepository quotationRepository;
+	private final EntityManager entityManager;
 
 	public Optional<Revenue> get(Integer id) {
 		return repo.findById(id);
@@ -115,5 +132,32 @@ public class RevenueService {
 
 	public List<SalesProduct> getRevenueProducts(Integer quotationNo) {
 		return repo.getRevenueProducts(quotationNo);
+	}
+
+	public Map<String, Object> getRevenueReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
+		QRevenue revenue = QRevenue.revenue;
+		QSalesProduct salesProduct = QSalesProduct.salesProduct;
+		QQuotation quotation = QQuotation.quotation;
+		
+		
+		var  res =  new JPAQuery<>(entityManager)
+				.from(revenue)
+				.innerJoin(revenue.quotation, quotation)
+				.innerJoin(quotation.salesProducts, salesProduct)
+//				.where(revenue.quotation.id.eq(salesProduct.quotation.id))
+				.transform(groupBy(revenue.receiptNo)
+				.as(Projections.constructor(RevenueReport.class, revenue.receiptNo,
+						revenue.amountPaid, revenue.balance, revenue.date, 
+						list(Projections.bean(SalesProductReport.class, salesProduct.cost, salesProduct.quantity)))));
+//				.select(revenue)
+		
+//		System.out.println(res);
+		for (var item : res.values()) {
+			System.out.println(item);
+		}
+
+//		return new Report<>(query.values()).getContent();
+		
+		return null;
 	}
 }
