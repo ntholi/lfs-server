@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.breakoutms.lfs.server.sales.report.SalesProductReport;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class RevenueReport {
 	private Integer quotationNo;
 	private BigDecimal amountPaid;
 	private BigDecimal balance;
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime date;
 	private List<SalesProductReport> salesProducts;
 

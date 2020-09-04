@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.breakoutms.lfs.server.reports.utils.Format;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
@@ -17,8 +16,10 @@ public class CorpseReport {
 	private String tagNo;
 	@JsonIgnore private String names;
 	@JsonIgnore private String surname;
-	@JsonIgnore private LocalDateTime arrivalDate;
-	@JsonIgnore private LocalDate dateOfDeath;
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	private LocalDateTime arrivalDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate dateOfDeath;
 	private String causeOfDeath = "";
 	private String fridgeNumber = "";
 	private String shelfNumber = "";
@@ -27,15 +28,5 @@ public class CorpseReport {
 	    return Stream.of(names, surname)
 	    		.filter(it -> it != null && !it.isBlank())
 	    		.collect(Collectors.joining(" "));
-	}
-	
-	@JsonProperty("arrivalDate")
-	public String getFormartedArrivalDate() {
-		return Format.date(arrivalDate);
-	}
-	
-	@JsonProperty("dateOfDeath")
-	public String getFormartedDateOfDeath() {
-		return Format.date(dateOfDeath);
 	}
 }
