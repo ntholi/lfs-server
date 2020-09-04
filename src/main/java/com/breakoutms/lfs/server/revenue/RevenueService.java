@@ -147,6 +147,7 @@ public class RevenueService {
 				.innerJoin(salesProduct.product, product)
 				.transform(groupBy(revenue.receiptNo)
 				.as(Projections.constructor(RevenueReport.class, revenue.receiptNo,
+						revenue.quotation.id,
 						revenue.amountPaid, revenue.balance, revenue.date, 
 						list(Projections.constructor(SalesProductReport.class, salesProduct.product.name, 
 								salesProduct.cost, salesProduct.quantity)))));

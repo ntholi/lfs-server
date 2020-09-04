@@ -124,7 +124,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 					ResponseEntity.ok(CollectionModel.of(list));
 	}
 	
-	@GetMapping("/corpse-report")
+	@GetMapping("/corpses/reports/corpse-report")
 	public Map<String, Object> reports(String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {
