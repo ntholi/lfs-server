@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -96,7 +97,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 	
 	@GetMapping("/reports/revenue-report")
-	public Map<String, Object> reports(String from, String to, 
+	public Map<String, List<Object>> reports(String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {
 		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;

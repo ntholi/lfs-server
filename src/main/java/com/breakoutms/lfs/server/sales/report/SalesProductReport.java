@@ -10,9 +10,11 @@ public class SalesProductReport {
 	private String productName;
 	private BigDecimal cost;
 	private int quantity;
+	private Integer receiptNo;
 	
-	public SalesProductReport(String productName, BigDecimal cost, int quantity) {
+	public SalesProductReport(String productName, Integer receiptNo, BigDecimal cost, int quantity) {
 		this.productName = productName;
+		this.receiptNo = receiptNo;
 		this.cost = cost;
 		this.quantity = quantity;
 	}

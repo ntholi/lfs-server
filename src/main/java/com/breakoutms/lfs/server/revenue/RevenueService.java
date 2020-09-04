@@ -5,6 +5,9 @@ import static com.querydsl.core.group.GroupBy.list;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -134,7 +137,7 @@ public class RevenueService {
 		return repo.getRevenueProducts(quotationNo);
 	}
 
-	public Map<String, Object> getRevenueReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
+	public Map<String, List<Object>> getRevenueReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
 		QRevenue revenue = QRevenue.revenue;
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QQuotation quotation = QQuotation.quotation;
@@ -150,8 +153,21 @@ public class RevenueService {
 						revenue.quotation.id,
 						revenue.amountPaid, revenue.balance, revenue.date, 
 						list(Projections.constructor(SalesProductReport.class, salesProduct.product.name, 
+								revenue.receiptNo,
 								salesProduct.cost, salesProduct.quantity)))));
 		
-		return new Report<>(res.values()).getContent();
+		
+		Map<String, List<Object>> report = new HashMap<>();
+		report.put(Report.DATA_KEY, new ArrayList<>());
+		report.put("salesProducts", new ArrayList<>());
+		//TODO: OBVIOUSLY, THIS IS ADDS CPU/MEMORY EXTRA OVERHEAD 
+		for(var it : res.values()) {
+			var receipts = report.get(Report.DATA_KEY);
+			var salesProducts = report.get("salesProducts");
+			receipts.add(it.getReceipt());
+			salesProducts.addAll(it.getSalesProducts());
+		}
+		
+		return report;
 	}
 }
