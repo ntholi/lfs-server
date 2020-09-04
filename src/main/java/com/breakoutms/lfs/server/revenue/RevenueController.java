@@ -97,12 +97,12 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 	
 	@GetMapping("/reports/revenue-report")
-	public Map<String, List<Object>> reports(String from, String to, 
+	public Map<String, Object> reports(String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {
 		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
 		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
-		return service.getRevenueReport(fromDate, toDate, branch, user);
+		return service.getCollectionsReport(fromDate, toDate, branch, user);
 	}
 	
 	@Override

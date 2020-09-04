@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.core.Entity;
+import com.breakoutms.lfs.server.user.model.User;
 
 import lombok.Data;
 
@@ -34,7 +35,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	
 	public static final String CLAUSE = "deleted = false";
 	
-	//I've Disabled @NotNull so that validations for Product can be validated
+	//I've Disabled @NotNull so that validations for Product so that it can be validated
 	//in the controller
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=true)
@@ -45,8 +46,9 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	protected LocalDateTime createdAt;
 	
 	@CreatedBy
-	@Column(updatable=false, columnDefinition = "SMALLINT UNSIGNED")
-	private Integer createdBy;
+	@JoinColumn(updatable=false, nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private User createdBy;
 	
 	@Column(columnDefinition = "BIT(1) default 0")
 	private boolean deleted;

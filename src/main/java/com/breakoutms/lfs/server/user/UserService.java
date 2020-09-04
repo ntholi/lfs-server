@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +37,11 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
 
+	//TODO: MAKE SURE THAT CACHING WORKS AS INTENDED
+	@Cacheable("users")
+	public Optional<User> get(Integer userId){
+		return userRepo.findById(userId);
+	}
 
 	public List<User> getAll() {
 		return userRepo.findAll();

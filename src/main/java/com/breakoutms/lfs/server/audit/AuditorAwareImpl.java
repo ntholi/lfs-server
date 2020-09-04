@@ -8,17 +8,25 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class AuditorAwareImpl implements AuditorAware<Integer>{
+import com.breakoutms.lfs.server.user.UserService;
+import com.breakoutms.lfs.server.user.model.User;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class AuditorAwareImpl implements AuditorAware<User>{
+
+	private final UserService userService;
+	
 	@Override
-	public Optional<Integer> getCurrentAuditor() {
+	public Optional<User> getCurrentAuditor() {
 		SecurityContext context = SecurityContextHolder.getContext();
 		if(context != null && context.getAuthentication() != null && context.getAuthentication().getPrincipal() != null) {
 			Object principal = context.getAuthentication().getPrincipal();
 			if (principal instanceof UserDetails) {
 				String userId = ((UserDetails)principal).getUsername();
 				if(StringUtils.isNumeric(userId)) {
-					return Optional.of(Integer.valueOf(userId));
+					return userService.get(Integer.valueOf(userId));
 				}
 			}
 		}

@@ -120,7 +120,7 @@ public class CorpseService {
 			query = query.where(table.branch.id.eq(branch));
 		}
 		if(user != null) {
-			query = query.where(table.createdBy.eq(user));
+			query = query.where(table.createdBy.id.eq(user));
 		}
 		return query;
 	}

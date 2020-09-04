@@ -6,7 +6,6 @@ import static com.querydsl.core.group.GroupBy.list;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.revenue.report.RevenueReport;
+import com.breakoutms.lfs.server.revenue.report.RevenueUser;
 import com.breakoutms.lfs.server.sales.QuotationRepository;
 import com.breakoutms.lfs.server.sales.SalesRepository;
 import com.breakoutms.lfs.server.sales.model.QQuotation;
@@ -35,7 +35,10 @@ import com.breakoutms.lfs.server.sales.model.QSalesProduct;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.report.SalesProductReport;
+import com.breakoutms.lfs.server.user.model.QUser;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import lombok.AllArgsConstructor;
@@ -136,8 +139,26 @@ public class RevenueService {
 	public List<SalesProduct> getRevenueProducts(Integer quotationNo) {
 		return repo.getRevenueProducts(quotationNo);
 	}
+	
+	public Map<String, Object> getCollectionsReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
+		QRevenue revenue = QRevenue.revenue;
+		QUser user = QUser.user;
+		NumberPath<Long> sum = Expressions.numberPath(Long.class, "sum");
+		
+		var  res =  new JPAQuery<>(entityManager)
+				.from(revenue)
+				.select(Projections.constructor(RevenueUser.class, 
+						revenue.createdBy.firstName, revenue.amountPaid.sum()))
+				.groupBy(revenue.createdBy)
+				.fetch();
+		
+		System.out.println(res);
+		
+		return null;
+	}
 
-	public Map<String, List<Object>> getRevenueReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getRevenueReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
 		QRevenue revenue = QRevenue.revenue;
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QQuotation quotation = QQuotation.quotation;
@@ -157,13 +178,13 @@ public class RevenueService {
 								salesProduct.cost, salesProduct.quantity)))));
 		
 		
-		Map<String, List<Object>> report = new HashMap<>();
+		Map<String, Object> report = new HashMap<>();
 		report.put(Report.DATA_KEY, new ArrayList<>());
 		report.put("salesProducts", new ArrayList<>());
 		//TODO: OBVIOUSLY, THIS IS ADDS CPU/MEMORY EXTRA OVERHEAD 
 		for(var it : res.values()) {
-			var receipts = report.get(Report.DATA_KEY);
-			var salesProducts = report.get("salesProducts");
+			ArrayList<Object> receipts = (ArrayList<Object>) report.get(Report.DATA_KEY);
+			ArrayList<Object> salesProducts = (ArrayList<Object>) report.get("salesProducts");
 			receipts.add(it.getReceipt());
 			salesProducts.addAll(it.getSalesProducts());
 		}
