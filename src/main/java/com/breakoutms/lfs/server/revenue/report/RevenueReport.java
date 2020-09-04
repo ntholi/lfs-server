@@ -18,7 +18,7 @@ public class RevenueReport {
 	private Integer quotationNo;
 	private BigDecimal amountPaid;
 	private BigDecimal balance;
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime date;
 	private List<SalesProductReport> salesProducts;
 
