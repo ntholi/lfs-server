@@ -1,8 +1,10 @@
 package com.breakoutms.lfs.server.revenue;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
+import com.breakoutms.lfs.server.products.model.QProduct;
 import com.breakoutms.lfs.server.reports.Report;
 import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
@@ -32,8 +34,6 @@ import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.report.SalesProductReport;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
-import static com.querydsl.core.group.GroupBy.*;
-
 
 import lombok.AllArgsConstructor;
 
@@ -138,26 +138,19 @@ public class RevenueService {
 		QRevenue revenue = QRevenue.revenue;
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QQuotation quotation = QQuotation.quotation;
-		
+		QProduct product = QProduct.product;
 		
 		var  res =  new JPAQuery<>(entityManager)
 				.from(revenue)
 				.innerJoin(revenue.quotation, quotation)
 				.innerJoin(quotation.salesProducts, salesProduct)
-//				.where(revenue.quotation.id.eq(salesProduct.quotation.id))
+				.innerJoin(salesProduct.product, product)
 				.transform(groupBy(revenue.receiptNo)
 				.as(Projections.constructor(RevenueReport.class, revenue.receiptNo,
 						revenue.amountPaid, revenue.balance, revenue.date, 
-						list(Projections.bean(SalesProductReport.class, salesProduct.cost, salesProduct.quantity)))));
-//				.select(revenue)
+						list(Projections.constructor(SalesProductReport.class, salesProduct.product.name, 
+								salesProduct.cost, salesProduct.quantity)))));
 		
-//		System.out.println(res);
-		for (var item : res.values()) {
-			System.out.println(item);
-		}
-
-//		return new Report<>(query.values()).getContent();
-		
-		return null;
+		return new Report<>(res.values()).getContent();
 	}
 }
