@@ -35,10 +35,7 @@ import com.breakoutms.lfs.server.sales.model.QSalesProduct;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.report.SalesProductReport;
-import com.breakoutms.lfs.server.user.model.QUser;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import lombok.AllArgsConstructor;
@@ -142,9 +139,6 @@ public class RevenueService {
 	
 	public Map<String, Object> getCollectionsReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
 		QRevenue revenue = QRevenue.revenue;
-		QUser user = QUser.user;
-		NumberPath<Long> sum = Expressions.numberPath(Long.class, "sum");
-		
 		var  res =  new JPAQuery<>(entityManager)
 				.from(revenue)
 				.select(Projections.constructor(RevenueUser.class, 
@@ -152,9 +146,7 @@ public class RevenueService {
 				.groupBy(revenue.createdBy)
 				.fetch();
 		
-		System.out.println(res);
-		
-		return null;
+		return new Report<>(res).getContent();
 	}
 
 	@SuppressWarnings("unchecked")
