@@ -39,7 +39,8 @@ public class RevenueReportsService {
 				.groupBy(product)
 				.orderBy(product.productType.asc())
 				.select(Projections.constructor(ProductSummaryReport.class, 
-						product.name, product.productType, salesProduct.cost.sum()))
+						product.name, product.productType, salesProduct.quantity.sum(),
+						salesProduct.cost.sum()))
 				.fetch();
 		return new Report<>(res).getContent();
 	}

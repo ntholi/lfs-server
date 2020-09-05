@@ -15,5 +15,6 @@ public class ProductSummaryReport {
 
 	private String productName;
 	private ProductType productType;
+	private int quantity;
 	private BigDecimal amount;
 }
