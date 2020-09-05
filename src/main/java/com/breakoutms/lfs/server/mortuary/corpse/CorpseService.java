@@ -45,9 +45,10 @@ public class CorpseService {
 	
 	@Transactional
 	public Corpse save(final Corpse entity) {
+		associateNextOfKin(entity);
 		return repo.save(entity);
 	}
-	
+
 	@Transactional
 	public Corpse update(String id, Corpse updatedEntity) {
 		if(updatedEntity == null) {
@@ -55,6 +56,9 @@ public class CorpseService {
 		}
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Corpse", id));
+		
+		
+		associateNextOfKin(updatedEntity);
 		
 		if(entity.getTransferredFrom() != null) {
 			OtherMortuary om = entity.getTransferredFrom();
@@ -73,6 +77,12 @@ public class CorpseService {
 		return repo.save(entity);
 	}
 
+	private void associateNextOfKin(Corpse entity) {
+		entity.getNextOfKins().forEach(it ->{
+			it.setCorpse(entity);
+		});
+	}
+	
 	public void delete(String id) {
 		repo.deleteById(id);
 	}
