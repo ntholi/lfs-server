@@ -33,6 +33,7 @@ import com.breakoutms.lfs.server.revenue.model.RevenueDTO;
 import com.breakoutms.lfs.server.revenue.model.RevenueEagerResponse;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
+import com.breakoutms.lfs.server.revenue.report.RevenueReportsService;
 import com.breakoutms.lfs.server.sales.QuotationController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 
@@ -45,6 +46,7 @@ import lombok.val;
 public class RevenueController implements ViewModelController<Revenue, RevenueViewModel> {
 
 	private final RevenueService service;
+	private final RevenueReportsService reportsService;
 	private final PagedResourcesAssembler<RevenueViewModel> pagedAssembler;
 
 	@GetMapping("/{id}")
@@ -95,12 +97,22 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 	
 	@GetMapping("/reports/revenue-report")
-	public Map<String, Object> reports(String from, String to, 
+	public Map<String, Object> reports(int reportType, String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {
 		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
 		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
-		return service.getProductSummaryReport(fromDate, toDate, branch, user);
+		Map<String, Object> res = null;
+		if(reportType <= 0) {
+			res = reportsService.getCollectionsReport(fromDate, toDate, branch, user);
+		}
+		else if(reportType == 1) {
+			res = reportsService.getProductSummaryReport(fromDate, toDate, branch, user);
+		}
+		else {
+			res = reportsService.getRevenueReport(fromDate, toDate, branch, user);
+		}
+		return res;
 	}
 	
 	@Override

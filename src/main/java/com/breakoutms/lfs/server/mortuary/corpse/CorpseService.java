@@ -1,7 +1,6 @@
 package com.breakoutms.lfs.server.mortuary.corpse;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.audit.QAuditableEntity;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
@@ -22,6 +20,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.mortuary.corpse.model.QCorpse;
 import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
+import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -103,25 +102,7 @@ public class CorpseService {
 						table.dateOfDeath, table.causeOfDeath,
 						table.shelfNumber, table.fridgeNumber));
 		
-		query = common(table._super, from, to, branch, user, query);	
+		query = AuditableRecordUtils.filter(table._super, from, to, branch, user, query);	
 		return new Report<>(query.fetch()).getContent();
-	}
-
-	private <T> JPAQuery<T> common(QAuditableEntity table, LocalDate from, LocalDate to, Integer branch, Integer user,
-			JPAQuery<T> query) {
-		query = query.where(table.deleted.isFalse());
-		if(from != null) {
-			query = query.where(table.createdAt.after(from.atStartOfDay()));
-		}
-		if(to != null) {
-			query = query.where(table.createdAt.before(to.atTime(LocalTime.MAX)));
-		}
-		if(branch != null) {
-			query = query.where(table.branch.id.eq(branch));
-		}
-		if(user != null) {
-			query = query.where(table.createdBy.id.eq(user));
-		}
-		return query;
 	}
 }
