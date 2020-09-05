@@ -94,9 +94,9 @@ public class PolicyController implements ViewModelController<Policy, PolicyViewM
 		if(reportType <= 0) {
 			res = reportsService.getPolicyReport(fromDate, toDate, branch, user);
 		}
-//		else {
-//			res = reportsService.getRevenueReport(fromDate, toDate, branch, user);
-//		}
+		else if(reportType == 1){
+			res = reportsService.getPlanTypeSummaryReport(fromDate, toDate, branch, user);
+		}
 		return res;
 	}
 	
