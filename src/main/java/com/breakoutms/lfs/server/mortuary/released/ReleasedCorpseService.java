@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,8 @@ public class ReleasedCorpseService {
 	
 	@Transactional
 	public ReleasedCorpse save(final ReleasedCorpse entity) {
+		Corpse corpse = entity.getCorpse();
+		corpse.setReleasedCorpse(entity);
 		return repo.save(entity);
 	}
 	

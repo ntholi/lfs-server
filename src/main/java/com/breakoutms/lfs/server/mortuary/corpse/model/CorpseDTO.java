@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
@@ -43,6 +44,9 @@ public class CorpseDTO {
 	
 	private District district;
 	
+	@Column(length = 150)
+	private String country;
+	
 	private String chief;
 	
 	private List<NextOfKin> nextOfKins;
@@ -72,7 +76,7 @@ public class CorpseDTO {
 	
 	private String otherNotes;
 	
-	private boolean released;
+	private Integer releasedCorpseId;
 	
 	private String transferredFrom;
 }

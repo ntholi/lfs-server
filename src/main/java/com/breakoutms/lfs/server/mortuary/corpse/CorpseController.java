@@ -34,8 +34,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
-import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
-import com.breakoutms.lfs.server.reports.Report;
+import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReportService;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.Vehicle;
 
@@ -48,6 +47,7 @@ import lombok.val;
 public class CorpseController implements ViewModelController<Corpse, CorpseViewModel> {
 	
 	private final CorpseService service;
+	private final CorpseReportService reportService;
 	private final PagedResourcesAssembler<CorpseViewModel> pagedAssembler;
 
 
@@ -125,12 +125,21 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 	
 	@GetMapping("/corpses/reports/corpse-report")
-	public Map<String, Object> reports(String from, String to, 
+	public Map<String, Object> reports(int reportType, String from, String to, 
 			@RequestParam(required = false) Integer branch, 
-			@RequestParam(required = false) Integer user) {
+			@RequestParam(required = false) Integer user,
+			@RequestParam(required = false) String tagNo) {
 		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
 		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
-		return service.getCorpseReport(fromDate, toDate, branch, user);
+		
+		Map<String, Object> res = null;
+		if(reportType <= 0) {
+			res = reportService.getCorpseReport(fromDate, toDate, branch, user);
+		}
+		else {
+			res = reportService.getDetailedCorpseReport(fromDate, toDate, branch, user, tagNo);
+		}
+		return res; 
 	}
 	
 	@Override

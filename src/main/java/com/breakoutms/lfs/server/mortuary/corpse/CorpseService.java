@@ -1,11 +1,7 @@
 package com.breakoutms.lfs.server.mortuary.corpse;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -18,12 +14,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
-import com.breakoutms.lfs.server.mortuary.corpse.model.QCorpse;
-import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReport;
-import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
-import com.breakoutms.lfs.server.reports.Report;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 
 import lombok.AllArgsConstructor;
 
@@ -33,7 +23,6 @@ public class CorpseService {
 
 	private final CorpseRepository repo;
 	private final OtherMortuaryRepository otherMortuaryRepo;
-	private final EntityManager entityManager;
 	
 	public Optional<Corpse> get(String id) {
 		return repo.findById(id);
@@ -101,18 +90,5 @@ public class CorpseService {
 
 	public List<CorpseLookupProjection> lookup(String names) {
 		return repo.lookup(names);
-	}
-
-	public Map<String, Object> getCorpseReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
-		QCorpse table = QCorpse.corpse;
-		var query = new JPAQuery<CorpseReport>(entityManager)
-				.from(table)
-				.select(Projections.bean(CorpseReport.class, table.tagNo, 
-						table.surname, table.names, table.arrivalDate, 
-						table.dateOfDeath, table.causeOfDeath,
-						table.shelfNumber, table.fridgeNumber));
-		
-		query = AuditableRecordUtils.filter(table._super, from, to, branch, user, query);	
-		return new Report<>(query.fetch()).getContent();
 	}
 }

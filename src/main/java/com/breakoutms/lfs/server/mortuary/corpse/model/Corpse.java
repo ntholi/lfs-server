@@ -19,6 +19,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -33,6 +34,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.common.enums.Gender;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -92,6 +94,9 @@ public class Corpse extends AuditableEntity<String> {
 	@Column(length = 50)
 	private District district;
 	
+	@Column(length = 150)
+	private String country;
+	
 	@Column(length = 50)
 	private String chief;
 	
@@ -130,7 +135,9 @@ public class Corpse extends AuditableEntity<String> {
 	
 	private String otherNotes;
 	
-	private boolean released;
+	@OneToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private ReleasedCorpse releasedCorpse;
 	
 	@ManyToOne(fetch = FetchType.LAZY,
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
