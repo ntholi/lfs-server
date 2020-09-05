@@ -4,7 +4,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -34,7 +33,6 @@ import com.breakoutms.lfs.server.revenue.model.RevenueDTO;
 import com.breakoutms.lfs.server.revenue.model.RevenueEagerResponse;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
 import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
-import com.breakoutms.lfs.server.revenue.report.RevenueReport;
 import com.breakoutms.lfs.server.sales.QuotationController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 
@@ -102,7 +100,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 			@RequestParam(required = false) Integer user) {
 		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
 		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
-		return service.getCollectionsReport(fromDate, toDate, branch, user);
+		return service.getProductSummaryReport(fromDate, toDate, branch, user);
 	}
 	
 	@Override

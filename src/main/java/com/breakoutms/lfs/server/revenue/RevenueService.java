@@ -26,6 +26,7 @@ import com.breakoutms.lfs.server.reports.Report;
 import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
+import com.breakoutms.lfs.server.revenue.report.ProductSummaryReport;
 import com.breakoutms.lfs.server.revenue.report.RevenueReport;
 import com.breakoutms.lfs.server.revenue.report.RevenueUser;
 import com.breakoutms.lfs.server.sales.QuotationRepository;
@@ -135,6 +136,21 @@ public class RevenueService {
 
 	public List<SalesProduct> getRevenueProducts(Integer quotationNo) {
 		return repo.getRevenueProducts(quotationNo);
+	}
+	
+	public Map<String, Object> getProductSummaryReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
+		QSalesProduct salesProduct = QSalesProduct.salesProduct;
+		QProduct product = QProduct.product;
+		
+		var  res =  new JPAQuery<>(entityManager)
+				.from(salesProduct)
+				.innerJoin(salesProduct.product, product)
+				.groupBy(product)
+				.orderBy(product.productType.asc())
+				.select(Projections.constructor(ProductSummaryReport.class, 
+						product.name, product.productType, salesProduct.cost.sum()))
+				.fetch();
+		return new Report<>(res).getContent();
 	}
 	
 	public Map<String, Object> getCollectionsReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
