@@ -2,8 +2,12 @@ package com.breakoutms.lfs.server.preneed.policy;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import java.time.LocalDate;
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
@@ -29,6 +34,7 @@ import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
+import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +47,7 @@ import lombok.val;
 public class PolicyController implements ViewModelController<Policy, PolicyViewModel> {
 
 	private final PolicyService service;
+	private final PolicyReportsService reportsService;
 	private final PagedResourcesAssembler<PolicyViewModel> pagedAssembler;
 	
 	@GetMapping("/{id}")
@@ -76,6 +83,23 @@ public class PolicyController implements ViewModelController<Policy, PolicyViewM
 		);
 	}
 
+	
+	@GetMapping("/reports/policy-report")
+	public Map<String, Object> reports(int reportType, String from, String to, 
+			@RequestParam(required = false) Integer branch, 
+			@RequestParam(required = false) Integer user) {
+		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
+		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
+		Map<String, Object> res = null;
+		if(reportType <= 0) {
+			res = reportsService.getPolicyReport(fromDate, toDate, branch, user);
+		}
+//		else {
+//			res = reportsService.getRevenueReport(fromDate, toDate, branch, user);
+//		}
+		return res;
+	}
+	
 	@Override
 	public PolicyViewModel toViewModel(Policy entity) {
 		var dto = PreneedMapper.INSTANCE.map(entity);

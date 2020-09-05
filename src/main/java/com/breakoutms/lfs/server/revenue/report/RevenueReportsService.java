@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.products.model.QProduct;
+import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
 import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.sales.model.QQuotation;
@@ -33,26 +34,29 @@ public class RevenueReportsService {
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QProduct product = QProduct.product;
 		
-		var  res =  new JPAQuery<>(entityManager)
+		var  query =  new JPAQuery<>(entityManager)
 				.from(salesProduct)
 				.innerJoin(salesProduct.product, product)
 				.groupBy(product)
 				.orderBy(product.productType.asc())
 				.select(Projections.constructor(ProductSummaryReport.class, 
 						product.name, product.productType, salesProduct.quantity.sum(),
-						salesProduct.cost.sum()))
-				.fetch();
+						salesProduct.cost.sum()));
+		var res = AuditableRecordUtils.filter(salesProduct._super, 
+				from, to, branch, userId, query).fetch();
 		return new Report<>(res).getContent();
 	}
 	
 	public Map<String, Object> getCollectionsReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
 		QRevenue revenue = QRevenue.revenue;
-		var  res =  new JPAQuery<>(entityManager)
+		var  query =  new JPAQuery<>(entityManager)
 				.from(revenue)
 				.select(Projections.constructor(RevenueUser.class, 
 						revenue.createdBy.firstName, revenue.amountPaid.sum()))
-				.groupBy(revenue.createdBy)
-				.fetch();
+				.groupBy(revenue.createdBy);
+		
+		var res = AuditableRecordUtils.filter(revenue._super, 
+				from, to, branch, userId, query).fetch();
 		
 		return new Report<>(res).getContent();
 	}
@@ -64,11 +68,14 @@ public class RevenueReportsService {
 		QQuotation quotation = QQuotation.quotation;
 		QProduct product = QProduct.product;
 		
-		var  res =  new JPAQuery<>(entityManager)
+		var  query =  new JPAQuery<>(entityManager)
 				.from(revenue)
 				.innerJoin(revenue.quotation, quotation)
 				.innerJoin(quotation.salesProducts, salesProduct)
-				.innerJoin(salesProduct.product, product)
+				.innerJoin(salesProduct.product, product);
+		
+		var res = AuditableRecordUtils.filter(revenue._super, 
+				from, to, branch, user, query)		
 				.transform(groupBy(revenue.receiptNo)
 				.as(Projections.constructor(RevenueReport.class, revenue.receiptNo,
 						revenue.quotation.id,
