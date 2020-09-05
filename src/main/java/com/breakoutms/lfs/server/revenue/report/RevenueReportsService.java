@@ -19,6 +19,7 @@ import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.sales.model.QQuotation;
 import com.breakoutms.lfs.server.sales.model.QSalesProduct;
 import com.breakoutms.lfs.server.sales.report.SalesProductReport;
+import com.breakoutms.lfs.server.user.model.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -49,11 +50,14 @@ public class RevenueReportsService {
 	
 	public Map<String, Object> getCollectionsReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
 		QRevenue revenue = QRevenue.revenue;
+		QUser user = QUser.user;
 		var  query =  new JPAQuery<>(entityManager)
 				.from(revenue)
+				.innerJoin(revenue.createdBy, user)
 				.select(Projections.constructor(RevenueUser.class, 
-						revenue.createdBy.firstName, revenue.amountPaid.sum()))
-				.groupBy(revenue.createdBy);
+						user.firstName.concat(" ").concat(user.lastName), 
+						revenue.amountPaid.sum()))
+				.groupBy(user);
 		
 		var res = AuditableRecordUtils.filter(revenue._super, 
 				from, to, branch, userId, query).fetch();

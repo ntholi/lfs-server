@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import com.breakoutms.lfs.common.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -15,6 +16,7 @@ public class PolicyReport {
 	private String policyNumber;
 	private String names;
 	private Gender gender;
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate registrationDate;
 	@JsonIgnore private LocalDate dateOfBirth;
 	private BigDecimal premiumAmount;

@@ -3,11 +3,14 @@ package com.breakoutms.lfs.server.preneed.payment;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -35,7 +38,9 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
+import com.breakoutms.lfs.server.preneed.payment.report.PolicyPaymentReportService;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
+import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -46,6 +51,7 @@ import lombok.val;
 public class PolicyPaymentController implements ViewModelController<PolicyPayment, PolicyPaymentViewModel> {
 
 	private final PolicyPaymentService service;
+	private final PolicyPaymentReportService reportsService;
 	private final PagedResourcesAssembler<PolicyPaymentViewModel> pagedAssembler;
 	
 
@@ -125,6 +131,22 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 						linkTo(methodOn(PolicyController.class).get(policyNumber)).withRel("policy")));
 	}
 
+	@GetMapping("payments/reports/payment-report")
+	public Map<String, Object> reports(int reportType, String from, String to, 
+			@RequestParam(required = false) Integer branch, 
+			@RequestParam(required = false) Integer user) {
+		LocalDate fromDate = StringUtils.isNotBlank(from)? LocalDate.parse(from): null;
+		LocalDate toDate = StringUtils.isNotBlank(to)? LocalDate.parse(to): null;
+		Map<String, Object> res = null;
+		if(reportType <= 0) {
+			res = reportsService.getCollections(fromDate, toDate, branch, user);
+		}
+		else if(reportType == 1){
+			res = reportsService.getPolicyPaymentReport(fromDate, toDate, branch, user);
+		}
+		return res;
+	}
+	
 	@Override
 	public PolicyPaymentViewModel toViewModel(PolicyPayment entity) {
 		PolicyPaymentViewModel viewModel = PolicyPaymentMapper.INSTANCE.map(entity);
