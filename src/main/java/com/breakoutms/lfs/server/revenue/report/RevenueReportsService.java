@@ -32,11 +32,15 @@ public class RevenueReportsService {
 	private final EntityManager entityManager;
 	
 	public Map<String, Object> getProductSummaryReport(LocalDate from, LocalDate to, Integer branch, Integer userId){
+		QRevenue revenue = QRevenue.revenue;
+		QQuotation quotation = QQuotation.quotation;
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QProduct product = QProduct.product;
 		
 		var  query =  new JPAQuery<>(entityManager)
-				.from(salesProduct)
+				.from(revenue)
+				.innerJoin(revenue.quotation, quotation)
+				.innerJoin(quotation.salesProducts, salesProduct)
 				.innerJoin(salesProduct.product, product)
 				.groupBy(product)
 				.orderBy(product.productType.asc())

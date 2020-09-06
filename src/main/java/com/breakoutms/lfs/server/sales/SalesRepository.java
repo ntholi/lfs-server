@@ -1,8 +1,8 @@
 package com.breakoutms.lfs.server.sales;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +16,6 @@ public interface SalesRepository extends JpaRepository<Sales, Integer>{
 	@Query("from SalesProduct where quotation.id = :quotationNo")
 	List<SalesProduct> getSalesProducts(int quotationNo);
 
-	Optional<Sales> findByQuotationId(Integer quotationNo);
+	List<Sales> findByQuotationId(Integer quotationNo, Sort sort);
 
 }

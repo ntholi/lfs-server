@@ -88,8 +88,12 @@ public class RevenueService {
 	}
 
 	private RevenueInquiry buildInquiryFromSales(Integer quotationNo) {
-		var sales = salesRepo.findByQuotationId(quotationNo)
-				.orElseThrow(ExceptionSupplier.notFound("Quotation", quotationNo));
+		Sort sort = Sort.by(Direction.DESC, "createdAt");
+		var salesList = salesRepo.findByQuotationId(quotationNo, sort);
+		if(salesList.isEmpty()) {
+			throw ExceptionSupplier.notFound("Quotation", quotationNo).get();
+		}
+		var sales = salesList.get(0);
 		RevenueInquiry inquiry = new RevenueInquiry();
 		var burial = sales.getBurialDetails();
 		if(burial != null) {
