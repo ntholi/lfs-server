@@ -19,10 +19,8 @@ import lombok.NoArgsConstructor;
 public class SalesProductViewModel extends RepresentationModel<SalesProductViewModel> {
 
 	private Long id;
-	
 	private String productName;
-
+	private Integer productId;
 	private BigDecimal cost;
-
 	private int quantity;
 }

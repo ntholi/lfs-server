@@ -31,7 +31,9 @@ public class IdGenerator extends SequenceStyleGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) {
     	Serializable id = super.generate(session, object);
-    	String result = Branch.current().getSyncNumber() 
+    	String result = // Branch.current().getSyncNumber() //TODO
+    			//TODO, ALSO REMEMEBER TO ADD BRANCH IN AUDITABLE_ENTITY
+    			777
     			+ StringUtils.leftPad(String.valueOf(id), 6, '0');
         Class<?> type = ID_TYPE_DEFAULT;
         

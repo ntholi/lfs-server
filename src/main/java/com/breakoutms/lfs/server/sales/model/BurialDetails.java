@@ -46,6 +46,8 @@ public class BurialDetails extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "burial_details_id")
 	private Integer id;
 	
+	
+	//TODO: CHANGE THIS TO SALES
 	@OneToOne(fetch = FetchType.LAZY)
 	private Corpse corpse;
 	

@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.sales;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,10 +42,6 @@ public class SalesService {
 
 	@Transactional
 	public Sales save(final Sales sales) {
-		Corpse corpse = sales.getBurialDetails().getCorpse();
-		if(corpse != null && !corpseRepo.existsById(corpse.getId())) {
-			throw ExceptionSupplier.corpseNoteFound(corpse.getTagNo()).get();
-		}
 		setAssociations(sales);
 		return repo.save(sales);
 	}
@@ -64,37 +61,42 @@ public class SalesService {
 	}
 
 	protected void setAssociations(final Sales sales) {
-		Quotation quot = sales.getQuotation();
-		if(quot != null) {
-			List<SalesProduct> salesProducts = quot.getSalesProducts();
-			if(salesProducts != null) {
-				salesProducts.forEach(it -> it.setQuotation(quot));
-			}
+		String tagNo = sales.getBurialDetails().getCorpse().getTagNo();
+		Corpse corpse = null;
+		if(tagNo != null) {
+			corpse = corpseRepo.findById(tagNo)
+					.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
 		}
+		
 		BurialDetails bd = sales.getBurialDetails();
 		if (bd.getId() == null 
 				&& bd.getBurialPlace() == null
-				&& (bd.getCorpse() == null || bd.getCorpse().getId() == null)
 				&& bd.getLeavingTime() == null
 				&& bd.getPhysicalAddress() == null
 				&& bd.getRoadStatus() == null
 				&& bd.getServiceTime() == null) {
 			sales.setBurialDetails(null);
 		}
-		if(bd.getCorpse() != null) {
-			Corpse corpse = bd.getCorpse();
-			if(corpse.getId() == null) {
-				bd.setCorpse(null);
-			}
+		
+		Quotation quotation = sales.getQuotation();
+		Customer customer = quotation.getCustomer();
+		List<SalesProduct> salesProducts = quotation.getSalesProducts();
+		
+		if(customer.getId() == null 
+				&& customer.getNames() == null
+				&& customer.getPhoneNumber() == null) {
+			customer = null;
 		}
-		Quotation q = sales.getQuotation();
-		if(q.getId() == null
-				&& q.getCustomer() != null) {
-			Customer c = q.getCustomer();
-			if(c.getId() == null 
-					&& c.getNames() == null
-					&& c.getPhoneNumber() == null) {
-				q.setCustomer(null);
+	
+		if(corpse != null) {
+			quotation = corpse.getQuotation();
+			quotation.addSalesProducts(salesProducts);
+		}
+		quotation.setCustomer(customer);
+		sales.setQuotation(quotation);
+		if(salesProducts != null) {
+			for (SalesProduct salesProduct : salesProducts) {
+				salesProduct.setQuotation(quotation);
 			}
 		}
 	}
@@ -102,6 +104,7 @@ public class SalesService {
 	public SalesInquiry salesInquiry(String tagNo) {
 		Optional<DeceasedClient> client = deceasedRepo.findByCorpseTagNo(tagNo);
 		SalesInquiryBuilder response = SalesInquiry.builder();
+		Corpse corpse = null;
 		if(client.isPresent()) {
 			var obj = client.get();
 			response.payout(obj.getPayout())
@@ -113,13 +116,17 @@ public class SalesService {
 			if(obj.getDependent() != null) {
 				response.dependentId(obj.getDependent().getId());
 			}
+			corpse = obj.getCorpse();
 		}
 		else {
-			Optional<Corpse> optional = corpseRepo.findById(tagNo);
-			if(optional.isPresent()) {
-				Corpse obj = optional.get();
-				response.tagNo(obj.getTagNo()).name(obj.getFullName());
-			}
+			corpse = corpseRepo.findById(tagNo)
+					.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
+			response.tagNo(corpse.getTagNo()).name(corpse.getFullName());
+		}
+		Quotation quot = corpse.getQuotation();
+		if(quot != null) {
+			List<SalesProduct> salesProducts = quot.getSalesProducts();
+			response.salesProducts(SalesMapper.INSTANCE.map(salesProducts));
 		}
 		SalesInquiry inquiry = response.build();
 		if(inquiry.getTagNo() != null) {

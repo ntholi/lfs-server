@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.sales.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -17,6 +19,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;
@@ -52,4 +55,14 @@ public class Quotation extends AuditableEntity<Integer> {
 			orphanRemoval = true,
 			cascade=CascadeType.ALL)
 	private List<SalesProduct> salesProducts;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private Corpse corpse;
+
+	public void addSalesProducts(List<SalesProduct> salesProducts) {
+		if(this.salesProducts == null) {
+			this.salesProducts = new ArrayList<>();
+		}
+		this.salesProducts.addAll(salesProducts);
+	}
 }

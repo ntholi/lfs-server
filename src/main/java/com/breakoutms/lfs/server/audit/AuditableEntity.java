@@ -38,7 +38,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	//I've Disabled @NotNull so that validations for Product so that it can be validated
 	//in the controller
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable=true)
+//	@JoinColumn(nullable=true) TODO
 	private Branch branch;
 	
 	@CreatedDate
@@ -56,7 +56,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	@PrePersist
 	void prePersist() {
 		if(branch == null) {
-			branch = Branch.current();
+//			branch = Branch.current(); TODO:
 		}
 	}
 }

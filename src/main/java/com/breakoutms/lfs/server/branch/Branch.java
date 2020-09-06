@@ -42,13 +42,4 @@ public class Branch {
 			columnDefinition = "SMALLINT")
 	@Digits(integer = 4, fraction = 0)
 	private short syncNumber;
-    
-	public static Branch current() {
-		return BranchHolder.INSTANCE;
-	}
-	
-    private static class BranchHolder {
-    	//Initialization-on-demand holder idiom
-        private static final Branch INSTANCE = BeanUtil.getBean(CurrentBranch.class).get();
-    }
 }

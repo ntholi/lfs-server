@@ -47,6 +47,7 @@ public class UserService {
 		return userRepo.findAll();
 	}
 	
+	@Transactional(readOnly = true)
 	public LoginResponseDto login(String username, String password) {
 		log.info("Attempting to login user, with username: "+ username);
 		Optional<User> userOp = userRepo.findByUsername(username);
@@ -59,7 +60,8 @@ public class UserService {
 		}
 		User user = userOp.get();
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		String token = jwtProvider.createToken(user);
+		var syncNo = user.getBranch().getSyncNumber();
+		String token = jwtProvider.createToken(user, syncNo);
 		return LoginResponseDto.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)

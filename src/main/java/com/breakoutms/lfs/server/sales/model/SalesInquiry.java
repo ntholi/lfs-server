@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.sales.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor	
 public class SalesInquiry {
 
 	private String policyNumber;	
@@ -18,4 +19,6 @@ public class SalesInquiry {
 	private String name;
 	private String dependentId;
 	private BigDecimal payout;
+	private Integer quotationNo;
+	private List<SalesProductViewModel> salesProducts;
 }

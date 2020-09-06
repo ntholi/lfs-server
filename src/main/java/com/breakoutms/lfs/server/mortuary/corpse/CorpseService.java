@@ -14,6 +14,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
+import com.breakoutms.lfs.server.sales.model.Quotation;
 
 import lombok.AllArgsConstructor;
 
@@ -34,7 +35,7 @@ public class CorpseService {
 	
 	@Transactional
 	public Corpse save(final Corpse entity) {
-		associateNextOfKin(entity);
+		addAssociations(entity);
 		return repo.save(entity);
 	}
 
@@ -47,7 +48,7 @@ public class CorpseService {
 				.orElseThrow(ExceptionSupplier.notFound("Corpse", id));
 		
 		
-		associateNextOfKin(updatedEntity);
+		addAssociations(updatedEntity);
 		
 		if(entity.getTransferredFrom() != null) {
 			OtherMortuary om = entity.getTransferredFrom();
@@ -66,10 +67,16 @@ public class CorpseService {
 		return repo.save(entity);
 	}
 
-	private void associateNextOfKin(Corpse entity) {
-		entity.getNextOfKins().forEach(it ->{
-			it.setCorpse(entity);
-		});
+	private void addAssociations(Corpse corpse) {
+		corpse.getNextOfKins().forEach(it ->
+			it.setCorpse(corpse)
+		);
+		Quotation quotation = corpse.getQuotation();
+		if(quotation == null) {
+			quotation = new Quotation();
+			corpse.setQuotation(quotation);
+			quotation.setCorpse(corpse);
+		}
 	}
 	
 	public void delete(String id) {
