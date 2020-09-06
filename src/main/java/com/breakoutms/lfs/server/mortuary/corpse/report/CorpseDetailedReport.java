@@ -1,8 +1,9 @@
 package com.breakoutms.lfs.server.mortuary.corpse.report;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.common.enums.Gender;
@@ -36,6 +37,8 @@ public class CorpseDetailedReport {
 	private String dressedBy;
 	private String coffinedBy;
 	
-	private List<NextOfKinReport> nextOfKins;
-	private List<CorpseSalesProduct> salesProducts;
+	private BigDecimal amountPaid;
+	
+	private Set<NextOfKinReport> nextOfKins;
+	private Set<CorpseSalesProduct> salesProducts;
 }

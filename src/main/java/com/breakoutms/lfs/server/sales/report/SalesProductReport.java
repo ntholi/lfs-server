@@ -18,10 +18,4 @@ public class SalesProductReport {
 		this.cost = cost;
 		this.quantity = quantity;
 	}
-	
-	public SalesProductReport(String productName, BigDecimal cost, int quantity) {
-		this.productName = productName;
-		this.cost = cost;
-		this.quantity = quantity;
-	}
 }

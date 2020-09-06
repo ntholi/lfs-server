@@ -1,7 +1,7 @@
 package com.breakoutms.lfs.server.mortuary.corpse.report;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
+import static com.querydsl.core.group.GroupBy.set;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -18,7 +18,6 @@ import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
 import com.breakoutms.lfs.server.sales.model.QQuotation;
 import com.breakoutms.lfs.server.sales.model.QSalesProduct;
-import com.breakoutms.lfs.server.sales.report.SalesProductReport;
 import com.breakoutms.lfs.server.transport.QTransport;
 import com.breakoutms.lfs.server.transport.QVehicle;
 import com.querydsl.core.types.Projections;
@@ -62,14 +61,15 @@ public class CorpseReportService {
 							vehicle.registrationNumber.as("registrationNumber"),
 							releasedCorpse.date.as("releaseDate"), 
 							releasedCorpse.dressedBy.as("dressedBy"), releasedCorpse.coffinedBy.as("coffinedBy"),
-							list(Projections.bean(NextOfKinReport.class, nextOfKin.names)).as("nextOfKins"),
-							list(Projections.constructor(SalesProductReport.class, product.name, 
-									salesProduct.cost, salesProduct.quantity)).as("salesProducts")
+							set(Projections.bean(NextOfKinReport.class, nextOfKin.id, corpse.tagNo, nextOfKin.names,
+									nextOfKin.surname, nextOfKin.relationship, nextOfKin.phoneNumber)).as("nextOfKins"),
+							set(Projections.bean(CorpseSalesProduct.class, salesProduct.id,
+									corpse.tagNo, product.name.as("productName"), 
+									salesProduct.quantity, salesProduct.cost)).as("salesProducts")
 						))
 					);
 		
 		return new Report<>(query.values()).getContent();
-//		return null;
 	}
 	
 	public Map<String, Object> getCorpseReport(LocalDate from, LocalDate to, Integer branch, Integer user) {
