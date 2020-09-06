@@ -59,7 +59,8 @@ public class PolicyPaymentReportService {
 				.select(Projections.bean(PolicyPaymentReport.class,policy.policyNumber, 
 						policy.names.concat(" ").concat(policy.surname).as("names"),
 						funeralScheme.name.as("planType"),
-						table.period, table.amount, 
+						table.period.as("_period"), table.amount,
+						table.type.as("paymentType"),
 						policyPayment.paymentDate.as("date")));
 		
 		var res = AuditableRecordUtils.filter(table._super, 
