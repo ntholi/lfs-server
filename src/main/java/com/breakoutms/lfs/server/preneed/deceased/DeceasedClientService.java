@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.common.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.deceased.model.Payout;
@@ -69,6 +70,16 @@ public class DeceasedClientService {
 		if(StringUtils.isBlank(entity.getPolicy().getPolicyNumber())) {
 			entity.setPolicy(null);
 		}
+		String tagNo = entity.getCorpse().getTagNo();
+		var corpse = corpseRepo.findById(tagNo)
+				.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
+		corpse.setPolicy(entity.getPolicy());
+		
+		var policyNo = entity.getPolicy().getId();
+		var policy = policyRepo.findById(policyNo)
+				.orElseThrow(ExceptionSupplier.policyNotFound(policyNo));
+		policy.addDeceasedClient(entity);
+				
 	}
 	
 	@Transactional(readOnly = true)

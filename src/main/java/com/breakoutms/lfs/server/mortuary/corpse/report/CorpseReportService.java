@@ -13,9 +13,13 @@ import org.springframework.stereotype.Service;
 import com.breakoutms.lfs.server.mortuary.corpse.model.QCorpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.QNextOfKin;
 import com.breakoutms.lfs.server.mortuary.released.model.QReleasedCorpse;
+import com.breakoutms.lfs.server.preneed.deceased.model.QDeceasedClient;
+import com.breakoutms.lfs.server.preneed.policy.model.QPolicy;
+import com.breakoutms.lfs.server.preneed.pricing.model.QFuneralScheme;
 import com.breakoutms.lfs.server.products.model.QProduct;
 import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
+import com.breakoutms.lfs.server.revenue.model.QRevenue;
 import com.breakoutms.lfs.server.sales.model.QQuotation;
 import com.breakoutms.lfs.server.sales.model.QSalesProduct;
 import com.breakoutms.lfs.server.transport.QTransport;
@@ -40,9 +44,14 @@ public class CorpseReportService {
 		QVehicle vehicle = QVehicle.vehicle;
 		QSalesProduct salesProduct = QSalesProduct.salesProduct;
 		QProduct product = QProduct.product;
+		QPolicy policy = QPolicy.policy;
+		QDeceasedClient deceasedClient = QDeceasedClient.deceasedClient;
+		QFuneralScheme funeralScheme = QFuneralScheme.funeralScheme;
+		QRevenue revenue = QRevenue.revenue;
 		
 		var query = new JPAQuery<CorpseDetailedReport>(entityManager)
 				.from(corpse)
+				.where(corpse.tagNo.equalsIgnoreCase(tagNo))
 				.leftJoin(corpse.releasedCorpse, releasedCorpse)
 				.leftJoin(corpse.transport, transport)
 				.leftJoin(transport.vehicle, vehicle)
@@ -50,6 +59,10 @@ public class CorpseReportService {
 				.leftJoin(corpse.quotation, quotation)
 				.leftJoin(quotation.salesProducts, salesProduct)
 				.leftJoin(salesProduct.product, product)
+				.leftJoin(quotation.revenues, revenue)
+				.leftJoin(corpse.policy, policy)
+				.leftJoin(policy.deceasedClients, deceasedClient)
+				.leftJoin(policy.funeralScheme, funeralScheme)
 				.transform(groupBy(corpse.tagNo)
 					.as(Projections.bean(CorpseDetailedReport.class,
 							corpse.tagNo, corpse.names, corpse.surname,
@@ -61,12 +74,15 @@ public class CorpseReportService {
 							vehicle.registrationNumber.as("registrationNumber"),
 							releasedCorpse.date.as("releaseDate"), 
 							releasedCorpse.dressedBy.as("dressedBy"), releasedCorpse.coffinedBy.as("coffinedBy"),
+							funeralScheme.name.as("planType"), policy.coverAmount, policy.premiumAmount.as("premium"),
+							deceasedClient.payout,
 							set(Projections.bean(NextOfKinReport.class, nextOfKin.id, corpse.tagNo, nextOfKin.names,
 									nextOfKin.surname, nextOfKin.relationship, nextOfKin.phoneNumber)).as("nextOfKins"),
 							set(Projections.bean(CorpseSalesProduct.class, salesProduct.id,
-									corpse.tagNo, product.name.as("productName"), 
+									corpse.tagNo, product.name, product.productType, 
 									salesProduct.quantity, salesProduct.cost)).as("salesProducts")
 						))
+					//TODO: ADD AMOUNT PAID AND REMAINING BALANCE
 					);
 		
 		return new Report<>(query.values()).getContent();

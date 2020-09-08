@@ -125,7 +125,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 	
 	@GetMapping("/corpses/reports/corpse-report")
-	public Map<String, Object> reports(int reportType, String from, String to, 
+	public Map<String, Object> reports(@RequestParam(defaultValue = "-1") int reportType, String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user,
 			@RequestParam(required = false) String tagNo) {

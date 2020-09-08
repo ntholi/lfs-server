@@ -63,6 +63,7 @@ public class RevenueService {
 		var quotation = quotationRepository.findById(qId)
 				.orElseThrow(ExceptionSupplier.notFound("Quotation", qId));
 		entity.setQuotation(quotation);
+		quotation.addRevenue(entity);
 	}
 
 	@Transactional(readOnly = true)
@@ -105,11 +106,11 @@ public class RevenueService {
 			var customer = quotation.getCustomer();
 			inquiry.setCustomerNames(customer != null? customer.getNames() : "");
 			inquiry.setSalesProducts(RevenueMapper.INSTANCE.map(quotation.getSalesProducts()));
-			var balance = quotation.getSalesProducts()
-					.stream()
-					.map(SalesProduct::getCost)
-					.reduce(BigDecimal.ZERO, BigDecimal::add);
-			inquiry.setBalance(balance);
+//			var balance = quotation.getSalesProducts() //TODO DELETE THIS
+//					.stream()
+//					.map(SalesProduct::getCost)
+//					.reduce(BigDecimal.ZERO, BigDecimal::add);
+			inquiry.setBalance(sales.getPayableAmount());
 		}
 		return inquiry;
 	}

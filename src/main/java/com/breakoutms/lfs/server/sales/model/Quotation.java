@@ -21,6 +21,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.revenue.model.Revenue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,11 +59,21 @@ public class Quotation extends AuditableEntity<Integer> {
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Corpse corpse;
+	
+	@OneToMany(mappedBy="quotation", fetch = FetchType.LAZY)
+	private List<Revenue> revenues;
 
 	public void addSalesProducts(List<SalesProduct> salesProducts) {
 		if(this.salesProducts == null) {
 			this.salesProducts = new ArrayList<>();
 		}
 		this.salesProducts.addAll(salesProducts);
+	}
+	
+	public void addRevenue(Revenue revenue) {
+		if(this.revenues == null) {
+			this.revenues = new ArrayList<>();
+		}
+		this.revenues.add(revenue);
 	}
 }

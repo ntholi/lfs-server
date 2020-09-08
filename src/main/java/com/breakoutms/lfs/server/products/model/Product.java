@@ -59,8 +59,8 @@ public class Product extends AuditableEntity<Integer>{
 	private Integer id;
 	
 	@NotBlank
-	@Size(min = 1, max = 35)
-	@Column(nullable=false, length = 35)
+	@Size(min = 1, max = 100)
+	@Column(nullable=false, length = 100)
 	private String name;
 	
 	@NotNull

@@ -1,14 +1,23 @@
 package com.breakoutms.lfs.server;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
+
+import com.breakoutms.lfs.common.enums.Domain;
+import com.breakoutms.lfs.common.enums.PrivilegeType;
+import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
+import com.breakoutms.lfs.server.user.UserService;
+import com.breakoutms.lfs.server.user.model.Privilege;
+import com.breakoutms.lfs.server.user.model.Role;
+import com.breakoutms.lfs.server.user.model.User;
 
 @SpringBootApplication
 @EnableCaching
@@ -17,7 +26,7 @@ public class MainApplication implements CommandLineRunner{
 
 //	@Autowired
 //	CorpseRepository repo;
-	
+//	
 //	@Autowired
 //	UserService userService;
 //	@Autowired
@@ -46,7 +55,8 @@ public class MainApplication implements CommandLineRunner{
 //	User admin = new User();
 //	admin.setUsername("admin");
 //	admin.setPassword("111111");
-//	admin.setFirstName("Administrator");
+//	admin.setFirstName("David");
+//	admin.setLastName("Mosito");
 //	Role role = new Role();
 //	role.setName(Domain.ADMIN);
 //	role.setPrivileges(List.of(

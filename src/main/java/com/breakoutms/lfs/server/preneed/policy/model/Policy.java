@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.preneed.policy.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +37,7 @@ import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.common.enums.Gender;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -136,10 +138,12 @@ public class Policy extends AuditableEntity<String> {
 	@Column(columnDefinition="ENUM('ACTIVE','WAITING_PERIOD','DEACTIVATED') DEFAULT 'ACTIVE'")
 	private PolicyStatus status;
 
-	@OneToMany(mappedBy="policy", 
-			cascade=CascadeType.ALL, 
-			orphanRemoval=true)
+	@OneToMany(mappedBy="policy", cascade=CascadeType.ALL, 
+			orphanRemoval=true, fetch = FetchType.LAZY)
 	private List<Dependent> dependents;
+	
+	@OneToMany(mappedBy="policy", fetch = FetchType.LAZY)
+	private List<DeceasedClient> deceasedClients;
 
 	public Policy(String policyNumber, LocalDate registrationDate, PolicyStatus status) {
 		this.policyNumber = policyNumber;
@@ -152,6 +156,13 @@ public class Policy extends AuditableEntity<String> {
 		return policyNumber;
 	}
 
+	public void addDeceasedClient(DeceasedClient entity) {
+		if(deceasedClients == null) {
+			deceasedClients = new ArrayList<>();
+		}
+		deceasedClients.add(entity);
+	}
+	
 	public void setAge(int age) {
 		this.dateOfBirth = LocalDate.now().minusYears(age);
 	}

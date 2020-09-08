@@ -80,6 +80,7 @@ public abstract class SalesMapper {
 	
 	@Mapping(source = "product.name", target = "productName")
 	@Mapping(source = "product.id", target = "productId")
+	@Mapping(source = "product.price", target = "unitPrice")
 	protected abstract SalesProductViewModel map(SalesProduct salesProduct);
 	
 	@Mapping(source = "productId", target = "product.id")

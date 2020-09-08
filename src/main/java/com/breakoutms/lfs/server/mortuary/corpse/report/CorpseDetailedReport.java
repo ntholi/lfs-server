@@ -39,6 +39,12 @@ public class CorpseDetailedReport {
 	
 	private BigDecimal amountPaid;
 	
+	private String planType;
+	private BigDecimal premium;
+	private BigDecimal coverAmount;
+	private BigDecimal payout;
+	private boolean dependent;
+	
 	private Set<NextOfKinReport> nextOfKins;
 	private Set<CorpseSalesProduct> salesProducts;
 }

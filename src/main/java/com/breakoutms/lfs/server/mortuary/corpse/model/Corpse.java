@@ -36,6 +36,7 @@ import com.breakoutms.lfs.common.enums.Gender;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -150,6 +151,9 @@ public class Corpse extends AuditableEntity<String> {
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,
 		optional = false)
 	private Quotation quotation;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private Policy policy;
 	
 	@Override
 	public String getId() {
