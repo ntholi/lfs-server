@@ -126,7 +126,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 					ResponseEntity.ok(CollectionModel.of(list));
 	}
 	
-	@GetMapping("/corpse-search")
+	@GetMapping("/corpses/search/corpse")
 	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> search(
 			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
