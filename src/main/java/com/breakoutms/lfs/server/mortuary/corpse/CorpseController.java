@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -37,6 +38,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReportService;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.Vehicle;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -124,8 +126,16 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 					ResponseEntity.ok(CollectionModel.of(list));
 	}
 	
+	@GetMapping("/corpse-search")
+	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> search(
+			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
+		return ResponseHelper.pagedGetResponse(this, 
+				pagedAssembler,
+				service.search(specs, pageable));
+	}
+	
 	@GetMapping("/corpses/reports/corpse-report")
-	public Map<String, Object> reports(@RequestParam(defaultValue = "-1") int reportType, String from, String to, 
+	public Map<String, Object> reports(int reportType, String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user,
 			@RequestParam(required = false) String tagNo) {

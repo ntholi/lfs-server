@@ -76,6 +76,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.sipios</groupId>
+			<artifactId>spring-search</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.breakoutms.lfs.common</groupId>
 			<artifactId>lfs-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
