@@ -14,7 +14,6 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.District;
-import com.breakoutms.lfs.server.util.BeanUtil;
 
 import lombok.Data;
 

@@ -1,6 +1,5 @@
 package com.breakoutms.lfs.server.exceptions;
 
-@SuppressWarnings("serial")
 public class ObjectNotFoundException extends RuntimeException {
 
 	/**

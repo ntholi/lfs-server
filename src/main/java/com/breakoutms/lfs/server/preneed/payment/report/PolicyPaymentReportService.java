@@ -13,8 +13,6 @@ import com.breakoutms.lfs.server.preneed.policy.model.QPolicy;
 import com.breakoutms.lfs.server.preneed.pricing.model.QFuneralScheme;
 import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
-import com.breakoutms.lfs.server.revenue.model.QRevenue;
-import com.breakoutms.lfs.server.revenue.report.RevenueUser;
 import com.breakoutms.lfs.server.user.model.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;

@@ -12,7 +12,6 @@ import com.breakoutms.lfs.server.preneed.pricing.model.QFuneralScheme;
 import com.breakoutms.lfs.server.reports.AuditableRecordUtils;
 import com.breakoutms.lfs.server.reports.Report;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import lombok.AllArgsConstructor;

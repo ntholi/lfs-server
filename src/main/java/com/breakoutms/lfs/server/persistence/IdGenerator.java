@@ -11,7 +11,6 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.LongType;
 import org.hibernate.type.Type;
 
-import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.util.TypeUtils;
 
 import lombok.extern.log4j.Log4j2;

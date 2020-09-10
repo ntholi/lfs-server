@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.user.model.RoleDto;
 import com.breakoutms.lfs.server.user.model.User;
 
