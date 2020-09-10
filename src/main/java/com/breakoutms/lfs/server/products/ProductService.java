@@ -35,7 +35,7 @@ public class ProductService {
 		for (int i = 0; i < arr.length; i++) {
 			types[i] = ProductType.fromString(arr[i]);
 		}
-		return repo.findByProductTypeIn(Specification.where(specs), pageable, types);
+		return repo.findByProductTypeIn(types, Specification.where(specs), pageable);
 	}
 	
 	public Page<Product> all(Pageable pageable) {

@@ -28,7 +28,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtUtils {
 
 	private static final String NAMES = "names";
-	private static final String SYNC_NO = "SYNC_NO";
+	private static final String SYNC_NO = "sync_no";
 	public static final String ROLE_PREFIX = "ROLE_";
 	public static final String BEARER = "Bearer";
     private static final String ROLES_KEY = "roles";

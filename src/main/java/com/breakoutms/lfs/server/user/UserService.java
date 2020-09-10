@@ -40,12 +40,12 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
 
-	//TODO: MAKE SURE THAT CACHING WORKS AS INTENDED
+	//TODO: MAKE SURE THAT CACHING WORKS AS INTENDED  - PLUS - add to update method once created
 	@Cacheable("users")
 	public Optional<User> get(Integer userId){
 		return userRepo.findById(userId);
 	}
-
+	
 	public List<User> getAll() {
 		return userRepo.findAll();
 	}
@@ -74,7 +74,7 @@ public class UserService {
 				.tokenType(JwtUtils.BEARER)
 				.build();
 	}
-
+	
 	@Transactional
 	public User register(User user) {
 		log.info("Registering new user with username: "+user.getUsername());
