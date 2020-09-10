@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 
 @Repository
-public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Long>{
+public interface PolicyPaymentRepository extends JpaRepository<PolicyPayment, Long>, JpaSpecificationExecutor<PolicyPayment>{
 
 	@Query("FROM PolicyPaymentDetails e WHERE e.policyPayment.id = :id AND e.deleted=false")
 	List<PolicyPaymentDetails> getPaymentDetails(Long id);

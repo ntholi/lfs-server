@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -29,12 +30,13 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemDTO;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.MORTUARY+"/postmortem")
+@RequestMapping("/"+Domain.Const.MORTUARY+"/postmortems")
 @AllArgsConstructor
 public class PostmortemController 
 		implements ViewModelController<Postmortem, PostmortemViewModel> {
@@ -50,10 +52,11 @@ public class PostmortemController
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PostmortemViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<PostmortemViewModel>>> all(
+			@SearchSpec Specification<Postmortem> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping

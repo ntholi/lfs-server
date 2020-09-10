@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +57,10 @@ public class TransferRequestService {
 					.notFound("Branch with name '"+name+"' not found"));
 		entity.setTransferTo(transferTo);
 	}
+	
+	public Page<TransferRequest> search(Specification<TransferRequest> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
 	
 	public void delete(Integer id) {
 		repo.deleteById(id);

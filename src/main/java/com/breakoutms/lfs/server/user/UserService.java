@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,6 +49,10 @@ public class UserService {
 	public List<User> getAll() {
 		return userRepo.findAll();
 	}
+	
+	public Page<User> search(Specification<User> specs, Pageable pageable) {
+        return userRepo.findAll(Specification.where(specs), pageable);
+    }
 	
 	@Transactional(readOnly = true)
 	public LoginResponseDto login(String username, String password) {

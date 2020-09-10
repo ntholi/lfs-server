@@ -1,11 +1,11 @@
 package com.breakoutms.lfs.server.sales;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +39,10 @@ public class SalesService {
 	public Page<Sales> all(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
+	
+	public Page<Sales> search(Specification<Sales> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
 
 	@Transactional
 	public Sales save(final Sales sales) {

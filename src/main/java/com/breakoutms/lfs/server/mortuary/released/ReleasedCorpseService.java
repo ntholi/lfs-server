@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,10 @@ public class ReleasedCorpseService {
 		return repo.save(entity);
 	}
 
+	public Page<ReleasedCorpse> search(Specification<ReleasedCorpse> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
+	
 	public void delete(Integer id) {
 		repo.deleteById(id);
 	}

@@ -1,6 +1,5 @@
 package com.breakoutms.lfs.server.revenue;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,6 +119,10 @@ public class RevenueService {
 		repo.deleteById(id);
 	}
 
+	public Page<Revenue> search(Specification<Revenue> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
+	
 	public List<SalesProduct> getRevenueProducts(Integer quotationNo) {
 		return repo.getRevenueProducts(quotationNo);
 	}

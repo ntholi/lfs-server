@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -40,7 +41,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 import com.breakoutms.lfs.server.preneed.payment.report.PolicyPaymentReportService;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
-import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -63,10 +64,11 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	}
 	
 	@GetMapping("payments")
-	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentViewModel>>> all(
+			@SearchSpec Specification<PolicyPayment> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler, 
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 	
 	@GetMapping("{policyNumber}/payments")

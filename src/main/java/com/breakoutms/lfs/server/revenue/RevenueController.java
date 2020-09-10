@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -36,6 +37,7 @@ import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
 import com.breakoutms.lfs.server.revenue.report.RevenueReportsService;
 import com.breakoutms.lfs.server.sales.QuotationController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -62,10 +64,11 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<RevenueViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<RevenueViewModel>>> all(
+			@SearchSpec Specification<Revenue> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping

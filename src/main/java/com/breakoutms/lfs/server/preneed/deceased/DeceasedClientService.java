@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.common.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
-import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.deceased.model.Payout;
@@ -116,6 +116,10 @@ public class DeceasedClientService {
 		
 		return new Payout(payoutAmount, null);
 	}
+	
+	public Page<DeceasedClient> search(Specification<DeceasedClient> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
 	
 	public void delete(Long id) {
 		repo.deleteById(id);

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,10 @@ public class PostmortemRequestService {
 	public Page<PostmortemRequest> all(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
+	
+	public Page<PostmortemRequest> search(Specification<PostmortemRequest> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
 	
 	@Transactional
 	public PostmortemRequest save(final PostmortemRequest entity) {

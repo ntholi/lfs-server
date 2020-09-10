@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +79,10 @@ public class PolicyService {
 				.orElseThrow(() -> new ObjectNotFoundException(
 						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
 	}
+	
+	public Page<Policy> search(Specification<Policy> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
 	
 	public void delete(String id) {
 		repo.deleteById(id);

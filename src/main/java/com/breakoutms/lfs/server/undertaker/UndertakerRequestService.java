@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
@@ -26,6 +27,10 @@ public class UndertakerRequestService {
 		return repo.findByProcessed(pageRequest, false);
 	}
 
+	public Page<UndertakerRequest> search(Specification<UndertakerRequest> specs, Pageable pageable) {
+        return repo.findAll(Specification.where(specs), pageable);
+    }
+	
 	public List<UndertakerRequest> lookup(String names) {
 		return repo.lookup(names);
 	}

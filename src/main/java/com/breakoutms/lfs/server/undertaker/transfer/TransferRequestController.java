@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -30,6 +31,7 @@ import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestDTO;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -51,10 +53,11 @@ public class TransferRequestController
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<TransferRequestViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<TransferRequestViewModel>>> all(
+			@SearchSpec Specification<TransferRequest> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping

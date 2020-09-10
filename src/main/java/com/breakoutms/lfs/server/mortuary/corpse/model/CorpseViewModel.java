@@ -3,8 +3,6 @@ package com.breakoutms.lfs.server.mortuary.corpse.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -17,7 +15,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "products")
+@Relation(collectionRelation = "corpses")
 public class CorpseViewModel extends RepresentationModel<CorpseViewModel>{
 	
 	private String tagNo;

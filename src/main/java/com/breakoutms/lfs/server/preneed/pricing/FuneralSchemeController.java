@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -36,6 +37,7 @@ import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleViewModel;
 import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -59,10 +61,11 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeViewModel>>> all(
+			@SearchSpec Specification<FuneralScheme> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping
@@ -151,7 +154,6 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 				linkTo(methodOn(getClass()).getPenaltyDeductibles(id)).withSelfRel());
 		return ResponseEntity.ok(result);
 	}
-	
 	
 	@Override
 	public FuneralSchemeViewModel toViewModel(FuneralScheme entity) {

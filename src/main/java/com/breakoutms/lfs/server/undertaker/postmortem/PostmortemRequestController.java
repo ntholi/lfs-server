@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -30,6 +31,7 @@ import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestDTO;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -51,10 +53,11 @@ public class PostmortemRequestController
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PostmortemRequestViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<PostmortemRequestViewModel>>> all(
+			@SearchSpec Specification<PostmortemRequest> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -20,6 +21,7 @@ import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestInquiry;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 
@@ -32,8 +34,9 @@ public class UndertakerRequestController {
 	private final PagedResourcesAssembler<UndertakerRequestInquiry> assembler;
 
 	@GetMapping("/requests")
-	public ResponseEntity<PagedModel<EntityModel<UndertakerRequestInquiry>>> inquire(Pageable pageable) {
-		Page<UndertakerRequest> page = service.all(pageable);
+	public ResponseEntity<PagedModel<EntityModel<UndertakerRequestInquiry>>> all(
+			@SearchSpec Specification<UndertakerRequest> specs, Pageable pageable) {
+		Page<UndertakerRequest> page = service.search(specs, pageable);
 		if(page.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}

@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -29,6 +30,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOut;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutDTO;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -49,10 +51,11 @@ public class TransferOutController implements ViewModelController<TransferOut, T
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<TransferOutViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<TransferOutViewModel>>> all(
+			@SearchSpec Specification<TransferOut> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping

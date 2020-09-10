@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -32,6 +33,7 @@ import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientDTO;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientViewModel;
 import com.breakoutms.lfs.server.preneed.deceased.model.Payout;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -53,10 +55,11 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 	}
 	
 	@GetMapping("deceased")
-	public ResponseEntity<PagedModel<EntityModel<DeceasedClientViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<DeceasedClientViewModel>>> all(
+			@SearchSpec Specification<DeceasedClient> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler, 
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 	
 	@GetMapping("{policyNumber}/deceased")

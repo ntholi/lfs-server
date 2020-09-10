@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.products;
 import javax.validation.Validator;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -27,6 +28,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductDTO;
 import com.breakoutms.lfs.server.products.model.ProductViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -49,11 +51,11 @@ public class ProductController implements ViewModelController<Product, ProductVi
 	}
 
 	@GetMapping 
-	public ResponseEntity<PagedModel<EntityModel<ProductViewModel>>> all(String productType, 
-			Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<ProductViewModel>>> all(
+			@SearchSpec Specification<Product> specs, Pageable pageable, String productType) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(productType, pageable));
+				service.search(specs, pageable, productType));
 	}
 
 	//@Valid has been omitted here but used manual validation because ProductDTO

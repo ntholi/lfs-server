@@ -61,10 +61,11 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 
 	@GetMapping("/corpses") 
-	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> all(
+			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping("/corpses")
@@ -124,14 +125,6 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 		return list.isEmpty()? 
 				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
 					ResponseEntity.ok(CollectionModel.of(list));
-	}
-	
-	@GetMapping("/corpses/search/corpse")
-	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> search(
-			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
-				service.search(specs, pageable));
 	}
 	
 	@GetMapping("/corpses/reports/corpse-report")

@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -30,6 +31,7 @@ import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
+import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -55,10 +57,11 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<SalesViewModel>>> all(Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<SalesViewModel>>> all(
+			@SearchSpec Specification<Sales> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
 
 	@PostMapping
