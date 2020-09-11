@@ -1,8 +1,8 @@
 package com.breakoutms.lfs.server.products;
 
+import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,16 +26,28 @@ public class ProductService {
 	}
 	
 	public Page<Product> search(Specification<Product> specs, Pageable pageable, String productType) {
-		if(StringUtils.isBlank(productType) 
-				|| productType.strip().equalsIgnoreCase("ALL")) {
-			return repo.findAll(specs, pageable);
+		if (productType.equalsIgnoreCase("All")) {
+			specs = Specification.where(specs);
 		}
-		String[] arr = productType.split(",");
-		ProductType[] types = new ProductType[arr.length];
-		for (int i = 0; i < arr.length; i++) {
-			types[i] = ProductType.fromString(arr[i]);
+		else {
+			String[] arr = productType.split(",");
+			ProductType[] types = new ProductType[arr.length];
+			for (int i = 0; i < arr.length; i++) {
+				types[i] = ProductType.fromString(arr[i]);
+			}
+			specs = Specification.where(specs).and(typeIn(List.of(types)));
 		}
-		return repo.findByProductTypeIn(types, Specification.where(specs), pageable);
+		return repo.findAll(specs, pageable);
+	}
+	
+	private Specification<Product> typeIn(List<ProductType> types) {
+	    return (root, query, cb) -> {
+	        if (types != null && !types.isEmpty()) {
+	           return root.get("productType").in(types);
+	        } else {
+	           return cb.and(); 
+	        }
+	    };
 	}
 	
 	public Page<Product> all(Pageable pageable) {

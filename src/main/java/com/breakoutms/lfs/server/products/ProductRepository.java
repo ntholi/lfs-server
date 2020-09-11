@@ -14,5 +14,6 @@ import com.breakoutms.lfs.server.products.model.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product>{
 
 	Page<Product> findByProductTypeIn(ProductType[] productType, Specification<Product> specs, Pageable pageable);
-	
+
+	Page<Product> findByProductTypeIn(ProductType[] types, Pageable pageable);
 }
