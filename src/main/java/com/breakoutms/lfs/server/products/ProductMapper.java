@@ -12,6 +12,8 @@ import com.breakoutms.lfs.server.products.model.EmbalmingPriceModel;
 import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.products.model.ProductDTO;
 import com.breakoutms.lfs.server.products.model.ProductViewModel;
+import com.breakoutms.lfs.server.products.model.Tombstone;
+import com.breakoutms.lfs.server.products.model.TombstoneViewModel;
 import com.breakoutms.lfs.server.products.model.TransportPrice;
 import com.breakoutms.lfs.server.products.model.TransportPriceViewModel;
 
@@ -35,6 +37,9 @@ public abstract class ProductMapper {
 	
 	protected abstract Coffin mapCoffin(ProductDTO entity);
 	public abstract CoffinViewModel mapCoffin(Coffin entity);
+	
+	protected abstract Tombstone mapTombstone(ProductDTO entity);
+	public abstract TombstoneViewModel mapTombstone(Tombstone entity);
 	
 	protected abstract TransportPrice mapTransport(ProductDTO entity);
 	protected abstract TransportPriceViewModel mapTransport(TransportPrice entity);
