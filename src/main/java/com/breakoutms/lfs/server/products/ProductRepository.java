@@ -1,5 +1,7 @@
 package com.breakoutms.lfs.server.products;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 	Page<Product> findByProductTypeIn(ProductType[] productType, Specification<Product> specs, Pageable pageable);
 
 	Page<Product> findByProductTypeIn(ProductType[] types, Pageable pageable);
+
+	Optional<Product> findByName(String string);
 }

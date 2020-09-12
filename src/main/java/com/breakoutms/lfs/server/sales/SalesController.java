@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.sales;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.time.LocalDateTime;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,8 @@ import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
+import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
@@ -92,6 +96,12 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 		return ResponseEntity.ok(
 				EntityModel.of(inquiry,
 						linkTo(methodOn(CorpseController.class).get(tagNo)).withRel("corpse")));
+	}
+	
+	@GetMapping("refrigeration-price")
+	public SalesProductViewModel refrigerationPrice(String tagNo, String leavingTime) {
+		SalesProduct salesProduct = service.refrigerationPrice(tagNo, LocalDateTime.parse(leavingTime));
+		return SalesMapper.INSTANCE.map(salesProduct);
 	}
 	
 	@Override

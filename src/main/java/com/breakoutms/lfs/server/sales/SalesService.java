@@ -1,5 +1,8 @@
 package com.breakoutms.lfs.server.sales;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +17,13 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.preneed.deceased.DeceasedClientRepository;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
+import com.breakoutms.lfs.server.products.ProductRepository;
+import com.breakoutms.lfs.server.products.model.Product;
 import com.breakoutms.lfs.server.sales.model.BurialDetails;
 import com.breakoutms.lfs.server.sales.model.Customer;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
-import com.breakoutms.lfs.server.sales.model.SalesInquiry.SalesInquiryBuilder;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +35,7 @@ public class SalesService {
 	private final SalesRepository repo;
 	private final DeceasedClientRepository deceasedRepo;
 	private final CorpseRepository corpseRepo;
+	private final ProductRepository productRepo;
 
 	public Optional<Sales> get(Integer id) {
 		return repo.findById(id);
@@ -105,36 +110,46 @@ public class SalesService {
 		}
 	}
 	
+	@Transactional
 	public SalesInquiry salesInquiry(String tagNo) {
 		Optional<DeceasedClient> client = deceasedRepo.findByCorpseTagNo(tagNo);
-		SalesInquiryBuilder response = SalesInquiry.builder();
+		SalesInquiry response = new SalesInquiry();
 		Corpse corpse = null;
 		if(client.isPresent()) {
 			var obj = client.get();
-			response.payout(obj.getPayout())
-				.tagNo(obj.getCorpse().getTagNo())
-				.name(obj.getCorpse().getFullName());
+			response.setPayout(obj.getPayout());
+			response.setTagNo(obj.getCorpse().getTagNo());
+			response.setName(obj.getCorpse().getFullName());
 			if(obj.getPolicy() != null) {
-				response.policyNumber(obj.getPolicy().getPolicyNumber());
+				response.setPolicyNumber(obj.getPolicy().getPolicyNumber());
 			}
 			if(obj.getDependent() != null) {
-				response.dependentId(obj.getDependent().getId());
+				response.setDependentId(obj.getDependent().getId());
 			}
 			corpse = obj.getCorpse();
 		}
 		else {
 			corpse = corpseRepo.findById(tagNo)
 					.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
-			response.tagNo(corpse.getTagNo()).name(corpse.getFullName());
+			response.setTagNo(corpse.getTagNo());
+			response.setName(corpse.getFullName());
 		}
+		
 		Quotation quot = corpse.getQuotation();
-		if(quot != null) {
-			List<SalesProduct> salesProducts = quot.getSalesProducts();
-			response.salesProducts(SalesMapper.INSTANCE.map(salesProducts));
+		
+		//create quotation if null
+		if(quot == null) {
+			quot = new Quotation();
+			corpse.setQuotation(quot);
+			quot.setCorpse(corpse);
+			corpseRepo.save(corpse);
 		}
-		SalesInquiry inquiry = response.build();
-		if(inquiry.getTagNo() != null) {
-			return inquiry;
+
+		List<SalesProduct> salesProducts = quot.getSalesProducts();
+		response.setSalesProducts(SalesMapper.INSTANCE.map(salesProducts));
+
+		if(response.getTagNo() != null) {
+			return response;
 		}
 		return null;
 	}
@@ -145,5 +160,20 @@ public class SalesService {
 
 	public List<SalesProduct> getSalesProducts(Integer quotationNo) {
 		return repo.getSalesProducts(quotationNo);
+	}
+
+	public SalesProduct refrigerationPrice(String tagNo, LocalDateTime leavingDate) {
+		Corpse corpse = corpseRepo.findById(tagNo)
+				.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
+		Product product = productRepo.findByName("Refrigeration")
+				.orElseThrow(ExceptionSupplier.notFound("Refrigeration Price Not Found"));
+		
+		LocalDate start = corpse.getArrivalDate() != null? 
+				corpse.getArrivalDate().toLocalDate():
+					corpse.getCreatedAt().toLocalDate();
+		int days = (int) ChronoUnit.DAYS.between(start, leavingDate);
+		days = days > 0? days: 1;
+		
+		return new SalesProduct(product, days);
 	}
 }

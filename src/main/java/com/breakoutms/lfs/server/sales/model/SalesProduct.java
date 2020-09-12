@@ -72,4 +72,13 @@ public class SalesProduct extends AuditableEntity<Long>{
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
     private Quotation quotation;
+	
+	public SalesProduct(@NotNull Product product, Integer quantity) {
+		this.product = product;
+		this.quantity = quantity;
+		if(quantity <= 0) {
+			quantity = 1;
+		}
+		this.cost = product.getPrice().multiply(new BigDecimal(quantity));
+	}
 }
