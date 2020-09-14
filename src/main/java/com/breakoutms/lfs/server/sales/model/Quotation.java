@@ -54,7 +54,7 @@ public class Quotation extends AuditableEntity<Integer> {
 	
 	@OneToMany(mappedBy="quotation", 
 			orphanRemoval = true,
-			cascade=CascadeType.ALL)
+			cascade = CascadeType.ALL)
 	private List<SalesProduct> salesProducts;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -68,6 +68,17 @@ public class Quotation extends AuditableEntity<Integer> {
 			this.salesProducts = new ArrayList<>();
 		}
 		this.salesProducts.addAll(salesProducts);
+	}
+	
+	public void setSalesProducts(List<SalesProduct> salesProducts) {
+		if(this.salesProducts == null) {
+			this.salesProducts = new ArrayList<>();
+		}
+		this.salesProducts.clear();
+		if(salesProducts != null) {
+			salesProducts.forEach(it -> it.setId(null));
+			this.salesProducts.addAll(salesProducts);
+		}
 	}
 	
 	public void addRevenue(Revenue revenue) {

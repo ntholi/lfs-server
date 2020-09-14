@@ -99,6 +99,10 @@ public class SalesService {
 	
 		if(corpse != null) {
 			quotation = corpse.getQuotation();
+			if(quotation == null) {
+				quotation = new Quotation();
+				corpse.setQuotation(quotation);
+			}
 			quotation.addSalesProducts(salesProducts);
 		}
 		quotation.setCustomer(customer);
@@ -108,6 +112,7 @@ public class SalesService {
 				salesProduct.setQuotation(quotation);
 			}
 		}
+		quotation.setSalesProducts(salesProducts);
 	}
 	
 	@Transactional
