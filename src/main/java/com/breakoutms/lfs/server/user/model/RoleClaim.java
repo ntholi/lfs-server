@@ -8,11 +8,11 @@ import com.breakoutms.lfs.common.enums.PrivilegeType;
 import lombok.Data;
 
 @Data
-public class RoleDto {
+public class RoleClaim {
 	private Domain name;
 	private String privileges;
 	
-	public RoleDto(Role role) {
+	public RoleClaim(Role role) {
 		name = role.getName();
 		if(role.getPrivileges() != null) {
 			privileges = role.getPrivileges()

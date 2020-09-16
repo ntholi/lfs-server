@@ -25,7 +25,6 @@ import lombok.ToString;
 
 @Entity
 @Data @Builder
-@ToString(exclude="roles")
 @AllArgsConstructor @NoArgsConstructor
 @Table(indexes = {
         @Index(columnList = "type", name = "unique_privilege_type", unique=true)
@@ -34,13 +33,14 @@ public class Privilege {
 		
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @NotNull
     @Column(nullable = false, columnDefinition = "CHAR(15)")
     @Enumerated(EnumType.STRING)
     private PrivilegeType type;
     
     @JsonIgnore
+    @ToString.Exclude
     @ManyToMany(mappedBy = "privileges")
     private List<Role> roles;
     

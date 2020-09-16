@@ -6,7 +6,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.breakoutms.lfs.server.branch.Branch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -31,5 +30,5 @@ public class UserDTO {
     private List<Role> roles;
     
     @NotNull
-    private Branch branch;
+    private String branchName;
 }

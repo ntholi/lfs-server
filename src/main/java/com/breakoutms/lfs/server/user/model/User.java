@@ -13,29 +13,30 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data @Builder
+@EqualsAndHashCode(callSuper=true)
 @AllArgsConstructor @NoArgsConstructor
 @Table(indexes = {
         @Index(columnList = "username", name = "unique_username", unique=true)
 })
-public class User {
+public class User extends AuditableEntity<Integer>{
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "SMALLINT UNSIGNED")
@@ -59,7 +60,7 @@ public class User {
     @Column(length = 50)
     private String lastName;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles", 
             joinColumns = @JoinColumn(
@@ -67,10 +68,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(
               name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Branch branch;
 
 	public String getFullnames() {
 		StringBuilder sb = new StringBuilder();

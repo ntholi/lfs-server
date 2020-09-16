@@ -46,8 +46,8 @@ public class UserService {
 		return userRepo.findById(userId);
 	}
 	
-	public List<User> getAll() {
-		return userRepo.findAll();
+	public Page<User> all(Pageable pageable) {
+		return userRepo.findAll(pageable);
 	}
 	
 	public Page<User> search(Specification<User> specs, Pageable pageable) {

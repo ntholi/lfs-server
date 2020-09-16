@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +29,6 @@ import lombok.ToString;
 
 @Entity
 @Data @Builder
-@ToString(exclude="users")
 @AllArgsConstructor @NoArgsConstructor
 @Table(indexes = {
         @Index(columnList = "name", name = "unique_role_name", unique=true)
@@ -37,17 +37,19 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+    
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Domain name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles")
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
  
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(
         name = "roles_privileges", 
         joinColumns = @JoinColumn(

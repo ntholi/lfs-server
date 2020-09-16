@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.breakoutms.lfs.server.user.model.RoleDto;
+import com.breakoutms.lfs.server.user.model.RoleClaim;
 import com.breakoutms.lfs.server.user.model.User;
 
 import io.jsonwebtoken.Claims;
@@ -56,7 +56,7 @@ public class JwtUtils {
         claims.put(NAMES, user.getFullnames());
         claims.put(SYNC_NO, syncNo);
         claims.put(ROLES_KEY, user.getRoles().stream()
-        		.map(RoleDto::new)
+        		.map(RoleClaim::new)
         		.collect(Collectors.toList())
         );
         Date now = new Date();
@@ -113,7 +113,7 @@ public class JwtUtils {
 			
 			auths.add(new SimpleGrantedAuthority(ROLE_PREFIX+name));
 			if(privileges != null && !privileges.isBlank()) {
-				String[] array = RoleDto.privilegesFromString(privileges);
+				String[] array = RoleClaim.privilegesFromString(privileges);
 				for (int i = 0; i < array.length; i++) {
 					auths.add(new SimpleGrantedAuthority(array[i]));
 				}
