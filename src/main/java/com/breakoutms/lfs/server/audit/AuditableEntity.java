@@ -22,6 +22,7 @@ import com.breakoutms.lfs.server.core.Entity;
 import com.breakoutms.lfs.server.user.model.User;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Ntholi Nkhatho
@@ -29,6 +30,7 @@ import lombok.Data;
  *
  */
 @Data
+@EqualsAndHashCode(exclude = {"createdBy", "branch"})
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity<ID> implements Entity<ID> {
