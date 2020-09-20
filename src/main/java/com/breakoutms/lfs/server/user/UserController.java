@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.ResponseHelper;
@@ -48,11 +47,13 @@ public class UserController implements ViewModelController<User, UserViewModel>{
        return service.login(loginDto.getUsername(), loginDto.getPassword());
     }
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody @Valid UserDTO userDto){
-    	User user = UserMapper.INSTANCE.map(userDto);
-        return service.register(user);
+    @PostMapping
+    public ResponseEntity<UserViewModel> register(@RequestBody @Valid UserDTO userDto){
+    	var entity = UserMapper.INSTANCE.map(userDto);
+		return new ResponseEntity<>(
+				toViewModel(service.register(entity)), 
+				HttpStatus.CREATED
+		);
     }
 
 	@Override
