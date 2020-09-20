@@ -36,6 +36,7 @@ public class PolicyDTO {
 	private Gender gender;
 	
 	@PastOrPresent
+	@NotNull
 	private LocalDate dateOfBirth;
 	
 	@Nullable
