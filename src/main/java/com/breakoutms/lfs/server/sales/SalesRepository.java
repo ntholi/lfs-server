@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.sales;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,8 @@ public interface SalesRepository extends JpaRepository<Sales, Integer>, JpaSpeci
 	List<SalesProduct> getSalesProducts(int quotationNo);
 
 	List<Sales> findByQuotationId(Integer quotationNo, Sort sort);
+
+	@Query("from Sales where quotation.corpse.tagNo = :tagNo")
+	Optional<Sales> findByCorpseTagNo(String tagNo);
 
 }
