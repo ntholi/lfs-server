@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -16,9 +17,11 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.enums.ReleasedCorpseStatus;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.sales.model.BurialDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +52,9 @@ public class ReleasedCorpse extends AuditableEntity<Integer> {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Corpse corpse;
 	
-	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
+	private BurialDetails burialDetails;
+	
 	private LocalDateTime date;
 	
 	@Column(length = 50)
@@ -57,4 +62,6 @@ public class ReleasedCorpse extends AuditableEntity<Integer> {
 	
 	@Column(length = 50)
 	private String coffinedBy;
+	
+	private ReleasedCorpseStatus status;
 }

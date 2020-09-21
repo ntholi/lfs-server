@@ -22,7 +22,7 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 	public SalesMother removeIDs() {
 		entity.setId(null);
 		entity.getBurialDetails().setId(null);
-		entity.getBurialDetails().getCorpse().setTagNo(null);
+		entity.getCorpse().setTagNo(null);
 		entity.getQuotation().setId(null);
 		entity.getQuotation().getCustomer().setId(null);
 		entity.getQuotation().getSalesProducts().forEach(it -> {
@@ -87,7 +87,7 @@ public class SalesMother extends AuditableMother<Sales, Integer> {
 			entity.setBurialDetails(burialDetails);
 		}
 		Corpse corpse  = new Corpse();
-		burialDetails.setCorpse(corpse);
+		entity.setCorpse(corpse);
 		corpse.setTagNo(tagNo);
 		return this;
 	}

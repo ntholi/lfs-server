@@ -18,7 +18,6 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
 import lombok.AllArgsConstructor;
@@ -46,10 +45,8 @@ public class BurialDetails extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "burial_details_id")
 	private Integer id;
 	
-	
-	//TODO: CHANGE THIS TO SALES
 	@OneToOne(fetch = FetchType.LAZY)
-	private Corpse corpse;
+	private Sales sales;
 	
 	private LocalDateTime leavingTime;
 	

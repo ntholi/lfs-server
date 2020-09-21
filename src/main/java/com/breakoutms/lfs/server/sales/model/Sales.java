@@ -24,6 +24,7 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.PaymentMode;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.sun.istack.Nullable;
 
@@ -51,6 +52,9 @@ public class Sales extends AuditableEntity<Integer> {
 	@Id
 	@GeneratedValue(generator = "sales_id")
 	private Integer id;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private Corpse corpse;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Quotation quotation;

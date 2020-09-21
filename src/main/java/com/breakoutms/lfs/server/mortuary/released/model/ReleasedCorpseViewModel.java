@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import com.breakoutms.lfs.common.enums.ReleasedCorpseStatus;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +17,8 @@ public class ReleasedCorpseViewModel extends RepresentationModel<ReleasedCorpseV
 
 	private Integer id;
 	private String tagNo;
-	private LocalDateTime date;
+	private LocalDateTime leavingTime;
 	private String dressedBy;
-	private String coffinedBy;
+	private String coffinedBy;	
+	private ReleasedCorpseStatus status;
 }

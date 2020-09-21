@@ -96,20 +96,14 @@ public class RevenueService {
 		}
 		var sales = salesList.get(0);
 		RevenueInquiry inquiry = new RevenueInquiry();
-		var burial = sales.getBurialDetails();
-		if(burial != null) {
-			var corpse = burial.getCorpse();
-			inquiry.setCorpse(corpse != null? corpse.getFullName() : "");
-		}
-		if(sales.getQuotation() != null) {
-			var quotation = sales.getQuotation();
+		var corpse = sales.getCorpse();
+		inquiry.setCorpse(corpse != null? corpse.getFullName() : "");
+		
+		var quotation = sales.getQuotation();
+		if(quotation != null) {
 			var customer = quotation.getCustomer();
 			inquiry.setCustomerNames(customer != null? customer.getNames() : "");
 			inquiry.setSalesProducts(RevenueMapper.INSTANCE.map(quotation.getSalesProducts()));
-//			var balance = quotation.getSalesProducts() //TODO DELETE THIS
-//					.stream()
-//					.map(SalesProduct::getCost)
-//					.reduce(BigDecimal.ZERO, BigDecimal::add);
 			inquiry.setBalance(sales.getPayableAmount());
 		}
 		return inquiry;

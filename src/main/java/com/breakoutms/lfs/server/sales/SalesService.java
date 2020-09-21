@@ -12,9 +12,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.common.enums.ReleasedCorpseStatus;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.released.ReleasedCorpseRepository;
+import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.preneed.deceased.DeceasedClientRepository;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.products.ProductRepository;
@@ -36,6 +39,7 @@ public class SalesService {
 	private final DeceasedClientRepository deceasedRepo;
 	private final CorpseRepository corpseRepo;
 	private final ProductRepository productRepo;
+	private final ReleasedCorpseRepository releasedCorpseRepository;
 
 	public Optional<Sales> get(Integer id) {
 		return repo.findById(id);
@@ -52,6 +56,20 @@ public class SalesService {
 	@Transactional
 	public Sales save(final Sales sales) {
 		setAssociations(sales);
+		
+		BurialDetails burial = sales.getBurialDetails();
+		if(burial != null && burial.getLeavingTime() != null) {
+			Corpse corpse = sales.getCorpse();
+			var leavingTime = burial.getLeavingTime();
+			if(leavingTime.isAfter(LocalDate.now().atStartOfDay())) {
+				ReleasedCorpse releasedCorpse = new ReleasedCorpse();
+				releasedCorpse.setCorpse(corpse);
+				releasedCorpse.setBurialDetails(burial);
+				releasedCorpse.setStatus(ReleasedCorpseStatus.PENDING);
+				releasedCorpseRepository.save(releasedCorpse);
+			}
+		}
+		
 		return repo.save(sales);
 	}
 
@@ -70,7 +88,7 @@ public class SalesService {
 	}
 
 	protected void setAssociations(final Sales sales) {
-		String tagNo = sales.getBurialDetails().getCorpse().getTagNo();
+		String tagNo = sales.getCorpse().getTagNo();
 		Corpse corpse = null;
 		if(tagNo != null) {
 			corpse = corpseRepo.findById(tagNo)

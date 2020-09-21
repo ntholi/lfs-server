@@ -52,13 +52,16 @@ public class Quotation extends AuditableEntity<Integer> {
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Customer customer;
 	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private Corpse corpse;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Sales sales;
+	
 	@OneToMany(mappedBy="quotation", 
 			orphanRemoval = true,
 			cascade = CascadeType.ALL)
 	private List<SalesProduct> salesProducts;
-	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	private Corpse corpse;
 	
 	@OneToMany(mappedBy="quotation", fetch = FetchType.LAZY)
 	private List<Revenue> revenues;

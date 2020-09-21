@@ -3,7 +3,10 @@ package com.breakoutms.lfs.server.mortuary.released;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
-
 import lombok.AllArgsConstructor;
 
 @Service
@@ -24,8 +26,10 @@ public class ReleasedCorpseService {
 		return repo.findById(id);
 	}
 	
-	public Page<ReleasedCorpse> all(Pageable pageable) {
-		return repo.findAll(pageable);
+	public Page<ReleasedCorpse> all(PageRequest pageable) {
+		Sort sort = Sort.by(Direction.DESC, "status").and(pageable.getSort());
+		var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+		return repo.findAll(pageRequest);
 	}
 	
 	@Transactional
