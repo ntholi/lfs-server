@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 public class ReleasedCorpseViewModel extends RepresentationModel<ReleasedCorpseViewModel>{
 
 	private Integer id;
+	private Integer burialDetailsId;
 	private String tagNo;
 	private LocalDateTime leavingTime;
 	private String dressedBy;

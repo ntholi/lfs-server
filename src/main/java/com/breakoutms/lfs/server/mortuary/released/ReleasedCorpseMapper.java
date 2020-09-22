@@ -15,11 +15,16 @@ public abstract class ReleasedCorpseMapper {
 	public static final ReleasedCorpseMapper INSTANCE = Mappers.getMapper(ReleasedCorpseMapper.class);
 
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "burialDetailsId", target = "burialDetails.id")
 	protected abstract ReleasedCorpse map(ReleasedCorpseDTO dto);
+	
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
+	@Mapping(source = "burialDetails.id", target = "burialDetailsId")
 	protected abstract ReleasedCorpseViewModel map(ReleasedCorpse releasedCorpse);
+	
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "burialDetails.id", target = "burialDetailsId")
 	protected abstract ReleasedCorpseDTO toDTO(ReleasedCorpse entity);
 
 	@Mapping(target = "id", ignore = true)

@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class ReleasedCorpseDTO {
 
 	private Integer id;
+	private Integer burialDetailsId;
 	@NotBlank
 	private String tagNo;
 	@NotNull
