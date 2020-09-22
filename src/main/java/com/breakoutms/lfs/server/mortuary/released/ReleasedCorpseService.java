@@ -28,13 +28,13 @@ public class ReleasedCorpseService {
 	}
 	
 	public Page<ReleasedCorpse> all(PageRequest pageable) {
-		Sort sort = Sort.by(Direction.ASC, "status").and(pageable.getSort());
-		var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		return repo.findAll(pageRequest);
+		return repo.findAll(pageable);
 	}
 	
 	public Page<ReleasedCorpse> search(Specification<ReleasedCorpse> specs, Pageable pageable) {
-		Sort sort = Sort.by(Direction.ASC, "status").and(pageable.getSort());
+		Sort sort = Sort.by(Direction.ASC, "status")
+				.and(Sort.by(Direction.ASC, "burialDetails.leavingTime"))
+				.and(pageable.getSort());
 		var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         return repo.findAll(Specification.where(specs), pageRequest);
     }
