@@ -56,7 +56,7 @@ public class Sales extends AuditableEntity<Integer> {
 	@OneToOne(fetch = FetchType.LAZY)
 	private Corpse corpse;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Quotation quotation;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

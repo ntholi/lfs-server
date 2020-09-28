@@ -23,5 +23,6 @@ public class SalesProductViewModel extends RepresentationModel<SalesProductViewM
 	private Integer productId;
 	private BigDecimal unitPrice;
 	private BigDecimal cost;
-	private int quantity;
+	private int quantity;	
+	private boolean undeletable = true;
 }

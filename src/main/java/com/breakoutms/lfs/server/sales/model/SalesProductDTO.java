@@ -28,4 +28,6 @@ public class SalesProductDTO {
 	private Integer productId;
 	
 	private int quantity;
+	
+	private boolean undeletable = true;
 }
