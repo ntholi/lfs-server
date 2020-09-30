@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientDTO;
-import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class DeceasedClientMapper {
@@ -29,7 +28,5 @@ public abstract class DeceasedClientMapper {
 	@Mapping(source = "policy.policyNumber", target = "policyNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "dependent.id", target = "dependentId")
-	public abstract DeceasedClientViewModel map(DeceasedClient entity);
-	
-	public abstract DeceasedClientDTO toDTO(DeceasedClient entity);
+	public abstract DeceasedClientDTO map(DeceasedClient entity);
 }

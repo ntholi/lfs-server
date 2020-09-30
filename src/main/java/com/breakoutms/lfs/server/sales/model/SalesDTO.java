@@ -12,18 +12,22 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.PaymentMode;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SalesDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "sales")
+public class SalesDTO extends RepresentationModel<SalesDTO> {
+	
+	private Integer id;
+	
+	private Integer quotationNo;
 	
 	private String tagNo;
 	

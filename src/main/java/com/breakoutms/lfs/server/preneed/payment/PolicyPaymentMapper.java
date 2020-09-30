@@ -11,8 +11,6 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsDTO;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsViewModel;
-import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class PolicyPaymentMapper {
@@ -31,9 +29,9 @@ public abstract class PolicyPaymentMapper {
 	public abstract PolicyPaymentDetails map(PolicyPaymentDetailsDTO dto);
 	
 	@Mapping(source = "policy.policyNumber", target = "policyNumber")
-	public abstract PolicyPaymentViewModel map(PolicyPayment entity);
+	public abstract PolicyPaymentDetailsDTO map(PolicyPayment entity);
 	
-	public abstract PolicyPaymentDetailsViewModel map(PolicyPaymentDetails entity);
-	public abstract List<PolicyPaymentDetailsViewModel> map(List<PolicyPaymentDetails> list);
+	public abstract PolicyPaymentDetailsDTO map(PolicyPaymentDetails entity);
+	public abstract List<PolicyPaymentDetailsDTO> map(List<PolicyPaymentDetails> list);
 	public abstract PolicyPaymentDTO toDTO(PolicyPayment entity);
 }

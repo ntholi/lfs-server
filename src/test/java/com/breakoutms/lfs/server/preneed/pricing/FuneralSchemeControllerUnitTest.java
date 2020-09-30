@@ -138,7 +138,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 		var entity = newEntity();
 		when(repo.save(any(FuneralScheme.class))).thenReturn(entity);
 
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		var viewModel = modelMapper.map(entity);
 
 		post(mockMvc, URL, dto)
@@ -166,7 +166,7 @@ public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		var viewModel = modelMapper.map(entity);
 
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));

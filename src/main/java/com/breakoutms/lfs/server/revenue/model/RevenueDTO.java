@@ -7,16 +7,16 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class RevenueDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "revenues")
+public class RevenueDTO extends RepresentationModel<RevenueDTO>{
 
 	private Integer receiptNo;
 

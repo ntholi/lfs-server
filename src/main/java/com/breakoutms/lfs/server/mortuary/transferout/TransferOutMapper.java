@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOut;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutDTO;
-import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class TransferOutMapper {
@@ -26,7 +25,7 @@ public abstract class TransferOutMapper {
 	@Mapping(source = "transport.vehicle.registrationNumber",  target = "registrationNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "transferRequest.id", target = "requestId")
-	protected abstract TransferOutViewModel map(TransferOut transferOut);
+	protected abstract TransferOutDTO map(TransferOut transferOut);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "corpse", ignore = true)

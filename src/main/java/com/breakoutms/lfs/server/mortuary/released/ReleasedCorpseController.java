@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseDTO;
-import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -38,20 +37,20 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.MORTUARY+"/released-corpses")
 @AllArgsConstructor
-public class ReleasedCorpseController implements ViewModelController<ReleasedCorpse, ReleasedCorpseViewModel> {
+public class ReleasedCorpseController implements ViewModelController<ReleasedCorpse, ReleasedCorpseDTO> {
 	
 	private final ReleasedCorpseService service;
-	private final PagedResourcesAssembler<ReleasedCorpseViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<ReleasedCorpseDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ReleasedCorpseViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<ReleasedCorpseDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("ReleasedCorpse", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<ReleasedCorpseViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<ReleasedCorpseDTO>>> all(
 			@SearchSpec Specification<ReleasedCorpse> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -59,7 +58,7 @@ public class ReleasedCorpseController implements ViewModelController<ReleasedCor
 	}
 
 	@PostMapping
-	public ResponseEntity<ReleasedCorpseViewModel> save(@Valid @RequestBody ReleasedCorpseDTO dto) {
+	public ResponseEntity<ReleasedCorpseDTO> save(@Valid @RequestBody ReleasedCorpseDTO dto) {
 		ReleasedCorpse entity = ReleasedCorpseMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -68,7 +67,7 @@ public class ReleasedCorpseController implements ViewModelController<ReleasedCor
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ReleasedCorpseViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<ReleasedCorpseDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody ReleasedCorpseDTO dto) {
 		ReleasedCorpse entity = ReleasedCorpseMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -78,8 +77,8 @@ public class ReleasedCorpseController implements ViewModelController<ReleasedCor
 	}
 	
 	@Override
-	public ReleasedCorpseViewModel toViewModel(ReleasedCorpse entity) {
-		ReleasedCorpseViewModel dto = ReleasedCorpseMapper.INSTANCE.map(entity);
+	public ReleasedCorpseDTO toViewModel(ReleasedCorpse entity) {
+		ReleasedCorpseDTO dto = ReleasedCorpseMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

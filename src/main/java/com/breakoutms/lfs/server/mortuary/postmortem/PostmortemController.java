@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemDTO;
-import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -39,20 +38,20 @@ import lombok.val;
 @RequestMapping("/"+Domain.Const.MORTUARY+"/postmortems")
 @AllArgsConstructor
 public class PostmortemController 
-		implements ViewModelController<Postmortem, PostmortemViewModel> {
+		implements ViewModelController<Postmortem, PostmortemDTO> {
 
 	private final PostmortemService service;
-	private final PagedResourcesAssembler<PostmortemViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<PostmortemDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PostmortemViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<PostmortemDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Postmortem", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PostmortemViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<PostmortemDTO>>> all(
 			@SearchSpec Specification<Postmortem> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -60,7 +59,7 @@ public class PostmortemController
 	}
 
 	@PostMapping
-	public ResponseEntity<PostmortemViewModel> save(@Valid @RequestBody PostmortemDTO dto) {
+	public ResponseEntity<PostmortemDTO> save(@Valid @RequestBody PostmortemDTO dto) {
 		Postmortem entity = PostmortemMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -69,7 +68,7 @@ public class PostmortemController
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<PostmortemViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<PostmortemDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody PostmortemDTO dto) {
 		Postmortem entity = PostmortemMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -79,8 +78,8 @@ public class PostmortemController
 	}
 	
 	@Override
-	public PostmortemViewModel toViewModel(Postmortem entity) {
-		PostmortemViewModel dto = PostmortemMapper.INSTANCE.map(entity);
+	public PostmortemDTO toViewModel(Postmortem entity) {
+		PostmortemDTO dto = PostmortemMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

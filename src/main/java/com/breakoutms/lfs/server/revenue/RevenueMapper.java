@@ -10,9 +10,8 @@ import org.mapstruct.factory.Mappers;
 import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueDTO;
 import com.breakoutms.lfs.server.revenue.model.RevenueEagerResponse;
-import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
-import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
+import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
 
 @Mapper(componentModel="spring")
 public abstract class RevenueMapper {
@@ -23,14 +22,11 @@ public abstract class RevenueMapper {
 	protected abstract Revenue map(RevenueDTO dto);
 
 	@Mapping(source = "quotation.id", target = "quotationNo")
-	protected abstract RevenueViewModel map(Revenue revenue);
+	protected abstract RevenueDTO map(Revenue revenue);
 	
 	@Mapping(source = "quotation.id", target = "quotationNo")
 	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
 	public abstract RevenueEagerResponse eager(Revenue entity);
-
-	@Mapping(source = "quotation.id", target = "quotationNo")
-	protected abstract RevenueDTO toDTO(Revenue entity);
 
 	@Mapping(target = "createdAt", ignore = true)
 	@Mapping(target = "createdBy", ignore = true)
@@ -39,8 +35,8 @@ public abstract class RevenueMapper {
 	
 	protected abstract Revenue copy(Revenue revenue);
 
-	protected abstract List<SalesProductViewModel> map(List<SalesProduct> revenueProducts);
+	protected abstract List<SalesProductDTO> map(List<SalesProduct> revenueProducts);
 	
 	@Mapping(source = "product.name", target = "productName")
-	protected abstract SalesProductViewModel map(SalesProduct revenueProduct);
+	protected abstract SalesProductDTO map(SalesProduct revenueProduct);
 }

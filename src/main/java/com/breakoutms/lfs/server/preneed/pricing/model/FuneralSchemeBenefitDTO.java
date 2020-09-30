@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Relation(collectionRelation = "funeralSchemeBenefits")
-public class FuneralSchemeBenefitViewModel extends RepresentationModel<FuneralSchemeBenefitViewModel> {
+public class FuneralSchemeBenefitDTO extends RepresentationModel<FuneralSchemeBenefitDTO> {
 
 	private Integer id;
 	private ProductType productType;

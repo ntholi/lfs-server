@@ -8,15 +8,21 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 
-@Data @Builder
-@AllArgsConstructor @NoArgsConstructor
-public class PolicyPaymentDTO {
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Relation(collectionRelation = "policyPayments")
+public class PolicyPaymentDTO extends RepresentationModel<PolicyPaymentDTO> {
+	
+	private Long id;
+	
+	private String policyNumber;
 	
 	@NotNull
 	private LocalDateTime paymentDate;

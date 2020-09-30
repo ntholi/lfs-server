@@ -9,16 +9,20 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class FuneralSchemeDTO {
+@Data @Builder
+@NoArgsConstructor @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "funeralSchemes")
+public class FuneralSchemeDTO extends RepresentationModel<FuneralSchemeDTO> {
 	
 	private Integer id;
 	

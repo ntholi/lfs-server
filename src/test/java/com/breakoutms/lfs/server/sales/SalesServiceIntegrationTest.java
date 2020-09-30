@@ -134,7 +134,7 @@ public class SalesServiceIntegrationTest {
 	 * @return
 	 */
 	private Sales fromDTO(Sales entity) {
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		return modelMapper.map(dto);
 	}
 }

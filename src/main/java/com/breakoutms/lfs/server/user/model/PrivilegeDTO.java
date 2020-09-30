@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Relation(collectionRelation = "privileges")
-public class PrivilegeViewModel extends RepresentationModel<PrivilegeViewModel>  {
+public class PrivilegeDTO extends RepresentationModel<PrivilegeDTO>  {
 	
     private Integer id;
     private PrivilegeType type;

@@ -10,12 +10,11 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Relation(collectionRelation = "premiums")
-public class PremiumViewModel extends RepresentationModel<PremiumViewModel> {
+@Relation(collectionRelation = "dependentBenefits")
+public class DependentBenefitDTO extends RepresentationModel<DependentBenefitDTO> {
 
 	private Integer id;
 	private int minimumAge;
 	private int maximumAge;
-	private BigDecimal premiumAmount;
 	private BigDecimal coverAmount;
 }

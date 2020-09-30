@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOut;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutDTO;
-import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOutViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -38,20 +37,20 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.MORTUARY+"/transfer-out")
 @AllArgsConstructor
-public class TransferOutController implements ViewModelController<TransferOut, TransferOutViewModel> {
+public class TransferOutController implements ViewModelController<TransferOut, TransferOutDTO> {
 	
 	private final TransferOutService service;
-	private final PagedResourcesAssembler<TransferOutViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<TransferOutDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TransferOutViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<TransferOutDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("TransferOut", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<TransferOutViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<TransferOutDTO>>> all(
 			@SearchSpec Specification<TransferOut> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -59,7 +58,7 @@ public class TransferOutController implements ViewModelController<TransferOut, T
 	}
 
 	@PostMapping
-	public ResponseEntity<TransferOutViewModel> save(@Valid @RequestBody TransferOutDTO dto) {
+	public ResponseEntity<TransferOutDTO> save(@Valid @RequestBody TransferOutDTO dto) {
 		TransferOut entity = TransferOutMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -68,7 +67,7 @@ public class TransferOutController implements ViewModelController<TransferOut, T
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<TransferOutViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<TransferOutDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody TransferOutDTO dto) {
 		TransferOut entity = TransferOutMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -78,8 +77,8 @@ public class TransferOutController implements ViewModelController<TransferOut, T
 	}
 	
 	@Override
-	public TransferOutViewModel toViewModel(TransferOut entity) {
-		TransferOutViewModel dto = TransferOutMapper.INSTANCE.map(entity);
+	public TransferOutDTO toViewModel(TransferOut entity) {
+		TransferOutDTO dto = TransferOutMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

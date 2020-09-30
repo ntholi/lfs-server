@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.VehicleOwner;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class TransferOutDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "transferOut")
+public class TransferOutDTO extends RepresentationModel<TransferOutDTO>{
 	
 	private Integer id;
 	@NotBlank

@@ -32,7 +32,6 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
-import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.mortuary.corpse.report.CorpseReportService;
@@ -46,22 +45,22 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.MORTUARY)
 @AllArgsConstructor
-public class CorpseController implements ViewModelController<Corpse, CorpseViewModel> {
+public class CorpseController implements ViewModelController<Corpse, CorpseDTO> {
 	
 	private final CorpseService service;
 	private final CorpseReportService reportService;
-	private final PagedResourcesAssembler<CorpseViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<CorpseDTO> pagedAssembler;
 
 
 	@GetMapping("/corpses/{id}")
-	public ResponseEntity<CorpseViewModel> get(@PathVariable String id) {
+	public ResponseEntity<CorpseDTO> get(@PathVariable String id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Corpse", id));
 	}
 
 	@GetMapping("/corpses") 
-	public ResponseEntity<PagedModel<EntityModel<CorpseViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<CorpseDTO>>> all(
 			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -69,7 +68,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 
 	@PostMapping("/corpses")
-	public ResponseEntity<CorpseViewModel> save(@Valid @RequestBody CorpseDTO dto) {
+	public ResponseEntity<CorpseDTO> save(@Valid @RequestBody CorpseDTO dto) {
 		Corpse entity = map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -78,7 +77,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 	
 	@PutMapping("/corpses/{id}")
-	public ResponseEntity<CorpseViewModel> update(@PathVariable String id, 
+	public ResponseEntity<CorpseDTO> update(@PathVariable String id, 
 			@Valid @RequestBody CorpseDTO dto) {
 		Corpse entity = map(dto);
 		return new ResponseEntity<>(
@@ -146,11 +145,11 @@ public class CorpseController implements ViewModelController<Corpse, CorpseViewM
 	}
 	
 	@Override
-	public CorpseViewModel toViewModel(Corpse entity) {
-		CorpseViewModel viewModel = CorpseMapper.INSTANCE.map(entity);
+	public CorpseDTO toViewModel(Corpse entity) {
+		var dto = CorpseMapper.INSTANCE.map(entity);
 		val id = entity.getId();
-		viewModel.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
-		return viewModel;
+		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
+		return dto;
 	}
 	
 	private Corpse map(CorpseDTO dto) {

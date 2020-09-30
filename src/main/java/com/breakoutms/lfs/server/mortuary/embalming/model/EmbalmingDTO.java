@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.EmbalmingType;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class EmbalmingDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "embalmings")
+public class EmbalmingDTO extends RepresentationModel<EmbalmingDTO>{
 
 	private Integer id;
 	@NotBlank

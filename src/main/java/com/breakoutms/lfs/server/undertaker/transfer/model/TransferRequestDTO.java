@@ -1,22 +1,19 @@
 package com.breakoutms.lfs.server.undertaker.transfer.model;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.hateoas.server.core.Relation;
+
+import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestDTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class TransferRequestDTO {
+@AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode(callSuper=true)
+@Relation(collectionRelation = "TransferRequests")
+public class TransferRequestDTO extends UndertakerRequestDTO<TransferRequestDTO>{
 	
-	private Integer id;
-	@NotNull
-	private String tagNo;
-	@NotNull
 	private String transferTo;
-	private boolean seen;
 }

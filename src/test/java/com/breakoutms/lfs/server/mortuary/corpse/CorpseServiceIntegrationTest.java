@@ -112,7 +112,7 @@ class CorpseServiceIntegrationTest {
 	 * @return
 	 */
 	private Corpse fromDTO(Corpse entity) {
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		return modelMapper.map(dto);
 	}
 }

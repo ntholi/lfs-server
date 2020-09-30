@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DependentViewModel extends RepresentationModel<DependentViewModel>{
+public class DependentDTO extends RepresentationModel<DependentDTO>{
 	private String id;
     private String names;
     private String surname;

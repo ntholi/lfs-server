@@ -30,11 +30,9 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
-import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
-import com.breakoutms.lfs.server.sales.model.SalesViewModel;
+import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -43,25 +41,25 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.SALES)
 @AllArgsConstructor
-public class SalesController implements ViewModelController<Sales, SalesViewModel> {
+public class SalesController implements ViewModelController<Sales, SalesDTO> {
 
 	private final SalesService service;
-	private final PagedResourcesAssembler<SalesViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<SalesDTO> pagedAssembler;
 
-	@GetMapping("/{id}")
-	public ResponseEntity<SalesEagerResponse> get(@PathVariable Integer id) {
-		return service.get(id)
-				.map(o -> ResponseEntity.ok(toEagerResponse(o)))
-				.orElse(ResponseEntity.noContent().build());
-	}
-	
-	private SalesEagerResponse toEagerResponse(Sales entity) {
-		SalesEagerResponse response = SalesMapper.INSTANCE.eager(entity);
-		return response;
-	}
+//	@GetMapping("/{id}")
+//	public ResponseEntity<SalesEagerResponse> get(@PathVariable Integer id) {
+//		return service.get(id)
+//				.map(o -> ResponseEntity.ok(toEagerResponse(o)))
+//				.orElse(ResponseEntity.noContent().build());
+//	}
+//	
+//	private SalesEagerResponse toEagerResponse(Sales entity) {
+//		SalesEagerResponse response = SalesMapper.INSTANCE.eager(entity);
+//		return response;
+//	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<SalesViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<SalesDTO>>> all(
 			@SearchSpec Specification<Sales> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -69,7 +67,7 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	}
 
 	@PostMapping
-	public ResponseEntity<SalesViewModel> save(@Valid @RequestBody SalesDTO dto) {
+	public ResponseEntity<SalesDTO> save(@Valid @RequestBody SalesDTO dto) {
 		Sales entity = SalesMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -78,7 +76,7 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<SalesViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<SalesDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody SalesDTO dto) {
 		Sales entity = SalesMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -99,18 +97,18 @@ public class SalesController implements ViewModelController<Sales, SalesViewMode
 	}
 	
 	@GetMapping("refrigeration-price")
-	public SalesProductViewModel refrigerationPrice(String tagNo, String leavingTime) {
+	public SalesProductDTO refrigerationPrice(String tagNo, String leavingTime) {
 		SalesProduct salesProduct = service.refrigerationPrice(tagNo, LocalDateTime.parse(leavingTime));
 		return SalesMapper.INSTANCE.map(salesProduct);
 	}
 	
 	@Override
-	public SalesViewModel toViewModel(Sales entity) {
-		SalesViewModel dto = SalesMapper.INSTANCE.map(entity);
+	public SalesDTO toViewModel(Sales entity) {
+		SalesDTO dto = SalesMapper.INSTANCE.map(entity);
 		return addLinks(entity, dto);
 	}
 
-	private <T extends SalesViewModel> T addLinks(Sales entity, T dto) {
+	private <T extends SalesDTO> T addLinks(Sales entity, T dto) {
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Quotation quotation = entity.getQuotation();

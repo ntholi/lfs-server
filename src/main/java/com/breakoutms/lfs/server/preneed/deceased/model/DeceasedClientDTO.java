@@ -4,13 +4,16 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.Digits;
 
-import lombok.AllArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@AllArgsConstructor @NoArgsConstructor
-public class DeceasedClientDTO{
+@EqualsAndHashCode(callSuper = true)
+@Relation(collectionRelation = "deceasedClients")
+public class DeceasedClientDTO extends RepresentationModel<DeceasedClientDTO>{
 	
 	private Long id;
 

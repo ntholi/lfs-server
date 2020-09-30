@@ -5,15 +5,22 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.PolicyPaymentType;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@AllArgsConstructor @NoArgsConstructor
-public class PolicyPaymentDetailsDTO {
+@EqualsAndHashCode(callSuper = true)
+@Relation(collectionRelation = "policyPaymentDetails")
+public class PolicyPaymentDetailsDTO extends RepresentationModel<PolicyPaymentDetailsDTO> {
+	
+	private Long id;
+	
+	private String policyNumber;
 	
 	@NotNull
 	private PolicyPaymentType type;

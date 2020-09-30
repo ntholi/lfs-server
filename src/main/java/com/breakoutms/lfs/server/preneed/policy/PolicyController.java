@@ -34,7 +34,6 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyViewModel;
 import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -46,21 +45,21 @@ import lombok.val;
 @RequestMapping("/"+Domain.Const.PRENEED+"/policies")
 @Import(GeneralConfigurations.class)
 @AllArgsConstructor
-public class PolicyController implements ViewModelController<Policy, PolicyViewModel> {
+public class PolicyController implements ViewModelController<Policy, PolicyDTO> {
 
 	private final PolicyService service;
 	private final PolicyReportsService reportsService;
-	private final PagedResourcesAssembler<PolicyViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<PolicyDTO> pagedAssembler;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PolicyViewModel> get(@PathVariable String id) {
+	public ResponseEntity<PolicyDTO> get(@PathVariable String id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Policy", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PolicyViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<PolicyDTO>>> all(
 			@SearchSpec Specification<Policy> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -68,7 +67,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyViewM
 	}
 	
 	@PostMapping
-	public ResponseEntity<PolicyViewModel> save(@Valid @RequestBody PolicyDTO dto) {
+	public ResponseEntity<PolicyDTO> save(@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity, dto.getFuneralScheme())), 
@@ -77,7 +76,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyViewM
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<PolicyViewModel> update(@PathVariable String id, 
+	public ResponseEntity<PolicyDTO> update(@PathVariable String id, 
 			@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -104,7 +103,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyViewM
 	}
 	
 	@Override
-	public PolicyViewModel toViewModel(Policy entity) {
+	public PolicyDTO toViewModel(Policy entity) {
 		var dto = PreneedMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));

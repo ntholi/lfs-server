@@ -245,7 +245,7 @@ class FuneralSchemeServiceIntegrationTest {
 	 * @return
 	 */
 	private FuneralScheme fromDTO(FuneralScheme entity) {
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		return modelMapper.map(dto);
 	}
 }

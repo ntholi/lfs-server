@@ -37,7 +37,7 @@ public class PolicyPaymentInquiry {
 	private List<PolicyPaymentDetails> payments;
 	private FuneralSchmeDetais funeralSchmeDetais;
 	
-	public CollectionModel<PolicyPaymentDetailsViewModel> getPayments(){
+	public CollectionModel<PolicyPaymentDetailsDTO> getPayments(){
 		return CollectionModel.of(PolicyPaymentMapper.INSTANCE.map(payments));
 	}
 }

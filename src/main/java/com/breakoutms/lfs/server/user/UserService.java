@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
-import com.breakoutms.lfs.server.user.model.LoginResponseDto;
+import com.breakoutms.lfs.server.user.model.LoginResponseDTO;
 import com.breakoutms.lfs.server.user.model.Privilege;
 import com.breakoutms.lfs.server.user.model.Role;
 import com.breakoutms.lfs.server.user.model.User;
@@ -55,7 +55,7 @@ public class UserService {
     }
 	
 	@Transactional(readOnly = true)
-	public LoginResponseDto login(String username, String password) {
+	public LoginResponseDTO login(String username, String password) {
 		log.info("Attempting to login user, with username: "+ username);
 		Optional<User> userOp = userRepo.findByUsername(username);
 		if(userOp.isEmpty()) {
@@ -69,7 +69,7 @@ public class UserService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		var syncNo = user.getBranch().getSyncNumber();
 		String token = jwtProvider.createToken(user, syncNo);
-		return LoginResponseDto.builder()
+		return LoginResponseDTO.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)
 				.build();

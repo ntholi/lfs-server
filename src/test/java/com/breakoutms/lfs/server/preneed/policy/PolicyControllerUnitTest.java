@@ -129,7 +129,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save() throws Exception {
 		var entity = newEntity();
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		var viewModel = modelMapper.map(entity);
 		FuneralScheme fs = new FuneralSchemeMother().planC().build();
 		Premium premium = fs.getPremiums().iterator().next();
@@ -151,7 +151,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {WRITE, DEFAULT_ROLE})
 	void save_fails_because_of_invalid_field() throws Exception {
 		entity.setNames(null);
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 
 		post(mockMvc, URL, dto)
 			.andExpect(responseBody().containsErrorFor("names"));
@@ -162,7 +162,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@Test
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update() throws Exception {
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		var viewModel = modelMapper.map(entity);
 		
 		when(repo.findById(ID)).thenReturn(Optional.of(entity));
@@ -182,7 +182,7 @@ public class PolicyControllerUnitTest implements ControllerUnitTest {
 	@WithMockUser(authorities = {UPDATE, DEFAULT_ROLE})
 	void update_fails_if_any_field_is_invalid() throws Exception {
 		entity.setNames(null);
-		var dto = modelMapper.toDTO(entity);
+		var dto = modelMapper.map(entity);
 		
 		put(mockMvc, URL+ID, dto)
 			.andExpect(responseBody().containsErrorFor("names"));

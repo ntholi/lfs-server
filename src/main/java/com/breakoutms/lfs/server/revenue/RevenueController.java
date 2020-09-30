@@ -33,7 +33,6 @@ import com.breakoutms.lfs.server.revenue.model.Revenue;
 import com.breakoutms.lfs.server.revenue.model.RevenueDTO;
 import com.breakoutms.lfs.server.revenue.model.RevenueEagerResponse;
 import com.breakoutms.lfs.server.revenue.model.RevenueInquiry;
-import com.breakoutms.lfs.server.revenue.model.RevenueViewModel;
 import com.breakoutms.lfs.server.revenue.report.RevenueReportsService;
 import com.breakoutms.lfs.server.sales.QuotationController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
@@ -45,11 +44,11 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.REVENUE)
 @AllArgsConstructor
-public class RevenueController implements ViewModelController<Revenue, RevenueViewModel> {
+public class RevenueController implements ViewModelController<Revenue, RevenueDTO> {
 
 	private final RevenueService service;
 	private final RevenueReportsService reportsService;
-	private final PagedResourcesAssembler<RevenueViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<RevenueDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<RevenueEagerResponse> get(@PathVariable Integer id) {
@@ -64,7 +63,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<RevenueViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<RevenueDTO>>> all(
 			@SearchSpec Specification<Revenue> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -72,7 +71,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 
 	@PostMapping
-	public ResponseEntity<RevenueViewModel> save(@Valid @RequestBody RevenueDTO dto) {
+	public ResponseEntity<RevenueDTO> save(@Valid @RequestBody RevenueDTO dto) {
 		Revenue entity = RevenueMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -81,7 +80,7 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<RevenueViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<RevenueDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody RevenueDTO dto) {
 		Revenue entity = RevenueMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -119,12 +118,12 @@ public class RevenueController implements ViewModelController<Revenue, RevenueVi
 	}
 	
 	@Override
-	public RevenueViewModel toViewModel(Revenue entity) {
-		RevenueViewModel dto = RevenueMapper.INSTANCE.map(entity);
+	public RevenueDTO toViewModel(Revenue entity) {
+		RevenueDTO dto = RevenueMapper.INSTANCE.map(entity);
 		return addLinks(entity, dto);
 	}
 
-	private <T extends RevenueViewModel> T addLinks(Revenue entity, T dto) {
+	private <T extends RevenueDTO> T addLinks(Revenue entity, T dto) {
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Quotation quotation = entity.getQuotation();

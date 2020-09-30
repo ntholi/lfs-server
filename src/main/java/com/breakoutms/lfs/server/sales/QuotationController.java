@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
+import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -24,7 +24,7 @@ public class QuotationController {
 	private final SalesService service;
 	
 	@GetMapping("/{quotationNo}/sales-products")
-	public ResponseEntity<CollectionModel<SalesProductViewModel>> getSalesProducts(@PathVariable Integer quotationNo){
+	public ResponseEntity<CollectionModel<SalesProductDTO>> getSalesProducts(@PathVariable Integer quotationNo){
 		var list = SalesMapper.INSTANCE.map(service.getSalesProducts(quotationNo));
 		if(list.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

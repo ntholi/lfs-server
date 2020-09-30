@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemDTO;
-import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class PostmortemMapper {
@@ -32,7 +31,7 @@ public abstract class PostmortemMapper {
 	@Mapping(source = "returnTransport.vehicle.registrationNumber",  target = "returnTransportRegNumber")
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "postmortemRequest.id", target = "requestId")
-	public abstract PostmortemViewModel map(Postmortem entity);
+	public abstract PostmortemDTO map(Postmortem entity);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)

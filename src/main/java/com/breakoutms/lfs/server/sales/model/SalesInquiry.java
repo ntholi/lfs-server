@@ -18,5 +18,5 @@ public class SalesInquiry {
 	private String dependentId;
 	private BigDecimal payout;
 	private Integer quotationNo;
-	private List<SalesProductViewModel> salesProducts;
+	private List<SalesProductDTO> salesProducts;
 }

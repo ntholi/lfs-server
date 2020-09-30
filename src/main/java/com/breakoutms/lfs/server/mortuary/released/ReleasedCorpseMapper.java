@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseDTO;
-import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpseViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class ReleasedCorpseMapper {
@@ -21,11 +20,7 @@ public abstract class ReleasedCorpseMapper {
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
 	@Mapping(source = "burialDetails.id", target = "burialDetailsId")
-	protected abstract ReleasedCorpseViewModel map(ReleasedCorpse releasedCorpse);
-	
-	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "burialDetails.id", target = "burialDetailsId")
-	protected abstract ReleasedCorpseDTO toDTO(ReleasedCorpse entity);
+	protected abstract ReleasedCorpseDTO map(ReleasedCorpse releasedCorpse);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "corpse", ignore = true)

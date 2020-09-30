@@ -9,11 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesDTO;
-import com.breakoutms.lfs.server.sales.model.SalesEagerResponse;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
-import com.breakoutms.lfs.server.sales.model.SalesProductViewModel;
-import com.breakoutms.lfs.server.sales.model.SalesViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class SalesMapper {
@@ -40,30 +37,19 @@ public abstract class SalesMapper {
 	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
 	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
 	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
-	protected abstract SalesViewModel map(Sales sales);
+	protected abstract SalesDTO map(Sales sales);
 	
-	@Mapping(source = "quotation.id", target = "quotationNo")
-	@Mapping(source = "quotation.customer.names", target = "customerNames")
-	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
-	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
-	@Mapping(source = "burialDetails.serviceTime", target = "serviceTime")
-	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
-	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
-	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
-	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
-	public abstract SalesEagerResponse eager(Sales entity);
-
-	@Mapping(source = "quotation.customer.names", target = "customerNames")
-	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
-	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
-	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
-	@Mapping(source = "burialDetails.serviceTime", target = "serviceTime")
-	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
-	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
-	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
-	protected abstract SalesDTO toDTO(Sales entity);
+//	@Mapping(source = "quotation.id", target = "quotationNo")
+//	@Mapping(source = "quotation.customer.names", target = "customerNames")
+//	@Mapping(source = "quotation.customer.phoneNumber", target = "phoneNumber")
+//	@Mapping(source = "corpse.tagNo", target = "tagNo")
+//	@Mapping(source = "burialDetails.leavingTime", target = "leavingTime")
+//	@Mapping(source = "burialDetails.serviceTime", target = "serviceTime")
+//	@Mapping(source = "burialDetails.burialPlace", target = "burialPlace")
+//	@Mapping(source = "burialDetails.roadStatus", target = "roadStatus")
+//	@Mapping(source = "burialDetails.physicalAddress", target = "physicalAddress")
+//	@Mapping(source = "quotation.salesProducts", target = "salesProducts")
+//	public abstract SalesEagerResponse eager(Sales entity);
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "quotation.id", ignore = true)
@@ -76,12 +62,12 @@ public abstract class SalesMapper {
 	
 	protected abstract Sales copy(Sales sales);
 
-	protected abstract List<SalesProductViewModel> map(List<SalesProduct> salesProducts);
+	protected abstract List<SalesProductDTO> map(List<SalesProduct> salesProducts);
 	
 	@Mapping(source = "product.name", target = "productName")
 	@Mapping(source = "product.id", target = "productId")
 	@Mapping(source = "product.price", target = "unitPrice")
-	protected abstract SalesProductViewModel map(SalesProduct salesProduct);
+	protected abstract SalesProductDTO map(SalesProduct salesProduct);
 	
 	@Mapping(source = "productId", target = "product.id")
 	protected abstract SalesProduct map(SalesProductDTO dto);

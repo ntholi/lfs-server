@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
-import com.breakoutms.lfs.server.user.model.LoginDto;
-import com.breakoutms.lfs.server.user.model.LoginResponseDto;
+import com.breakoutms.lfs.server.user.model.LoginDTO;
+import com.breakoutms.lfs.server.user.model.LoginResponseDTO;
 import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.model.UserDTO;
 import com.breakoutms.lfs.server.user.model.UserViewModel;
@@ -43,7 +43,7 @@ public class UserController implements ViewModelController<User, UserViewModel>{
 	}
     
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody @Valid LoginDto loginDto) {
+    public LoginResponseDTO login(@RequestBody @Valid LoginDTO loginDto) {
        return service.login(loginDto.getUsername(), loginDto.getPassword());
     }
 

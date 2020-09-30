@@ -10,20 +10,20 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.common.enums.Gender;
 import com.breakoutms.lfs.common.enums.VehicleOwner;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class CorpseDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "corpses")
+public class CorpseDTO extends RepresentationModel<CorpseDTO>{
 
 	private String tagNo;
 	

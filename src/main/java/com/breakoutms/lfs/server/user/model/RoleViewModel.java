@@ -17,6 +17,6 @@ public class RoleViewModel extends RepresentationModel<RoleViewModel>  {
 	
     private Integer id;
     private Domain name;
-    private List<PrivilegeViewModel> privileges;
+    private List<PrivilegeDTO> privileges;
 }
 

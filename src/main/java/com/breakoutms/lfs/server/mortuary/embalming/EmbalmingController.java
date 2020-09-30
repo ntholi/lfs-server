@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.embalming.model.Embalming;
 import com.breakoutms.lfs.server.mortuary.embalming.model.EmbalmingDTO;
-import com.breakoutms.lfs.server.mortuary.embalming.model.EmbalmingViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -38,20 +37,20 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.MORTUARY+"/embalmings")
 @AllArgsConstructor
-public class EmbalmingController implements ViewModelController<Embalming, EmbalmingViewModel> {
+public class EmbalmingController implements ViewModelController<Embalming, EmbalmingDTO> {
 	
 	private final EmbalmingService service;
-	private final PagedResourcesAssembler<EmbalmingViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<EmbalmingDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EmbalmingViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<EmbalmingDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Embalming", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<EmbalmingViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<EmbalmingDTO>>> all(
 			@SearchSpec Specification<Embalming> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -59,7 +58,7 @@ public class EmbalmingController implements ViewModelController<Embalming, Embal
 	}
 
 	@PostMapping
-	public ResponseEntity<EmbalmingViewModel> save(@Valid @RequestBody EmbalmingDTO dto) {
+	public ResponseEntity<EmbalmingDTO> save(@Valid @RequestBody EmbalmingDTO dto) {
 		Embalming entity = EmbalmingMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -68,7 +67,7 @@ public class EmbalmingController implements ViewModelController<Embalming, Embal
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<EmbalmingViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<EmbalmingDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody EmbalmingDTO dto) {
 		Embalming entity = EmbalmingMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -78,8 +77,8 @@ public class EmbalmingController implements ViewModelController<Embalming, Embal
 	}
 	
 	@Override
-	public EmbalmingViewModel toViewModel(Embalming entity) {
-		EmbalmingViewModel dto = EmbalmingMapper.INSTANCE.map(entity);
+	public EmbalmingDTO toViewModel(Embalming entity) {
+		var dto = EmbalmingMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

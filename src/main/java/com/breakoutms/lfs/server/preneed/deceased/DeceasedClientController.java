@@ -30,7 +30,6 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClient;
 import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientDTO;
-import com.breakoutms.lfs.server.preneed.deceased.model.DeceasedClientViewModel;
 import com.breakoutms.lfs.server.preneed.deceased.model.Payout;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -41,21 +40,21 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/policies")
 @AllArgsConstructor
-public class DeceasedClientController implements ViewModelController<DeceasedClient, DeceasedClientViewModel> {
+public class DeceasedClientController implements ViewModelController<DeceasedClient, DeceasedClientDTO> {
 
 	private final DeceasedClientService service;
-	private final PagedResourcesAssembler<DeceasedClientViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<DeceasedClientDTO> pagedAssembler;
 	
 
 	@GetMapping("{policyNumber}/deceased/{id}")
-	public ResponseEntity<DeceasedClientViewModel> get(@PathVariable String policyNumber, @PathVariable Long id) {
+	public ResponseEntity<DeceasedClientDTO> get(@PathVariable String policyNumber, @PathVariable Long id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Deceased Client", id));
 	}
 	
 	@GetMapping("deceased")
-	public ResponseEntity<PagedModel<EntityModel<DeceasedClientViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<DeceasedClientDTO>>> all(
 			@SearchSpec Specification<DeceasedClient> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler, 
@@ -63,7 +62,7 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 	}
 	
 	@GetMapping("{policyNumber}/deceased")
-	public ResponseEntity<PagedModel<EntityModel<DeceasedClientViewModel>>> all(@PathVariable String policyNumber, 
+	public ResponseEntity<PagedModel<EntityModel<DeceasedClientDTO>>> all(@PathVariable String policyNumber, 
 			Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler, 
@@ -71,7 +70,7 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 	}
 
 	@PostMapping("{policyNumber}/deceased")
-	public ResponseEntity<DeceasedClientViewModel> save(@PathVariable String policyNumber,
+	public ResponseEntity<DeceasedClientDTO> save(@PathVariable String policyNumber,
 			@Valid @RequestBody DeceasedClientDTO dto) {
 		DeceasedClient entity = DeceasedClientMapper.INSTANCE.map(dto);
 		
@@ -82,7 +81,7 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 	}
 	
 	@PutMapping("{policyNumber}/deceased/{id}")
-	public ResponseEntity<DeceasedClientViewModel> update(@PathVariable String policyNumber,
+	public ResponseEntity<DeceasedClientDTO> update(@PathVariable String policyNumber,
 			@PathVariable Long id, 
 			@Valid @RequestBody DeceasedClientDTO dto) {
 		DeceasedClient entity = DeceasedClientMapper.INSTANCE.map(dto);
@@ -110,15 +109,15 @@ public class DeceasedClientController implements ViewModelController<DeceasedCli
 	}
 
 	@Override
-	public DeceasedClientViewModel toViewModel(DeceasedClient entity) {
-		DeceasedClientViewModel viewModel = DeceasedClientMapper.INSTANCE.map(entity);
+	public DeceasedClientDTO toViewModel(DeceasedClient entity) {
+		DeceasedClientDTO dto = DeceasedClientMapper.INSTANCE.map(entity);
 		val policyNumber = entity.getPolicy() != null ? entity.getPolicy().getPolicyNumber() : "";
-		viewModel.add(linkTo(methodOn(getClass()).get(policyNumber, entity.getId())).withSelfRel());
-		viewModel.add(linkTo(getClass()).slash(policyNumber).slash("deceasedClients").withRel("all"));
-		viewModel.add(CommonLinks.branch(entity.getBranch()));
+		dto.add(linkTo(methodOn(getClass()).get(policyNumber, entity.getId())).withSelfRel());
+		dto.add(linkTo(getClass()).slash(policyNumber).slash("deceasedClients").withRel("all"));
+		dto.add(CommonLinks.branch(entity.getBranch()));
 		String policyId = entity.getPolicy() != null? entity.getPolicy().getId(): null;
-		viewModel.add(linkTo(methodOn(PolicyController.class).get(policyId)).withRel("policy"));
-		return viewModel;
+		dto.add(linkTo(methodOn(PolicyController.class).get(policyId)).withRel("policy"));
+		return dto;
 	}
 
 }

@@ -30,7 +30,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestDTO;
-import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -40,20 +39,20 @@ import lombok.val;
 @RequestMapping("/"+Domain.Const.UNDERTAKER+"/transfer-requests")
 @AllArgsConstructor
 public class TransferRequestController 
-		implements ViewModelController<TransferRequest, TransferRequestViewModel> {
+		implements ViewModelController<TransferRequest, TransferRequestDTO> {
 
 	private final TransferRequestService service;
-	private final PagedResourcesAssembler<TransferRequestViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<TransferRequestDTO> pagedAssembler;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TransferRequestViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<TransferRequestDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("TransferRequest", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<TransferRequestViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<TransferRequestDTO>>> all(
 			@SearchSpec Specification<TransferRequest> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -61,7 +60,7 @@ public class TransferRequestController
 	}
 
 	@PostMapping
-	public ResponseEntity<TransferRequestViewModel> save(@Valid @RequestBody TransferRequestDTO dto) {
+	public ResponseEntity<TransferRequestDTO> save(@Valid @RequestBody TransferRequestDTO dto) {
 		TransferRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -70,7 +69,7 @@ public class TransferRequestController
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<TransferRequestViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<TransferRequestDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody TransferRequestDTO dto) {
 		TransferRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -80,8 +79,8 @@ public class TransferRequestController
 	}
 	
 	@Override
-	public TransferRequestViewModel toViewModel(TransferRequest entity) {
-		TransferRequestViewModel dto = UndertakerRequestMapper.INSTANCE.map(entity);
+	public TransferRequestDTO toViewModel(TransferRequest entity) {
+		TransferRequestDTO dto = UndertakerRequestMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

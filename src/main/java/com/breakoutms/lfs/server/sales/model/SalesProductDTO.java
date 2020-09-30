@@ -6,28 +6,32 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SalesProductDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "salesProducts")
+public class SalesProductDTO extends RepresentationModel<SalesProductDTO> {
 
 	private Long id;
 
 	@NotNull
+	private Integer productId;
+	
+	private String productName;
+	
+	private BigDecimal unitPrice;
+	
+	private int quantity;
+	
+	@NotNull
 	@Min(value = 0L, message = "{validation.number.negative}")
 	@Digits(integer = 7, fraction = 2)
 	private BigDecimal cost;
-    
-	@NotNull
-	private Integer productId;
-	
-	private int quantity;
 	
 	private boolean undeletable = true;
 }

@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
-import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseViewModel;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 
 @Mapper(componentModel="spring")
@@ -32,12 +31,7 @@ public abstract class CorpseMapper {
 	@Mapping(target = "driversName",  source = "transport.driver")
 	@Mapping(target = "vehicleOwner",  source = "transport.vehicle.owner")
 	@Mapping(target = "registrationNumber",  source = "transport.vehicle.registrationNumber")
-	protected abstract CorpseDTO toDTO(Corpse entity);
-	
-	@Mapping(target = "driversName",  source = "transport.driver")
-	@Mapping(target = "vehicleOwner",  source = "transport.vehicle.owner")
-	@Mapping(target = "registrationNumber",  source = "transport.vehicle.registrationNumber")
-	public abstract CorpseViewModel map(Corpse entity);
+	protected abstract CorpseDTO map(Corpse entity);
 	
 	@Mapping(target = "transport.driver",  source = "driversName")
 	@Mapping(target = "transport.vehicle.owner",  source = "vehicleOwner")

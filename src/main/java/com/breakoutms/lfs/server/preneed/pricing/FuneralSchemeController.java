@@ -30,13 +30,12 @@ import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
-import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefitDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefitViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeBenefitDTO;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeDTO;
-import com.breakoutms.lfs.server.preneed.pricing.model.FuneralSchemeViewModel;
-import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleViewModel;
-import com.breakoutms.lfs.server.preneed.pricing.model.PremiumViewModel;
+import com.breakoutms.lfs.server.preneed.pricing.model.PenaltyDeductibleDTO;
+import com.breakoutms.lfs.server.preneed.pricing.model.PremiumDTO;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -45,23 +44,23 @@ import lombok.val;
 @RestController
 @RequestMapping("/"+Domain.Const.ADMIN+"/funeral-schemes")
 @AllArgsConstructor
-public class FuneralSchemeController implements ViewModelController<FuneralScheme, FuneralSchemeViewModel> {
+public class FuneralSchemeController implements ViewModelController<FuneralScheme, FuneralSchemeDTO> {
 
 	private static final String FUNERAL_SCHEME = "funeralScheme";
 	private final FuneralSchemeService service;
-	private final PagedResourcesAssembler<FuneralSchemeViewModel> pagedAssembler;
+	private final PagedResourcesAssembler<FuneralSchemeDTO> pagedAssembler;
 
 	//TODO: ADD DELETE END-POINT
 
 	@GetMapping("/{id}")
-	public ResponseEntity<FuneralSchemeViewModel> get(@PathVariable Integer id) {
+	public ResponseEntity<FuneralSchemeDTO> get(@PathVariable Integer id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Funeral Scheme", id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<FuneralSchemeDTO>>> all(
 			@SearchSpec Specification<FuneralScheme> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -69,7 +68,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 
 	@PostMapping
-	public ResponseEntity<FuneralSchemeViewModel> save(@Valid @RequestBody FuneralSchemeDTO dto) {
+	public ResponseEntity<FuneralSchemeDTO> save(@Valid @RequestBody FuneralSchemeDTO dto) {
 		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
@@ -78,7 +77,7 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<FuneralSchemeViewModel> update(@PathVariable Integer id, 
+	public ResponseEntity<FuneralSchemeDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody FuneralSchemeDTO dto) {
 		FuneralScheme entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -88,8 +87,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 
 	@GetMapping("/{id}/premiums")
-	public ResponseEntity<CollectionModel<PremiumViewModel>> getPremiums(@PathVariable Integer id) {
-		List<PremiumViewModel> list = new ArrayList<>();
+	public ResponseEntity<CollectionModel<PremiumDTO>> getPremiums(@PathVariable Integer id) {
+		List<PremiumDTO> list = new ArrayList<>();
 		for (var entity: service.getPremiums(id)) {
 			var dto = PreneedMapper.INSTANCE.map(entity);
 			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
@@ -105,8 +104,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 	
 	@GetMapping("/{id}/dependent-benefits")
-	public ResponseEntity<CollectionModel<DependentBenefitViewModel>> getDependentBenefits(@PathVariable Integer id) {
-		List<DependentBenefitViewModel> list = new ArrayList<>();
+	public ResponseEntity<CollectionModel<DependentBenefitDTO>> getDependentBenefits(@PathVariable Integer id) {
+		List<DependentBenefitDTO> list = new ArrayList<>();
 		for (var entity: service.getDependentBenefits(id)) {
 			var dto = PreneedMapper.INSTANCE.map(entity);
 			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
@@ -122,8 +121,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 	
 	@GetMapping("/{id}/funeral-scheme-benefits")
-	public ResponseEntity<CollectionModel<FuneralSchemeBenefitViewModel>> getFuneralSchemeBenefits(@PathVariable Integer id) {
-		List<FuneralSchemeBenefitViewModel> list = new ArrayList<>();
+	public ResponseEntity<CollectionModel<FuneralSchemeBenefitDTO>> getFuneralSchemeBenefits(@PathVariable Integer id) {
+		List<FuneralSchemeBenefitDTO> list = new ArrayList<>();
 		for (var entity: service.getFuneralSchemeBenefits(id)) {
 			var dto = PreneedMapper.INSTANCE.map(entity);
 			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
@@ -139,8 +138,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 
 	@GetMapping("/{id}/penalty-deductibles")
-	public ResponseEntity<CollectionModel<PenaltyDeductibleViewModel>> getPenaltyDeductibles(@PathVariable Integer id) {
-		List<PenaltyDeductibleViewModel> list = new ArrayList<>();
+	public ResponseEntity<CollectionModel<PenaltyDeductibleDTO>> getPenaltyDeductibles(@PathVariable Integer id) {
+		List<PenaltyDeductibleDTO> list = new ArrayList<>();
 		for (var entity: service.getPenaltyDeductibles(id)) {
 			var dto = PreneedMapper.INSTANCE.map(entity);
 			dto.add(linkTo(methodOn(getClass()).get(id)).withRel(FUNERAL_SCHEME));
@@ -156,8 +155,8 @@ public class FuneralSchemeController implements ViewModelController<FuneralSchem
 	}
 	
 	@Override
-	public FuneralSchemeViewModel toViewModel(FuneralScheme entity) {
-		FuneralSchemeViewModel dto = PreneedMapper.INSTANCE.map(entity);
+	public FuneralSchemeDTO toViewModel(FuneralScheme entity) {
+		FuneralSchemeDTO dto = PreneedMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		dto.add(linkTo(methodOn(getClass()).getPremiums(id)).withRel("premiums"));

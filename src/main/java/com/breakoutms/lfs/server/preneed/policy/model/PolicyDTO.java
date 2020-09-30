@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.preneed.policy.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -12,17 +13,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.breakoutms.lfs.common.enums.District;
 import com.breakoutms.lfs.common.enums.Gender;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-@Data @Builder
-@AllArgsConstructor @NoArgsConstructor
-public class PolicyDTO {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Relation(collectionRelation = "policies")
+public class PolicyDTO extends RepresentationModel<PolicyDTO> {
 	private String policyNumber;
 	
 	@NotBlank
@@ -79,4 +82,12 @@ public class PolicyDTO {
 	private boolean active;
 
 	private List<Dependent> dependents;
+	
+	public Integer getAge() {
+		Integer age = null;
+		if(dateOfBirth != null) {
+			age = (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+		}
+		return age;
+	}
 }
