@@ -30,7 +30,7 @@ import com.breakoutms.lfs.common.enums.ProductType;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.product.ProductMother;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.products.model.Coffin;
 import com.breakoutms.lfs.server.products.model.CoffinViewModel;
 import com.breakoutms.lfs.server.products.model.Product;
@@ -38,7 +38,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ProductController.class)
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 public class ProductControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRODUCTS";

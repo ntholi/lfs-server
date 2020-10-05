@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
@@ -43,7 +43,7 @@ import lombok.val;
 
 @RestController
 @RequestMapping("/"+Domain.Const.PRENEED+"/policies")
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 @AllArgsConstructor
 public class PolicyController implements ViewModelController<Policy, PolicyDTO> {
 

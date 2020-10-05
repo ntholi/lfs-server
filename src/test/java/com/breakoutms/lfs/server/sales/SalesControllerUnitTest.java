@@ -29,13 +29,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.sales.SalesMother;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({SalesController.class})
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 public class SalesControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_SALES";

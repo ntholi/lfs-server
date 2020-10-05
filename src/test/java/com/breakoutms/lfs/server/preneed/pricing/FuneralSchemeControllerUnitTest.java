@@ -34,7 +34,7 @@ import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.FuneralSchemeMother;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.pricing.model.DependentBenefit;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
@@ -45,7 +45,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(FuneralSchemeController.class)
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 public class FuneralSchemeControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";

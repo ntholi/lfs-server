@@ -28,14 +28,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.breakoutms.lfs.server.common.ControllerUnitTest;
 import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.mortuary.CorpseMother;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CorpseController.class)
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 public class CorpseControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_MORTUARY";

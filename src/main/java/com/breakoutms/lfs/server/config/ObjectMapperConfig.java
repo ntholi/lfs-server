@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 @Configuration
-public class GeneralConfigurations {
+public class ObjectMapperConfig {
 
 	@Bean
 	@Primary
@@ -31,6 +31,7 @@ public class GeneralConfigurations {
 		objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		
 		SimpleModule emptyStringModule = new SimpleModule();
 		emptyStringModule.addDeserializer(String.class, new StdDeserializer<String>(String.class) {

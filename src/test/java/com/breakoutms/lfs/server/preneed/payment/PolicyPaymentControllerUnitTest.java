@@ -41,7 +41,7 @@ import com.breakoutms.lfs.server.common.PageRequestHelper;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyMother.PlanType;
 import com.breakoutms.lfs.server.common.motherbeans.preeneed.PolicyPaymentMother;
-import com.breakoutms.lfs.server.config.GeneralConfigurations;
+import com.breakoutms.lfs.server.config.ObjectMapperConfig;
 import com.breakoutms.lfs.server.preneed.payment.model.Period;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
@@ -52,7 +52,7 @@ import com.breakoutms.lfs.server.user.UserDetailsServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PolicyPaymentController.class)
-@Import(GeneralConfigurations.class)
+@Import(ObjectMapperConfig.class)
 public class PolicyPaymentControllerUnitTest implements ControllerUnitTest {
 
 	private static final String DEFAULT_ROLE = "ROLE_PRENEED";
