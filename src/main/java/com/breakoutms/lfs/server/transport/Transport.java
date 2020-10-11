@@ -41,6 +41,7 @@ public class Transport extends AuditableEntity<Integer>{
 	@GeneratedValue(generator = "transport_id")
 	private Integer id;
 	private String driver;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, 
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Vehicle vehicle;
 }

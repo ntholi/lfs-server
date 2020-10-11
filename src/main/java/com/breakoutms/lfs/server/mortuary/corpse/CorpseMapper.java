@@ -40,7 +40,12 @@ public abstract class CorpseMapper {
 	
 	protected abstract Corpse copy(Corpse product);
 	
-	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "tagNo", ignore = true)
+	@Mapping(target = "transport.id", ignore = true)
+	@Mapping(target = "releasedCorpse.id", ignore = true)
+	@Mapping(target = "transferredFrom.id", ignore = true)
+	@Mapping(target = "quotation", ignore = true)
+	@Mapping(target = "policy", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)
 	@Mapping(target = "createdBy", ignore = true)
 	@Mapping(target = "branch", ignore = true)

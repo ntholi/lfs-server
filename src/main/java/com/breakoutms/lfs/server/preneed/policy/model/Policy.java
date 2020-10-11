@@ -58,7 +58,7 @@ import lombok.NoArgsConstructor;
 		parameters = {
 				@Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_STRING)
 })
-@SQLDelete(sql = "UPDATE policy SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE policy SET deleted=true WHERE policyNumber=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class Policy extends AuditableEntity<String> {
 
