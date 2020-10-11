@@ -56,7 +56,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	private boolean deleted;
 	
 	@PrePersist
-	void prePersist() {
+	void beforeSaving() {
 		if(createdBy != null) {
 			branch = createdBy.getBranch();
 		}
