@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE sales SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE other_mortuary SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 public class OtherMortuary extends AuditableEntity<Integer> {
 

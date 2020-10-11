@@ -63,7 +63,12 @@ public class CorpseService {
 				om.setId(null);
 			}
 		}
-		
+//		var kins = entity.getNextOfKins(); //TODO
+//		for (var kin : kins) {
+//			if(updatedEntity.getNextOfKins().contains(kin)) {
+//				
+//			}
+//		}
 		CorpseMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
