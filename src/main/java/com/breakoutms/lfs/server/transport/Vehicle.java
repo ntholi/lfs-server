@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @Table(indexes = {
-        @Index(columnList = "name", name = "unique_registration_number", unique=true)
+        @Index(columnList = "registrationNumber", name = "unique_registration_number", unique=true)
 })
 @GenericGenerator(
         name = "vehicle_id",          

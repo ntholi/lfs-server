@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.mortuary.corpse.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -164,5 +165,16 @@ public class Corpse extends AuditableEntity<String> {
 	    return Stream.of(names, surname)
 	    		.filter(it -> it != null && !it.isBlank())
 	    		.collect(Collectors.joining(" "));
+	}
+	
+	public void setNextOfKins(List<NextOfKin> nextOfKins) {
+		if(this.nextOfKins == null) {
+			this.nextOfKins = new ArrayList<>();
+		}
+		this.nextOfKins.clear();
+		if(nextOfKins != null) {
+			nextOfKins.forEach(it -> it.setId(null));
+			this.nextOfKins.addAll(nextOfKins);
+		}
 	}
 }

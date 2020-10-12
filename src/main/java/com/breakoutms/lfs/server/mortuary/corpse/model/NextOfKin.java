@@ -35,7 +35,7 @@ import lombok.ToString;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE next_of_kin SET deleted=true WHERE id=?")
+//@SQLDelete not applied because Next_Of_kin can be deleted because it is as just a field inside another object (corpse)
 @Where(clause = AuditableEntity.CLAUSE)
 public class NextOfKin extends AuditableEntity<Integer> {
 
