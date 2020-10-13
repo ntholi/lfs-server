@@ -62,13 +62,34 @@ public class User extends AuditableEntity<Integer>{
 			cascade=CascadeType.ALL, orphanRemoval = true)
     private List<Role> roles;
 	
+	@OneToMany(mappedBy="user", 
+			cascade=CascadeType.ALL, orphanRemoval = true)
+    private List<UpdatableBean> updatableBeans;
+	
+	public void setUpdatableBeans(List<UpdatableBean> updatableBeans) {
+		if(this.updatableBeans == null) {
+			this.updatableBeans = new ArrayList<>();
+		}
+		this.updatableBeans.clear();
+		if(updatableBeans != null) {
+			updatableBeans.forEach(it -> {
+				it.setId(null);
+				it.setUser(this);
+			});
+			this.updatableBeans.addAll(updatableBeans);
+		}
+	}
+	
 	public void setRoles(List<Role> roles) {
 		if(this.roles == null) {
 			this.roles = new ArrayList<>();
 		}
 		this.roles.clear();
 		if(roles != null) {
-			roles.forEach(it -> it.setId(null));
+			roles.forEach(it -> {
+				it.setId(null);
+				it.setUser(this);
+			});
 			this.roles.addAll(roles);
 		}
 	}

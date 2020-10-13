@@ -32,6 +32,8 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 
     private List<RoleDTO> roles;
     
+    private List<UpdatableBeanDTO> updatableBeans;
+    
     @NotBlank
     private String branchName;
 }

@@ -1,11 +1,6 @@
 package com.breakoutms.lfs.server.user.model;
 
-import java.util.List;
-
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,8 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.common.enums.Privilege;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -24,24 +17,21 @@ import lombok.ToString;
 
 @Data
 @Entity
-public class Role {
-
+public class UpdatableBean {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Domain name;
-    
+	@NotNull
+	private String bean;
+	@NotNull
+	private String field;
+	
 	@ToString.Exclude
 	@JsonIgnore
 	@EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-    private User user;
- 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private List<Privilege> privileges;
+	private User user;
 }

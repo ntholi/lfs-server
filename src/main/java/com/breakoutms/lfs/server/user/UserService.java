@@ -75,13 +75,6 @@ public class UserService {
 		}
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
-		setAssociations(user);
 		return userRepo.save(user);
-	}
-
-	private void setAssociations(User user) {
-		for(var role: user.getRoles()) {
-			role.setUser(user);
-		}
 	}
 }
