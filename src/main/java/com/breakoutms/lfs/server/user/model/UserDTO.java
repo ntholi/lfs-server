@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 @Relation(collectionRelation = "users")
 public class UserDTO extends RepresentationModel<UserDTO> {
 
+    private Integer id;
+    
     @NotBlank
     @Size(min = 2, max = 50)
     private String username;
