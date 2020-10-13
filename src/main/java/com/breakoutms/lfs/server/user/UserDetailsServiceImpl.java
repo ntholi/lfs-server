@@ -14,11 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.breakoutms.lfs.common.enums.Privilege;
 import com.breakoutms.lfs.server.security.JwtUtils;
-import com.breakoutms.lfs.server.user.model.Privilege;
 import com.breakoutms.lfs.server.user.model.Role;
 import com.breakoutms.lfs.server.user.model.User;
-import com.breakoutms.lfs.server.user.repo.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -49,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for (Role role : list) {
 			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX+role.getName()));
 			for (Privilege privilege : role.getPrivileges()) {
-				authorities.add(new SimpleGrantedAuthority(privilege.getType().name()));
+				authorities.add(new SimpleGrantedAuthority(privilege.name()));
 			}
 		}
 		return authorities;

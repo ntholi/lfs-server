@@ -1,7 +1,5 @@
 package com.breakoutms.lfs.server.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -17,13 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
-import com.breakoutms.lfs.server.user.model.LoginResponseDTO;
-import com.breakoutms.lfs.server.user.model.Privilege;
-import com.breakoutms.lfs.server.user.model.Role;
+import com.breakoutms.lfs.server.user.model.LoginResponse;
 import com.breakoutms.lfs.server.user.model.User;
-import com.breakoutms.lfs.server.user.repo.PrivilegeRepository;
-import com.breakoutms.lfs.server.user.repo.RoleRepository;
-import com.breakoutms.lfs.server.user.repo.UserRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,8 +27,6 @@ import lombok.extern.log4j.Log4j2;
 public class UserService {
 
 	private final UserRepository userRepo;
-	private final RoleRepository roleRepo;
-	private final PrivilegeRepository privilegeRepo;
 	private final AuthenticationManager authenticationManager;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
@@ -55,7 +46,7 @@ public class UserService {
     }
 	
 	@Transactional(readOnly = true)
-	public LoginResponseDTO login(String username, String password) {
+	public LoginResponse login(String username, String password) {
 		log.info("Attempting to login user, with username: "+ username);
 		Optional<User> userOp = userRepo.findByUsername(username);
 		if(userOp.isEmpty()) {
@@ -69,7 +60,7 @@ public class UserService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		var syncNo = user.getBranch().getSyncNumber();
 		String token = jwtProvider.createToken(user, syncNo);
-		return LoginResponseDTO.builder()
+		return LoginResponse.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)
 				.build();
@@ -84,49 +75,13 @@ public class UserService {
 		}
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
-		user.setRoles(getRoles(user));
-		
+		setAssociations(user);
 		return userRepo.save(user);
 	}
-	
-	protected List<Role> getRoles(User user) {
-		List<Role> roles = new ArrayList<>();
-	
-		List<Role> savedRoles = roleRepo.findAll();
-		List<Privilege> savedPrivileges = privilegeRepo.findAll();
-		
-		List<Role> requestedRoles = user.getRoles();
-		for (int i = 0; i < requestedRoles.size(); i++) {
-			Role requestedRole = requestedRoles.get(i);
-			Role role = roleFromDb(savedRoles, requestedRole);
-			List<Privilege> requestedPrivileges = role.getPrivileges(); 
-			List<Privilege> privileges = new ArrayList<>();
-			if(requestedPrivileges != null) {
-				for (int x = 0; x < requestedPrivileges.size(); x++) {
-					privileges.add(privilegeFromDb(savedPrivileges, requestedPrivileges.get(x)));
-				}
-			}
-			role.setPrivileges(privileges);
-			roles.add(role);
-		}
-		return roles;
-	}
 
-	private Role roleFromDb(List<Role> savedRoles, Role role) {
-		for (Role savedRole : savedRoles) {
-			if(role.getName() == savedRole.getName()) {
-				return savedRole;
-			}
+	private void setAssociations(User user) {
+		for(var role: user.getRoles()) {
+			role.setUser(user);
 		}
-		return role;
-	}
-
-	private Privilege privilegeFromDb(List<Privilege> savedPrivileges, Privilege privilege) {
-		for (Privilege savedPrivilege: savedPrivileges) {
-			if(privilege.getType() == savedPrivilege.getType()) {
-				return savedPrivilege;
-			}
-		}
-		return privilege;
 	}
 }

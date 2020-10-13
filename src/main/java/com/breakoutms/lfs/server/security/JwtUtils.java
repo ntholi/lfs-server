@@ -53,7 +53,7 @@ public class JwtUtils {
      */
     public String createToken(User user, short syncNo) {
         Claims claims = Jwts.claims().setSubject(user.getId().toString());
-        claims.put(NAMES, user.getFullnames());
+        claims.put(NAMES, user.getFullName());
         claims.put(SYNC_NO, syncNo);
         claims.put(ROLES_KEY, user.getRoles().stream()
         		.map(RoleClaim::new)

@@ -5,10 +5,16 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class UserDTO {
+@EqualsAndHashCode(callSuper=false)
+@Relation(collectionRelation = "users")
+public class UserDTO extends RepresentationModel<UserDTO> {
 
     @NotBlank
     @Size(min = 2, max = 50)
@@ -24,7 +30,7 @@ public class UserDTO {
     @Size(min = 2, max = 50)
     private String lastName;
 
-    private List<Role> roles;
+    private List<RoleDTO> roles;
     
     @NotBlank
     private String branchName;

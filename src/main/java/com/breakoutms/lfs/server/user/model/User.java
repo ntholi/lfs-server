@@ -1,23 +1,21 @@
 package com.breakoutms.lfs.server.user.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -60,23 +58,24 @@ public class User extends AuditableEntity<Integer>{
     @Column(length = 50)
     private String lastName;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_roles", 
-            joinColumns = @JoinColumn(
-              name = "user_id", referencedColumnName = "id"), 
-            inverseJoinColumns = @JoinColumn(
-              name = "role_id", referencedColumnName = "id"))
+	@OneToMany(mappedBy="user", 
+			cascade=CascadeType.ALL, orphanRemoval = true)
     private List<Role> roles;
-
-	public String getFullnames() {
-		StringBuilder sb = new StringBuilder();
-		if(StringUtils.isNotBlank(firstName)){
-			sb.append(firstName);
+	
+	public void setRoles(List<Role> roles) {
+		if(this.roles == null) {
+			this.roles = new ArrayList<>();
 		}
-		if(StringUtils.isNotBlank(lastName)) {
-			sb.append(" ").append(lastName);
+		this.roles.clear();
+		if(roles != null) {
+			roles.forEach(it -> it.setId(null));
+			this.roles.addAll(roles);
 		}
-		return sb.toString().trim();
+	}
+	
+	public String getFullName() {
+	    return Stream.of(firstName, lastName)
+	    		.filter(it -> it != null && !it.isBlank())
+	    		.collect(Collectors.joining(" "));
 	}
 }

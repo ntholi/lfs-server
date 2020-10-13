@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.model.UserDTO;
-import com.breakoutms.lfs.server.user.model.UserViewModel;
 
 @Mapper(componentModel="spring")
 public abstract class UserMapper {
@@ -18,10 +17,7 @@ public abstract class UserMapper {
 	protected abstract User map(UserDTO dto);
 
 	@Mapping(source = "branch.name", target = "branchName")
-	protected abstract UserViewModel map(User entity);
-
-	@Mapping(source = "branch.name", target = "branchName")
-	protected abstract UserDTO toDTO(User entity);
+	protected abstract UserDTO map(User entity);
 	
 	@Mapping(target = "createdAt", ignore = true)
 	@Mapping(target = "createdBy", ignore = true)

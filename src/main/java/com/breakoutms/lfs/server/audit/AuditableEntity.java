@@ -48,7 +48,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	protected LocalDateTime createdAt;
 	
 	@CreatedBy
-	@JoinColumn(updatable=false, nullable = false)
+//	@JoinColumn(updatable=false, nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User createdBy;
 	

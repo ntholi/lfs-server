@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.user.model.LoginDTO;
-import com.breakoutms.lfs.server.user.model.LoginResponseDTO;
+import com.breakoutms.lfs.server.user.model.LoginResponse;
 import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.model.UserDTO;
-import com.breakoutms.lfs.server.user.model.UserViewModel;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -29,13 +28,13 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
-public class UserController implements ViewModelController<User, UserViewModel>{
+public class UserController implements ViewModelController<User, UserDTO>{
 
     private UserService service;
-    private final PagedResourcesAssembler<UserViewModel> pagedAssembler;
+    private final PagedResourcesAssembler<UserDTO> pagedAssembler;
 
 	@GetMapping 
-	public ResponseEntity<PagedModel<EntityModel<UserViewModel>>> all(
+	public ResponseEntity<PagedModel<EntityModel<UserDTO>>> all(
 			@SearchSpec Specification<User> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
@@ -43,12 +42,12 @@ public class UserController implements ViewModelController<User, UserViewModel>{
 	}
     
     @PostMapping("/login")
-    public LoginResponseDTO login(@RequestBody @Valid LoginDTO loginDto) {
+    public LoginResponse login(@RequestBody @Valid LoginDTO loginDto) {
        return service.login(loginDto.getUsername(), loginDto.getPassword());
     }
 
     @PostMapping
-    public ResponseEntity<UserViewModel> register(@RequestBody @Valid UserDTO userDto){
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid UserDTO userDto){
     	var entity = UserMapper.INSTANCE.map(userDto);
 		return new ResponseEntity<>(
 				toViewModel(service.register(entity)), 
@@ -57,7 +56,7 @@ public class UserController implements ViewModelController<User, UserViewModel>{
     }
 
 	@Override
-	public UserViewModel toViewModel(User entity) {
+	public UserDTO toViewModel(User entity) {
 		return UserMapper.INSTANCE.map(entity);
 	}
 }

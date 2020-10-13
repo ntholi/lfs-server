@@ -3,7 +3,7 @@ package com.breakoutms.lfs.server.user.model;
 import java.util.stream.Collectors;
 
 import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.common.enums.PrivilegeType;
+import com.breakoutms.lfs.common.enums.Privilege;
 
 import lombok.Data;
 
@@ -17,8 +17,7 @@ public class RoleClaim {
 		if(role.getPrivileges() != null) {
 			privileges = role.getPrivileges()
 				.stream()
-				.map(Privilege::getType)
-				.map(PrivilegeType::toString)
+				.map(Privilege::toString)
 				.collect(Collectors.joining(","));
 		}
 	}

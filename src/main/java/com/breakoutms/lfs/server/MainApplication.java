@@ -1,11 +1,21 @@
 package com.breakoutms.lfs.server;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+
+import com.breakoutms.lfs.common.enums.Domain;
+import com.breakoutms.lfs.common.enums.Privilege;
+import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.user.UserService;
+import com.breakoutms.lfs.server.user.model.Role;
+import com.breakoutms.lfs.server.user.model.User;
 
 @SpringBootApplication
 @EnableCaching
@@ -28,8 +38,7 @@ public class MainApplication implements CommandLineRunner{
 //
 //	Role role = new Role();
 //	role.setName(Domain.PRENEED);
-//	role.setPrivileges(List.of(new Privilege(PrivilegeType.READ),
-//			new Privilege(PrivilegeType.WRITE)));
+//	role.setPrivileges(List.of(Privilege.READ, Privilege.WRITE));
 //	user.setRoles(List.of(role));
 //	setBranch(user);
 //	return user;
@@ -47,12 +56,7 @@ public class MainApplication implements CommandLineRunner{
 //	admin.setLastName("Mosito");
 //	Role role = new Role();
 //	role.setName(Domain.ADMIN);
-//	role.setPrivileges(List.of(
-//			new Privilege(PrivilegeType.READ),
-//			new Privilege(PrivilegeType.WRITE),
-//			new Privilege(PrivilegeType.UPDATE),
-//			new Privilege(PrivilegeType.DELETE)
-//	));
+//	role.setPrivileges(List.of(Privilege.READ, Privilege.WRITE,Privilege.UPDATE,Privilege.DELETE));
 //	setBranch(admin);
 //	admin.setRoles(List.of(role));
 //	return admin;

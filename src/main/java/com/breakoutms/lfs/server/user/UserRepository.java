@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.user.repo;
+package com.breakoutms.lfs.server.user;
 
 import java.util.Optional;
 
