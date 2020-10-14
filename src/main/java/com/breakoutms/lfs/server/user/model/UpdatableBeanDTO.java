@@ -18,6 +18,4 @@ public class UpdatableBeanDTO extends RepresentationModel<UpdatableBeanDTO> {
 	private String bean;
 	@NotNull
 	private String field;
-	
-	private Integer userId;
 }

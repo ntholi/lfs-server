@@ -21,7 +21,5 @@ public class RoleDTO extends RepresentationModel<UserDTO> {
     private Integer id;
     @NotNull
     private Domain name;
-    @NotNull
-    private User user;
     private List<Privilege> privileges;
 }
