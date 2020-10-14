@@ -1,6 +1,8 @@
 package com.breakoutms.lfs.server.user.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -38,4 +40,10 @@ public class UserDTO extends RepresentationModel<UserDTO> {
     
     @NotBlank
     private String branchName;
+    
+	public String getFullName() {
+	    return Stream.of(firstName, lastName)
+	    		.filter(it -> it != null && !it.isBlank())
+	    		.collect(Collectors.joining(" "));
+	}
 }
