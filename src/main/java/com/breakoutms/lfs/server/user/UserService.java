@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.user;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
 import com.breakoutms.lfs.server.user.model.LoginResponse;
+import com.breakoutms.lfs.server.user.model.UpdatableBean;
 import com.breakoutms.lfs.server.user.model.User;
 
 import lombok.AllArgsConstructor;
@@ -64,10 +66,19 @@ public class UserService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		var syncNo = user.getBranch().getSyncNumber();
 		String token = jwtProvider.createToken(user, syncNo);
-		return LoginResponse.builder()
+		var response = LoginResponse.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)
 				.build();
+		
+		if(user.getUpdatableBeans() != null) {
+			var updatableBeans = user.getUpdatableBeans()
+					.stream()
+					.map(UpdatableBean::getField)
+					.collect(Collectors.toList());
+			response.setUpdatableBeans(updatableBeans);
+		}
+		return response;
 	}
 	
 	@Transactional
