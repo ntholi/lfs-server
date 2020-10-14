@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +63,14 @@ public class UserController implements ViewModelController<User, UserDTO>{
 				toViewModel(service.register(entity)), 
 				HttpStatus.CREATED
 		);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody @Valid UserDTO userDto){
+    	var entity = UserMapper.INSTANCE.map(userDto);
+    	return new ResponseEntity<>(
+    			toViewModel(service.update(id, entity)), 
+    			HttpStatus.CREATED);
     }
 
 	@Override

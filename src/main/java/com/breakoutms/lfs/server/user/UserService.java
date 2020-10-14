@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.UserAlreadyExistsException;
 import com.breakoutms.lfs.server.security.JwtUtils;
 import com.breakoutms.lfs.server.user.model.LoginResponse;
@@ -26,7 +29,8 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 public class UserService {
 
-	private final UserRepository userRepo;
+	private final UserRepository repo;
+	private final BranchRepository branchRepo;
 	private final AuthenticationManager authenticationManager;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtProvider;
@@ -34,21 +38,21 @@ public class UserService {
 	//TODO: MAKE SURE THAT CACHING WORKS AS INTENDED  - PLUS - add to update method once created
 	@Cacheable("users")
 	public Optional<User> get(Integer userId){
-		return userRepo.findById(userId);
+		return repo.findById(userId);
 	}
 	
 	public Page<User> all(Pageable pageable) {
-		return userRepo.findAll(pageable);
+		return repo.findAll(pageable);
 	}
 	
 	public Page<User> search(Specification<User> specs, Pageable pageable) {
-        return userRepo.findAll(Specification.where(specs), pageable);
+        return repo.findAll(Specification.where(specs), pageable);
     }
 	
 	@Transactional(readOnly = true)
 	public LoginResponse login(String username, String password) {
 		log.info("Attempting to login user, with username: "+ username);
-		Optional<User> userOp = userRepo.findByUsername(username);
+		Optional<User> userOp = repo.findByUsername(username);
 		if(userOp.isEmpty()) {
 			String error = "unable to find user with username: "+ username;
 			// log this error here because exception is going to be changed in the @ControllerAdvice
@@ -70,11 +74,29 @@ public class UserService {
 	public User register(User user) {
 		log.info("Registering new user with username: "+user.getUsername());
 
-		if(userRepo.findByUsername(user.getUsername()).isPresent()) {
+		if(repo.findByUsername(user.getUsername()).isPresent()) {
 			throw new UserAlreadyExistsException("Username '"+user.getUsername()+"' already exists");
 		}
+		Branch branch = branchRepo.findByName(user.getBranch().getName())
+				.orElseThrow(ExceptionSupplier.notFound("Branch", user.getBranch()));
+		user.setBranch(branch);
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
-		return userRepo.save(user);
+		return repo.save(user);
+	}
+
+	@Transactional
+	public User update(Integer id, User updateUser) {
+		Branch branch = branchRepo.findByName(updateUser.getBranch().getName())
+				.orElseThrow(ExceptionSupplier.notFound("Branch", updateUser.getBranch()));
+		User user = repo.findById(id).orElseThrow(ExceptionSupplier.notFound("User", id));
+		
+		user.setUsername(updateUser.getUsername());
+		user.setFirstName(updateUser.getFirstName());
+		user.setLastName(updateUser.getLastName());
+		user.setBranch(branch);
+		user.setRoles(updateUser.getRoles());
+		user.setUpdatableBeans(updateUser.getUpdatableBeans());
+		return repo.save(user);
 	}
 }
