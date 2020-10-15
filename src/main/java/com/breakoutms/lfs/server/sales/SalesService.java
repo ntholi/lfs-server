@@ -40,6 +40,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SalesService {
 
+	private final ReleasedCorpseRepository releasedCorpseRepo;
 	private final SalesRepository repo;
 	private final EmbalmingRepository embalmingRepo;
 	private final PostmortemRepository postmortemRepo;
@@ -64,19 +65,6 @@ public class SalesService {
 	public Sales save(final Sales sales) {
 		setAssociations(sales);
 		
-		BurialDetails burial = sales.getBurialDetails();
-		if(burial != null && burial.getLeavingTime() != null) {
-			Corpse corpse = sales.getCorpse();
-			var leavingTime = burial.getLeavingTime();
-			if(leavingTime.isAfter(LocalDate.now().atStartOfDay())) {
-				ReleasedCorpse releasedCorpse = new ReleasedCorpse();
-				releasedCorpse.setCorpse(corpse);
-				releasedCorpse.setBurialDetails(burial);
-				releasedCorpse.setStatus(ReleasedCorpseStatus.PENDING);
-				releasedCorpseRepository.save(releasedCorpse);
-			}
-		}
-		
 		return repo.save(sales);
 	}
 
@@ -100,6 +88,19 @@ public class SalesService {
 		if(tagNo != null) {
 			corpse = corpseRepo.findById(tagNo)
 					.orElseThrow(ExceptionSupplier.corpseNoteFound(tagNo));
+		}
+		
+		BurialDetails burial = sales.getBurialDetails();
+		if(burial != null && burial.getLeavingTime() != null) {
+			var leavingTime = burial.getLeavingTime();
+			if(leavingTime.isAfter(LocalDate.now().atStartOfDay())) {
+				ReleasedCorpse releasedCorpse = releasedCorpseRepo.findByCorpse(corpse)
+						.orElse(new ReleasedCorpse());
+				releasedCorpse.setCorpse(corpse);
+				releasedCorpse.setBurialDetails(burial);
+				releasedCorpse.setStatus(ReleasedCorpseStatus.PENDING);
+				releasedCorpseRepository.save(releasedCorpse);
+			}
 		}
 		
 		BurialDetails bd = sales.getBurialDetails();
