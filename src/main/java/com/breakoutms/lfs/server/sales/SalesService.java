@@ -169,7 +169,7 @@ public class SalesService {
 		Quotation quot = corpse.getQuotation();
 		List<SalesProduct> salesProducts = quot.getSalesProducts();
 		if(salesProducts != null) {
-			salesProducts.addAll(getServices(corpse));
+			salesProducts.addAll(getServices(corpse, salesProducts));
 		}
 		response.setSalesProducts(SalesMapper.INSTANCE.map(salesProducts));
 
@@ -179,12 +179,18 @@ public class SalesService {
 		return null;
 	}
 
-	private List<SalesProduct> getServices(Corpse corpse) {
+	private List<SalesProduct> getServices(Corpse corpse, List<SalesProduct> salesProducts) {
 		List<SalesProduct> list = new ArrayList<>();
 
 		embalmingRepo.findAllByCorpse(corpse).forEach(it ->
 			productRepo.findByEmbalmingType(it.getEmbalmingType())
-				.ifPresent(product -> list.add(new SalesProduct(product, 1))));
+				.ifPresent(product -> {
+					var salesProduct = new SalesProduct(product, 1);
+					if(!contains(salesProducts, salesProduct)) {
+						list.add(new SalesProduct(product, 1));
+					}
+				})
+		);
 		
 		postmortemRepo.findAllByCorpse(corpse).forEach(postmortem -> {
 			VehicleOwner going = postmortem.getTransport() != null? 
@@ -195,11 +201,26 @@ public class SalesService {
 					returning == VehicleOwner.LFS){
 				var postmortemRequest = postmortem.getPostmortemRequest().getLocation();
 				productRepo.findByTransportByType(TransportType.POSTMORTEM, postmortemRequest)
-					.ifPresent(product -> list.add(new SalesProduct(product, 1)));
+					.ifPresent(product -> {
+						var salesProduct = new SalesProduct(product, 1);
+						if(!contains(salesProducts, salesProduct)) {
+							list.add(new SalesProduct(product, 1));
+						}
+				});
 			}
 		});
 		
 		return list;
+	}
+
+	private boolean contains(List<SalesProduct> list, SalesProduct salesProduct) {
+		for(var item: list) {
+			if(salesProduct.getProduct().equals(item.getProduct()) 
+					&& salesProduct.getQuantity() == item.getQuantity()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void delete(Integer id) {
