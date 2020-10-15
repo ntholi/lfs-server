@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
+import com.breakoutms.lfs.server.transport.Transport;
+import com.breakoutms.lfs.server.transport.TransportRepository;
+import com.breakoutms.lfs.server.transport.Vehicle;
 import com.breakoutms.lfs.server.undertaker.UndertakerRequestRepository;
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
@@ -22,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class PostmortemService {
 
 	private final PostmortemRepository repo;
+	private final TransportRepository transportRepo;
 	private final UndertakerRequestRepository requestRepo;
 
 	public Optional<Postmortem> get(Integer id) {
@@ -46,6 +50,7 @@ public class PostmortemService {
 			throw new InvalidOperationException("Undertaker Request of id: '"+
 					requestId+"' is not a Postmortem Request");
 		}
+		setAssociations(entity);
 		return repo.save(entity);
 	}
 
@@ -58,7 +63,19 @@ public class PostmortemService {
 				.orElseThrow(ExceptionSupplier.notFound("Postmortem Request", id));
 		
 		PostmortemMapper.INSTANCE.update(updatedEntity, entity);
+		setAssociations(updatedEntity);
 		return repo.save(entity);
+	}
+	
+	private void setAssociations(Postmortem entity) {
+		Transport transport = entity.getTransport();
+		if(transport != null) {
+			Vehicle v = transport.getVehicle();
+			if(v != null) {
+				transportRepo.findVehicleByRegNumber(v.getRegistrationNumber())
+					.ifPresent(it -> entity.getTransport().setVehicle(it));
+			}
+		}
 	}
 	
 	public Page<Postmortem> search(Specification<Postmortem> specs, Pageable pageable) {

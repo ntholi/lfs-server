@@ -16,6 +16,9 @@ import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 import com.breakoutms.lfs.server.sales.model.Quotation;
+import com.breakoutms.lfs.server.transport.Transport;
+import com.breakoutms.lfs.server.transport.TransportRepository;
+import com.breakoutms.lfs.server.transport.Vehicle;
 
 import lombok.AllArgsConstructor;
 
@@ -24,6 +27,7 @@ import lombok.AllArgsConstructor;
 public class CorpseService {
 
 	private final CorpseRepository repo;
+	private final TransportRepository transportRepo;
 	private final OtherMortuaryRepository otherMortuaryRepo;
 	
 	public Optional<Corpse> get(String id) {
@@ -69,6 +73,14 @@ public class CorpseService {
 	}
 
 	private void addAssociations(Corpse corpse) {
+		Transport transport = corpse.getTransport();
+		if(transport != null) {
+			Vehicle v = transport.getVehicle();
+			if(v != null) {
+				transportRepo.findVehicleByRegNumber(v.getRegistrationNumber())
+					.ifPresent(it -> corpse.getTransport().setVehicle(it));
+			}
+		}
 		corpse.getNextOfKins().forEach(it ->
 			it.setCorpse(corpse)
 		);

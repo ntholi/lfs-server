@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.sales;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.common.enums.ReleasedCorpseStatus;
+import com.breakoutms.lfs.common.enums.TransportType;
+import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.embalming.EmbalmingRepository;
+import com.breakoutms.lfs.server.mortuary.postmortem.PostmortemRepository;
 import com.breakoutms.lfs.server.mortuary.released.ReleasedCorpseRepository;
 import com.breakoutms.lfs.server.mortuary.released.model.ReleasedCorpse;
 import com.breakoutms.lfs.server.preneed.deceased.DeceasedClientRepository;
@@ -36,6 +41,8 @@ import lombok.AllArgsConstructor;
 public class SalesService {
 
 	private final SalesRepository repo;
+	private final EmbalmingRepository embalmingRepo;
+	private final PostmortemRepository postmortemRepo;
 	private final DeceasedClientRepository deceasedRepo;
 	private final CorpseRepository corpseRepo;
 	private final ProductRepository productRepo;
@@ -133,7 +140,7 @@ public class SalesService {
 		quotation.setSalesProducts(salesProducts);
 	}
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	public SalesInquiry salesInquiry(String tagNo) {
 		Optional<DeceasedClient> client = deceasedRepo.findByCorpseTagNo(tagNo);
 		SalesInquiry response = new SalesInquiry();
@@ -159,22 +166,39 @@ public class SalesService {
 		}
 		
 		Quotation quot = corpse.getQuotation();
-		
-		//create quotation if null
-		if(quot == null) {
-			quot = new Quotation();
-			corpse.setQuotation(quot);
-			quot.setCorpse(corpse);
-			corpseRepo.save(corpse);
-		}
-
 		List<SalesProduct> salesProducts = quot.getSalesProducts();
+		if(salesProducts != null) {
+			salesProducts.addAll(getServices(corpse));
+		}
 		response.setSalesProducts(SalesMapper.INSTANCE.map(salesProducts));
 
 		if(response.getTagNo() != null) {
 			return response;
 		}
 		return null;
+	}
+
+	private List<SalesProduct> getServices(Corpse corpse) {
+		List<SalesProduct> list = new ArrayList<>();
+
+		embalmingRepo.findAllByCorpse(corpse).forEach(it ->
+			productRepo.findByEmbalmingType(it.getEmbalmingType())
+				.ifPresent(product -> list.add(new SalesProduct(product, 1))));
+		
+		postmortemRepo.findAllByCorpse(corpse).forEach(postmortem -> {
+			VehicleOwner going = postmortem.getTransport() != null? 
+					postmortem.getTransport().getVehicleOwner() : null;
+			VehicleOwner returning = postmortem.getReturnTransport() != null?
+					postmortem.getReturnTransport().getVehicleOwner() : null;
+			if(going == VehicleOwner.LFS ||
+					returning == VehicleOwner.LFS){
+				var postmortemRequest = postmortem.getPostmortemRequest().getLocation();
+				productRepo.findByTransportByType(TransportType.POSTMORTEM, postmortemRequest)
+					.ifPresent(product -> list.add(new SalesProduct(product, 1)));
+			}
+		});
+		
+		return list;
 	}
 
 	public void delete(Integer id) {

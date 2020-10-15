@@ -13,6 +13,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
+import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
@@ -44,4 +45,11 @@ public class Transport extends AuditableEntity<Integer>{
 	@ManyToOne(fetch = FetchType.LAZY, 
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Vehicle vehicle;
+	
+	public VehicleOwner getVehicleOwner() {
+		if(vehicle != null) {
+			return vehicle.getOwner();
+		}
+		return null;
+	}
 }
