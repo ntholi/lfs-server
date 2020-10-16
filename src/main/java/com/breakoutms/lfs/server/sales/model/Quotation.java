@@ -28,6 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Audited
@@ -50,12 +51,17 @@ public class Quotation extends AuditableEntity<Integer> {
 
 	@ManyToOne( fetch = FetchType.LAZY, 
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ToString.Exclude
 	private Customer customer;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private Corpse corpse;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private Sales sales;
 	
 	@OneToMany(mappedBy="quotation", 
