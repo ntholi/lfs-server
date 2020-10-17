@@ -1,7 +1,8 @@
-package com.breakoutms.lfs.server.branch;
+package com.breakoutms.lfs.server.branch.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,22 +24,23 @@ import lombok.Data;
         @Index(columnList = "name", name = "unique_branch_name", unique=true)
 })
 @Data
-public class Branch {
+public class Branch implements com.breakoutms.lfs.server.core.Entity<Integer>{
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "SMALLINT UNSIGNED")
 	private Integer id;
 	
 	@NotBlank
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, unique = true, length = 50)
 	private String name;
 	
-	@Enumerated
-	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Enumerated(EnumType.STRING)
+	@Column(length = 50)
 	private District district;
 	
 	@Column(nullable = false, unique = true,
 			columnDefinition = "SMALLINT")
 	@Digits(integer = 4, fraction = 0)
-	private short syncNumber;
+	@GeneratedValue
+	private Integer syncNumber;
 }

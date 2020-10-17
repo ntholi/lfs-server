@@ -72,7 +72,7 @@ public class CorpseControllerUnitTest implements ControllerUnitTest {
 		mockMvc.perform(get(URL+ID))
 				.andExpect(responseBody().hasLink("all", "/corpses"))
 				.andExpect(responseBody().hasLink("nextOfKin", "/nextOfKin"))
-				.andExpect(responseBody().hasLink("transferredFrom", "/transferredFrom"))
+				.andExpect(responseBody().hasLink("fromOtherMortuary", "/fromOtherMortuary"))
 				.andExpect(responseBody().hasLink("transportx", "/transport"))
 				.andExpect(responseBody().hasLink("self", "/corpses/"+ID))
 				.andExpect(responseBody().hasLink("branch", "/corpses/1"));

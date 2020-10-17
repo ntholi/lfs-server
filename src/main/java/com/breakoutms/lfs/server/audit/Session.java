@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.user.model.User;
 
 //@Entity

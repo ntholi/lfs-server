@@ -17,7 +17,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.core.Entity;
 import com.breakoutms.lfs.server.user.model.User;
 

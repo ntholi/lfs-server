@@ -13,7 +13,7 @@ import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.RequestType;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 
 import lombok.AllArgsConstructor;

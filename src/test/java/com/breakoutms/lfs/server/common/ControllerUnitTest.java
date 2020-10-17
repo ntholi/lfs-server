@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.breakoutms.lfs.common.enums.District;
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -48,7 +48,7 @@ public interface ControllerUnitTest extends SecuredWebTest {
 		branch.setId(1);
 		branch.setDistrict(District.MASERU);
 		branch.setName("Maseru");
-		branch.setSyncNumber((short)256);
+		branch.setSyncNumber(256);
 		return Optional.of(branch);
 	}
 }

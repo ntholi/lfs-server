@@ -40,7 +40,6 @@ import com.breakoutms.lfs.server.persistence.IdGenerator;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.transport.Transport;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -145,8 +144,8 @@ public class Corpse extends AuditableEntity<String> {
 	@ManyToOne(fetch = FetchType.LAZY,
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name="from_other_mortuary_id")
-	@JsonProperty("transferredFrom")
-	private OtherMortuary transferredFrom;
+//	@JsonProperty("fromOtherMortuary")
+	private OtherMortuary fromOtherMortuary;
 	
 	@NotNull
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,

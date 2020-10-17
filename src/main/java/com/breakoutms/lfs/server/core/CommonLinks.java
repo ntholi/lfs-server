@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.springframework.hateoas.Link;
 
-import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.branch.BranchController;
+import com.breakoutms.lfs.server.branch.model.Branch;
 
 public final class CommonLinks {
 

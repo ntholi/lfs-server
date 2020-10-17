@@ -8,8 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;

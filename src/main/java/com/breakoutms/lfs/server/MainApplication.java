@@ -11,8 +11,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 import com.breakoutms.lfs.common.enums.Domain;
 import com.breakoutms.lfs.common.enums.Privilege;
-import com.breakoutms.lfs.server.branch.Branch;
 import com.breakoutms.lfs.server.branch.BranchRepository;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.user.UserService;
 import com.breakoutms.lfs.server.user.model.Role;
 import com.breakoutms.lfs.server.user.model.User;

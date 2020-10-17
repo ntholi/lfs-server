@@ -78,5 +78,5 @@ public class CorpseDTO extends RepresentationModel<CorpseDTO>{
 	
 	private Integer releasedCorpseId;
 	
-	private String transferredFrom;
+	private String fromOtherMortuary;
 }

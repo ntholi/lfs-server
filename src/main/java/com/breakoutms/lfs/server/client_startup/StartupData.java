@@ -2,7 +2,7 @@ package com.breakoutms.lfs.server.client_startup;
 
 import java.util.List;
 
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 
 import lombok.Data;
 

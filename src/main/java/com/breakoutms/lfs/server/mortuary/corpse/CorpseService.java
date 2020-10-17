@@ -55,12 +55,12 @@ public class CorpseService {
 		
 		addAssociations(updatedEntity);
 		
-		if(entity.getTransferredFrom() != null) {
-			OtherMortuary om = entity.getTransferredFrom();
+		if(entity.getFromOtherMortuary() != null) {
+			OtherMortuary om = entity.getFromOtherMortuary();
 			if(om.getId() == null && StringUtils.isNotBlank(om.getName())) {
 				Optional<OtherMortuary> obj = otherMortuaryRepo.findFirstByName(om.getName());
 				if(obj.isPresent()) {
-					entity.setTransferredFrom(obj.get());
+					entity.setFromOtherMortuary(obj.get());
 				}
 			}
 			else if(!otherMortuaryRepo.existsById(om.getId())) {

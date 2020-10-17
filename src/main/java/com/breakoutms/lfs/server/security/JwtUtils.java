@@ -51,7 +51,7 @@ public class JwtUtils {
      * @param roles
      * @return jwt string
      */
-    public String createToken(User user, short syncNo) {
+    public String createToken(User user, Integer syncNo) {
         Claims claims = Jwts.claims().setSubject(user.getId().toString());
         claims.put(NAMES, user.getFullName());
         claims.put(SYNC_NO, syncNo);

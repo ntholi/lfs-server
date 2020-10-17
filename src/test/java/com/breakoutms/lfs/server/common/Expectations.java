@@ -18,7 +18,7 @@ import java.util.Map;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.util.FieldUtils;
 
 public class Expectations {

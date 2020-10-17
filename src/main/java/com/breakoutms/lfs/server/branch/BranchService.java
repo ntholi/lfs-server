@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.mortuary.embalming;
+package com.breakoutms.lfs.server.branch;
 
 import java.util.Optional;
 
@@ -8,43 +8,47 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.mortuary.embalming.model.Embalming;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class EmbalmingService {
-
-	private final EmbalmingRepository repo;
+public class BranchService {
 	
-	public Optional<Embalming> get(Integer id) {
+	private final BranchRepository repo;
+	
+	public Optional<Branch> get(Integer id) {
 		return repo.findById(id);
 	}
 	
-	public Page<Embalming> all(Pageable pageable) {
+	public Page<Branch> all(Pageable pageable) {
 		return repo.findAll(pageable);
 	}
 	
-	public Page<Embalming> search(Specification<Embalming> specs, Pageable pageable) {
+	public Page<Branch> search(Specification<Branch> specs, Pageable pageable) {
         return repo.findAll(Specification.where(specs), pageable);
     }
 	
 	@Transactional
-	public Embalming save(final Embalming entity) {
+	public Branch save(final Branch entity) {
+		if(entity.getSyncNumber() == null || entity.getSyncNumber() == 0) {
+			Integer syncNumber = repo.getLastSyncNumber()+1;
+			entity.setSyncNumber(syncNumber);
+		}
 		return repo.save(entity);
 	}
 	
 	@Transactional
-	public Embalming update(Integer id, Embalming updatedEntity) {
+	public Branch update(Integer id, Branch updatedEntity) {
 		if(updatedEntity == null) {
-			throw ExceptionSupplier.nullUpdate("Embalming").get();
+			throw ExceptionSupplier.nullUpdate("Branch").get();
 		}
 		var entity = repo.findById(id)
-				.orElseThrow(ExceptionSupplier.notFound("Embalming", id));
+				.orElseThrow(ExceptionSupplier.notFound("Branch", id));
 		
-		EmbalmingMapper.INSTANCE.update(updatedEntity, entity);
+		BranchMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 	

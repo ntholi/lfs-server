@@ -10,7 +10,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jeasy.random.EasyRandomParameters;
 
 import com.breakoutms.lfs.server.audit.AuditableEntity;
-import com.breakoutms.lfs.server.branch.Branch;
+import com.breakoutms.lfs.server.branch.model.Branch;
 
 public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMother<T>{
 	
@@ -65,7 +65,7 @@ public class AuditableMother<T extends AuditableEntity<ID>, ID> extends ObjectMo
 		Branch branch = new Branch();
 		branch.setId(1);
 		branch.setName("Maseru");
-		branch.setSyncNumber((short)256);
+		branch.setSyncNumber(256);
 		return branch;
 	}
 }

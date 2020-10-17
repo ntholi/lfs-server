@@ -26,7 +26,7 @@ public class CorpseMother extends AuditableMother<Corpse, String>{
 	@Override
 	public CorpseMother removeIDs() {
 		entity.setTagNo(null);
-		entity.getTransferredFrom().setId(null);
+		entity.getFromOtherMortuary().setId(null);
 		entity.getTransport().setId(null);
 		if(entity.getNextOfKins() != null) {
 			entity.getNextOfKins().forEach(it -> it.setId(null));
