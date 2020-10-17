@@ -1,8 +1,10 @@
 package com.breakoutms.lfs.server.mortuary.corpse;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -142,6 +144,19 @@ public class CorpseController implements ViewModelController<Corpse, CorpseDTO> 
 			res = reportService.getDetailedCorpseReport(fromDate, toDate, branch, user, tagNo);
 		}
 		return res; 
+	}
+	
+	
+	@GetMapping("/corpses/autocomplete-data")
+	public Map<String, List<String>> dataForAutocomplete() {
+		Map<String, List<String>> data = new HashMap<>();
+		var otherMotuaries = service.getOtherMortuaries()
+				.stream()
+				.map(OtherMortuary::getName)
+				.collect(Collectors.toList());
+		data.put("otherMotuaries", otherMotuaries);
+		
+		return data;
 	}
 	
 	@Override

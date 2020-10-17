@@ -1,11 +1,11 @@
 package com.breakoutms.lfs.server.transport;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -13,7 +13,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
-import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
@@ -28,27 +27,21 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "transport_id",          
+        name = "driver_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE transport SET deleted=true WHERE id=?")
+@Table(indexes = {
+        @Index(columnList = "name", name = "unique_drivers_name", unique=true)
+})
+@SQLDelete(sql = "UPDATE driver SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-public class Transport extends AuditableEntity<Integer>{
+public class Driver  extends AuditableEntity<Integer> {
 
 	@Id
-	@GeneratedValue(generator = "transport_id")
+	@GeneratedValue(generator = "vehicle_id")
 	private Integer id;
-	private String driver;
-	@ManyToOne(fetch = FetchType.LAZY, 
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	private Vehicle vehicle;
-	
-	public VehicleOwner getVehicleOwner() {
-		if(vehicle != null) {
-			return vehicle.getOwner();
-		}
-		return null;
-	}
+	@Column(length = 50, nullable = false)
+	private String name;
 }

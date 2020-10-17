@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
+import com.breakoutms.lfs.server.transport.Driver;
 
 @Repository
 public interface CorpseRepository extends JpaRepository<Corpse, String>, JpaSpecificationExecutor<Corpse>{
@@ -25,4 +26,7 @@ public interface CorpseRepository extends JpaRepository<Corpse, String>, JpaSpec
 			+ " from Corpse c where CONCAT(c.names, ' ', c.surname) like %:fullnames%"
 			+ " OR CONCAT(c.surname, ' ', c.names) like %:fullnames%")
 	List<CorpseLookupProjection> lookup(@Param("fullnames") String fullnames);
+
+	@Query("from Driver")
+	List<Driver> findAllDrivers();
 }
