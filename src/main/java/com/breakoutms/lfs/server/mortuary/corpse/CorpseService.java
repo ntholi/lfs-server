@@ -55,18 +55,6 @@ public class CorpseService {
 		
 		addAssociations(updatedEntity);
 		
-		if(entity.getFromOtherMortuary() != null) {
-			OtherMortuary om = entity.getFromOtherMortuary();
-			if(om.getId() == null && StringUtils.isNotBlank(om.getName())) {
-				Optional<OtherMortuary> obj = otherMortuaryRepo.findFirstByName(om.getName());
-				if(obj.isPresent()) {
-					entity.setFromOtherMortuary(obj.get());
-				}
-			}
-			else if(!otherMortuaryRepo.existsById(om.getId())) {
-				om.setId(null);
-			}
-		}
 		CorpseMapper.INSTANCE.update(updatedEntity, entity);
 		entity.setNextOfKins(updatedEntity.getNextOfKins());
 		return repo.save(entity);
@@ -79,6 +67,18 @@ public class CorpseService {
 			if(v != null) {
 				transportRepo.findVehicleByRegNumber(v.getRegistrationNumber())
 					.ifPresent(it -> corpse.getTransport().setVehicle(it));
+			}
+		}
+		if(corpse.getFromOtherMortuary() != null) {
+			OtherMortuary om = corpse.getFromOtherMortuary();
+			if(om.getId() == null && StringUtils.isNotBlank(om.getName())) {
+				Optional<OtherMortuary> obj = otherMortuaryRepo.findFirstByName(om.getName());
+				if(obj.isPresent()) {
+					corpse.setFromOtherMortuary(obj.get());
+				}
+			}
+			else if(!otherMortuaryRepo.existsById(om.getId())) {
+				om.setId(null);
 			}
 		}
 		corpse.getNextOfKins().forEach(it ->
