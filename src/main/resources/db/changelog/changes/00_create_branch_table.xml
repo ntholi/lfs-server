@@ -15,7 +15,7 @@
 			<column name="name" type="VARCHAR(50)">
 				<constraints nullable="false" unique="true" />
 			</column>
-			<column name="district" type="TINYINT UNSIGNED" />
+			<column name="district" type="VARCHAR(30)" />
 			<column name="sync_number" type="SMALLINT UNSIGNED">
 				<constraints nullable="false" unique="true" />
 			</column>

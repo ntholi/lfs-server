@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.transport;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -47,6 +48,8 @@ public class Vehicle extends AuditableEntity<String>{
 	@GeneratedValue(generator = "vehicle_id")
 	private Integer id;
 	private String registrationNumber;
+	
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private VehicleOwner owner;
 	

@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.user.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,6 +32,7 @@ public class Role {
     private Integer id;
     
     @NotNull
+    @Column(length = 20)
     @Enumerated(EnumType.STRING)
     private Domain name;
     

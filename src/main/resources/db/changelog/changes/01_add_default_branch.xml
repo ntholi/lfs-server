@@ -10,7 +10,7 @@
 		<insert tableName="branch">
 			<column name="id" valueNumeric="1" />
 			<column name="name" value="Maseru" />
-			<column name="district" value="4" />
+			<column name="district" value="MASERU" />
 			<column name="sync_number" value="256" />
 		</insert>
 	</changeSet>

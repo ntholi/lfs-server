@@ -34,8 +34,8 @@ public class Branch implements com.breakoutms.lfs.server.core.Entity<Integer>{
 	@Column(nullable = false, unique = true, length = 50)
 	private String name;
 	
+	@Column(length = 30)
 	@Enumerated(EnumType.STRING)
-	@Column(length = 50)
 	private District district;
 	
 	@Column(nullable = false, unique = true,
