@@ -65,7 +65,7 @@ public class UnpaidPolicyPayment extends AuditableEntity<Long>{
     
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, name = "policy_number")
 	private Policy policy;
 	
 	public UnpaidPolicyPayment(PolicyPaymentDetails payment) {

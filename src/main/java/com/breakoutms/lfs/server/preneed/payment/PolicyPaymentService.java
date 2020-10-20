@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.common.enums.PolicyPaymentType;
+import com.breakoutms.lfs.common.enums.PolicyStatus;
 import com.breakoutms.lfs.server.exceptions.AccountNotActiveException;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
@@ -30,7 +31,6 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry.Fune
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
@@ -154,6 +154,11 @@ public class PolicyPaymentService {
 		
 		addAssociations(entity);
 		
+		LocalDate activeDate = policy.getRegistrationDate()
+				.plusMonths(policy.getFuneralScheme().getMonthsBeforeActive());
+		LocalDate today = LocalDate.now();
+		
+		// TODO: Add login for deactivating an account
 		if(policy.getStatus() == PolicyStatus.DEACTIVATED) {
 			//TODO: Add logic for re-activating deactivated policy
 			Period period = getLastPayedPeriod(policy);
@@ -161,6 +166,13 @@ public class PolicyPaymentService {
 					+ "last premium payment was for period "+period;
 			throw new AccountNotActiveException(msg);
 		}
+		else if(today.isEqual(activeDate) || today.isAfter(activeDate)) {
+			policy.setStatus(PolicyStatus.ACTIVE);
+		}
+		else {
+			policy.setStatus(PolicyStatus.WAITING_PERIOD);
+		}
+		
 		List<Period> paidPeriods = entity.getPolicyPaymentDetails()
 				.stream()
 				.map(PolicyPaymentDetails::getPeriod)

@@ -7,9 +7,9 @@ import java.time.LocalDate;
 
 import org.jeasy.random.EasyRandomParameters;
 
+import com.breakoutms.lfs.common.enums.PolicyStatus;
 import com.breakoutms.lfs.server.common.motherbeans.AuditableMother;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
-import com.breakoutms.lfs.server.preneed.policy.model.PolicyStatus;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 public class PolicyMother extends AuditableMother<Policy, String> {

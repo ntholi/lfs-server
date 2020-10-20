@@ -153,6 +153,7 @@ public class Corpse extends AuditableEntity<String> {
 	private Quotation quotation;
 	
 	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="policy_number")
 	private Policy policy;
 	
 	@Override

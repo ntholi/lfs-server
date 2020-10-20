@@ -75,7 +75,7 @@ public class Dependent extends AuditableEntity<String>{
 	private boolean deceased;
 	
 	@ManyToOne
-	@JoinColumn(name="policy_id")
+	@JoinColumn(name="policy_number")
 	private Policy policy;
 	
 	public int getAge() {

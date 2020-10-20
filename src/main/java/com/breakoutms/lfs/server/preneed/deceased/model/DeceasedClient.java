@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Digits;
 
@@ -48,6 +49,7 @@ public class DeceasedClient extends AuditableEntity<Long> {
 	private Long id;
 
 	@ManyToOne
+	@JoinColumn(name = "policy_number")
 	private Policy policy;
 
 	@ManyToOne
