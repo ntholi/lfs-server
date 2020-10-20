@@ -40,7 +40,7 @@ import lombok.NoArgsConstructor;
 public class Driver  extends AuditableEntity<Integer> {
 
 	@Id
-	@GeneratedValue(generator = "vehicle_id")
+	@GeneratedValue(generator = "driver_id")
 	private Integer id;
 	@Column(length = 50, nullable = false)
 	private String name;

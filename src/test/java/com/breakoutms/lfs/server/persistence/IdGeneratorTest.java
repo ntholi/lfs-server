@@ -17,10 +17,19 @@ import org.hibernate.annotations.Parameter;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 
+import com.breakoutms.lfs.server.products.model.Coffin;
+import com.breakoutms.lfs.server.products.model.EmbalmingPrice;
+import com.breakoutms.lfs.server.products.model.Tombstone;
+import com.breakoutms.lfs.server.products.model.TransportPrice;
+import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
+import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.google.common.base.CaseFormat;
 
 class IdGeneratorTest {
 
+	private List<Class<?>> excludes = List.of(Coffin.class, EmbalmingPrice.class, Tombstone.class, TransportPrice.class, 
+			TransferRequest.class, PostmortemRequest.class);
+	
 	@Test
 	void checkIf_IdsAregeneratedCorrectly() throws Exception {
 		
@@ -28,6 +37,11 @@ class IdGeneratorTest {
 		List<Class<?>> types = reflections
 				.getTypesAnnotatedWith(GenericGenerator.class)
 				.stream().collect(Collectors.toList());
+		
+		for (Class<?> exclude : excludes) {
+			System.err.println("Excludeing "+ exclude);
+		}
+		types.removeAll(excludes);
 		
 		int size = types.size();
 		for (int i = 0; i < size; i++) {

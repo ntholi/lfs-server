@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "policy_payment_id",          
+        name = "deceased_client_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_LONG)
