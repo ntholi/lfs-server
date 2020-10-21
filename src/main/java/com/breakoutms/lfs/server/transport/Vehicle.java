@@ -42,19 +42,20 @@ import lombok.NoArgsConstructor;
 })
 @SQLDelete(sql = "UPDATE vehicle SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-public class Vehicle extends AuditableEntity<String>{
+public class Vehicle extends AuditableEntity<Integer>{
 
 	@Id
 	@GeneratedValue(generator = "vehicle_id")
 	private Integer id;
+	@Column(length = 16)
 	private String registrationNumber;
 	
-	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition="ENUM('LFS','OWN','POLICE','OTHER')")
 	private VehicleOwner owner;
 	
 	@Override
-	public String getId() {
-		return registrationNumber;
+	public Integer getId() {
+		return id;
 	}
 }
