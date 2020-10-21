@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.transport;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class Transport extends AuditableEntity<Integer>{
 	@Id
 	@GeneratedValue(generator = "transport_id")
 	private Integer id;
+	@Column(length = 50, nullable = false)
 	private String driver;
 	@ManyToOne(fetch = FetchType.LAZY, 
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})

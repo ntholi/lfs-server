@@ -22,20 +22,19 @@ public interface FuneralSchemeRepository extends JpaRepository<FuneralScheme, In
 	
 	Optional<FuneralScheme> findByName(String name);
 	
-	@Query("FROM PenaltyDeductible e WHERE e.funeralScheme.id = :id AND e.deleted=false")
+	@Query("FROM PenaltyDeductible e WHERE e.funeralScheme.id = :id")
 	List<PenaltyDeductible> getPenaltyDeductibles(Integer id);
 
-	@Query("FROM FuneralSchemeBenefit e WHERE e.funeralScheme.id = :id AND e.deleted=false")
+	@Query("FROM FuneralSchemeBenefit e WHERE e.funeralScheme.id = :id")
 	List<FuneralSchemeBenefit> getFuneralSchemeBenefits(Integer id);
 
-	@Query("FROM DependentBenefit e WHERE e.funeralScheme.id = :id AND e.deleted=false")
+	@Query("FROM DependentBenefit e WHERE e.funeralScheme.id = :id")
 	List<DependentBenefit> getDependentBenefits(Integer id);
 
-	@Query("FROM Premium e WHERE e.funeralScheme.id = :id AND e.deleted=false")
+	@Query("FROM Premium e WHERE e.funeralScheme.id = :id")
 	List<Premium> getPremiums(Integer id);
 	
 	@Query("FROM Premium e WHERE e.funeralScheme = :funeralScheme "
-			+ "AND (:age >= e.minimumAge AND :age <= e.maximumAge) "
-			+ "AND e.deleted=false")
+			+ "AND (:age >= e.minimumAge AND :age <= e.maximumAge) ")
 	Optional<Premium> findPremium(FuneralScheme funeralScheme, int age);
 }
