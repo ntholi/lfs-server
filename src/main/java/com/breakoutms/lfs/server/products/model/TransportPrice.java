@@ -2,6 +2,7 @@ package com.breakoutms.lfs.server.products.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -22,7 +23,9 @@ import lombok.NoArgsConstructor;
 @PrimaryKeyJoinColumn(name = "product_id")
 public class TransportPrice extends Product {
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition="ENUM('CORPSE_DELIVERY','TOMBSTONE_DELIVERY',"
+			+ "'TRANSFER', 'POSTMORTEM','EMBALMING','COLLECTION')")
 	private TransportType transportType;
 	@Column(name="trans_from")
 	private String from;
