@@ -14,6 +14,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Length;
 
 import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -47,7 +48,9 @@ public class Vehicle extends AuditableEntity<Integer>{
 	@Id
 	@GeneratedValue(generator = "vehicle_id")
 	private Integer id;
-	@Column(length = 16)
+	
+	@Length(max = 16)
+	@Column(length = 16, unique = true)
 	private String registrationNumber;
 	
 	@Enumerated(EnumType.STRING)

@@ -13,6 +13,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Length;
 
 import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
@@ -41,8 +42,11 @@ public class Transport extends AuditableEntity<Integer>{
 	@Id
 	@GeneratedValue(generator = "transport_id")
 	private Integer id;
-	@Column(length = 50, nullable = false)
+	
+	@Length(max = 40)
+	@Column(length = 40)
 	private String driver;
+	
 	@ManyToOne(fetch = FetchType.LAZY, 
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Vehicle vehicle;
