@@ -147,9 +147,8 @@ public class Corpse extends AuditableEntity<String> {
 //	@JsonProperty("fromOtherMortuary")
 	private OtherMortuary fromOtherMortuary;
 	
-	@NotNull
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,
-		optional = false)
+//	@NotNull
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Quotation quotation;
 	
 	@OneToOne(fetch = FetchType.LAZY)
