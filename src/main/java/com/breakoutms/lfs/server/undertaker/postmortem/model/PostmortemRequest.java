@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorValue("Postmortem")
+@DiscriminatorValue(RequestType.Const.POSTMORTEM)
 public class PostmortemRequest extends UndertakerRequest {
 	
 	@Enumerated(EnumType.STRING)
@@ -73,6 +73,6 @@ public class PostmortemRequest extends UndertakerRequest {
 
 	@Override
 	public RequestType getRequestType() {
-		return RequestType.Postmortem;
+		return RequestType.POSTMORTEM;
 	}
 }

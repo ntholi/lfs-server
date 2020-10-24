@@ -54,12 +54,11 @@ public class UndertakerRequestController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return ResponseEntity.ok(
-					CollectionModel.of(
-						list.stream()
-							.map(this::map)
-							.collect(Collectors.toList())
-					)
-				);
+				CollectionModel.of(
+					list.stream()
+						.map(this::map)
+						.collect(Collectors.toList()))
+		);
 	}
 
 	private UndertakerRequestInquiry map(UndertakerRequest uRequest) {

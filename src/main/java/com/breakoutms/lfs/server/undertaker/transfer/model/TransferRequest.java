@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorValue("Transfer")
+@DiscriminatorValue(RequestType.Const.TRANSFER)
 public class TransferRequest extends UndertakerRequest {
 	
 	@NotNull
@@ -44,6 +44,6 @@ public class TransferRequest extends UndertakerRequest {
 	
 	@Override
 	public RequestType getRequestType() {
-		return RequestType.Transfer;
+		return RequestType.TRANSFER;
 	}
 }
