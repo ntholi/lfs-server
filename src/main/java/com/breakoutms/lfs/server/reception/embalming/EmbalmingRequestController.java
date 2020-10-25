@@ -3,6 +3,8 @@ package com.breakoutms.lfs.server.reception.embalming;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -42,6 +44,7 @@ public class EmbalmingRequestController
 
 	private final EmbalmingRequestService service;
 	private final PagedResourcesAssembler<EmbalmingRequestDTO> pagedAssembler;
+	private final EmbalmingCertificateService embalmingCertificateService;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<EmbalmingRequestDTO> get(@PathVariable Integer id) {
@@ -75,6 +78,11 @@ public class EmbalmingRequestController
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
 		);
+	}
+	
+	@GetMapping("/certificate/{tagNo}")
+	public Map<String, Object> certificate(@PathVariable String tagNo) {
+		return embalmingCertificateService.create(tagNo);
 	}
 	
 	@Override

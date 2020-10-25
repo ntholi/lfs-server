@@ -81,7 +81,7 @@ public class EmbalmingController implements ViewModelController<Embalming, Embal
 		var dto = EmbalmingMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
-		Corpse corpse = entity.getCorpse();
+		Corpse corpse = entity.getEmbalmingRequest().getCorpse();
 		if(corpse != null) {
 			String tagNo = corpse.getId();
 			dto.add(linkTo(methodOn(CorpseController.class).get(tagNo)).withRel("corpse"));

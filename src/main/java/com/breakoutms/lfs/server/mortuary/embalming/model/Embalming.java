@@ -22,6 +22,7 @@ import com.breakoutms.lfs.common.enums.EmbalmingType;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
+import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,9 @@ public class Embalming extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "embalming_id")
 	private Integer id;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	private EmbalmingRequest embalmingRequest;
+	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Corpse corpse;
