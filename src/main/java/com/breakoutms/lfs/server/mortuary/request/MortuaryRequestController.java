@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker;
+package com.breakoutms.lfs.server.mortuary.request;
 
 import java.util.stream.Collectors;
 
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestInquiry;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequestInquiry;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -26,17 +26,17 @@ import com.sipios.springsearch.anotation.SearchSpec;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/"+Domain.Const.UNDERTAKER)
+@RequestMapping("/"+Domain.Const.MORTUARY)
 @AllArgsConstructor
-public class UndertakerRequestController {
+public class MortuaryRequestController {
 
-	private final UndertakerRequestService service;
-	private final PagedResourcesAssembler<UndertakerRequestInquiry> assembler;
+	private final MortuaryRequestService service;
+	private final PagedResourcesAssembler<MortuaryRequestInquiry> assembler;
 
 	@GetMapping("/requests")
-	public ResponseEntity<PagedModel<EntityModel<UndertakerRequestInquiry>>> all(
-			@SearchSpec Specification<UndertakerRequest> specs, Pageable pageable) {
-		Page<UndertakerRequest> page = service.search(specs, pageable);
+	public ResponseEntity<PagedModel<EntityModel<MortuaryRequestInquiry>>> all(
+			@SearchSpec Specification<MortuaryRequest> specs, Pageable pageable) {
+		Page<MortuaryRequest> page = service.search(specs, pageable);
 		if(page.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
@@ -44,7 +44,7 @@ public class UndertakerRequestController {
 	}
 	
 	@GetMapping("/requests-lookup")
-	public ResponseEntity<CollectionModel<UndertakerRequestInquiry>> lookup(String names) {
+	public ResponseEntity<CollectionModel<MortuaryRequestInquiry>> lookup(String names) {
 		if(StringUtils.isBlank(names)) {
 			return ResponseEntity.noContent()
 					.build();
@@ -61,8 +61,8 @@ public class UndertakerRequestController {
 		);
 	}
 
-	private UndertakerRequestInquiry map(UndertakerRequest uRequest) {
-		UndertakerRequestInquiry inquiry = new UndertakerRequestInquiry();
+	private MortuaryRequestInquiry map(MortuaryRequest uRequest) {
+		MortuaryRequestInquiry inquiry = new MortuaryRequestInquiry();
 		inquiry.setId(uRequest.getId());
 		inquiry.setSeen(uRequest.isSeen());
 		inquiry.setTagNo(uRequest.getCorpse().getTagNo());
@@ -82,6 +82,9 @@ public class UndertakerRequestController {
 			inquiry.setTransferTo(request.getBranch().getName());
 
 		}
+//		else if(uRequest instanceof EmbalmingRequest) {
+//			EmbalmingRequest request = (EmbalmingRequest) uRequest;
+//		}
 		return inquiry;
 	}
 

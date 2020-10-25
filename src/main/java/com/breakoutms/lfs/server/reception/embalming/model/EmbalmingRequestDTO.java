@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.hateoas.server.core.Relation;
 
 import com.breakoutms.lfs.common.enums.EvidenceOfDisease;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestDTO;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Relation(collectionRelation = "embalmingRequests")
-public class EmbalmingRequestDTO extends UndertakerRequestDTO<EmbalmingRequestDTO>{
+public class EmbalmingRequestDTO extends MortuaryRequestDTO<EmbalmingRequestDTO>{
 
 	@Length(max = 50)
 	private String hair;

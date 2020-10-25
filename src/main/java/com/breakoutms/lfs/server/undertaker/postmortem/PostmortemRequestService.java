@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestMapper;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class PostmortemRequestService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Postmortem Request", id));
 		
-		UndertakerRequestMapper.INSTANCE.update(updatedEntity, entity);
+		MortuaryRequestMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 }

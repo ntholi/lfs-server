@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker;
+package com.breakoutms.lfs.server.mortuary.request;
 
 import java.util.List;
 
@@ -9,17 +9,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class UndertakerRequestService {
+public class MortuaryRequestService {
 
-	private UndertakerRequestRepository repo;
+	private MortuaryRequestRepository repo;
 
-	public Page<UndertakerRequest> all(Pageable p) {
+	public Page<MortuaryRequest> all(Pageable p) {
 		Sort sort = p.getSort().and(Sort.by("processed").ascending());
 		PageRequest pageRequest = PageRequest.of(p.getPageNumber(), 
 				p.getPageSize(), sort);
@@ -27,11 +27,11 @@ public class UndertakerRequestService {
 		return repo.findByProcessed(pageRequest, false);
 	}
 
-	public Page<UndertakerRequest> search(Specification<UndertakerRequest> specs, Pageable pageable) {
+	public Page<MortuaryRequest> search(Specification<MortuaryRequest> specs, Pageable pageable) {
         return repo.findAll(Specification.where(specs), pageable);
     }
 	
-	public List<UndertakerRequest> lookup(String names) {
+	public List<MortuaryRequest> lookup(String names) {
 		return repo.lookup(names);
 	}
 }

@@ -1,21 +1,19 @@
-package com.breakoutms.lfs.server.undertaker;
+package com.breakoutms.lfs.server.mortuary.request;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequest;
-import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequestDTO;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestDTO;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestDTO;
 
 @Mapper(componentModel="spring")
-public abstract class UndertakerRequestMapper {
+public abstract class MortuaryRequestMapper {
 
-	public static final UndertakerRequestMapper INSTANCE = Mappers.getMapper(UndertakerRequestMapper.class);
+	public static final MortuaryRequestMapper INSTANCE = Mappers.getMapper(MortuaryRequestMapper.class);
 	
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "createdAt", ignore = true)

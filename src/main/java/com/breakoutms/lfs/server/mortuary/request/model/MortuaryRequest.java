@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.mortuary.request.model;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -34,21 +34,21 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
 @GenericGenerator(
-        name = "undertaker_request_id",          
+        name = "mortuary_request_id",          
         strategy = IdGenerator.STRATEGY,
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-@SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE mortuary_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 @DiscriminatorColumn(
 	    discriminatorType = DiscriminatorType.STRING,
 	    name = "request_type"
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class UndertakerRequest extends AuditableEntity<Integer>{
+public abstract class MortuaryRequest extends AuditableEntity<Integer>{
 	@Id
-	@GeneratedValue(generator = "undertaker_request_id")
+	@GeneratedValue(generator = "mortuary_request_id")
 	private Integer id;
 
 	

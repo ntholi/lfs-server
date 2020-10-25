@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.mortuary.request.model;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public class UndertakerRequestInquiry extends RepresentationModel<UndertakerRequestInquiry> {
+public class MortuaryRequestInquiry extends RepresentationModel<MortuaryRequestInquiry> {
 
 	private Integer id;
 	private String tagNo;

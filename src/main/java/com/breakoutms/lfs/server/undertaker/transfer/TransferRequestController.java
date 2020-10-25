@@ -27,7 +27,7 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestMapper;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequestDTO;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -61,7 +61,7 @@ public class TransferRequestController
 
 	@PostMapping
 	public ResponseEntity<TransferRequestDTO> save(@Valid @RequestBody TransferRequestDTO dto) {
-		TransferRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		TransferRequest entity = MortuaryRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
@@ -71,7 +71,7 @@ public class TransferRequestController
 	@PutMapping("/{id}")
 	public ResponseEntity<TransferRequestDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody TransferRequestDTO dto) {
-		TransferRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		TransferRequest entity = MortuaryRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
@@ -80,7 +80,7 @@ public class TransferRequestController
 	
 	@Override
 	public TransferRequestDTO toViewModel(TransferRequest entity) {
-		TransferRequestDTO dto = UndertakerRequestMapper.INSTANCE.map(entity);
+		TransferRequestDTO dto = MortuaryRequestMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

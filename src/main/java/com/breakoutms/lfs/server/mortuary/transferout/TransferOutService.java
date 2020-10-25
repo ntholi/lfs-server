@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestRepository;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 import com.breakoutms.lfs.server.mortuary.transferout.model.TransferOut;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestRepository;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 public class TransferOutService {
 
 	private final TransferOutRepository repo;
-	private final UndertakerRequestRepository requestRepo;
+	private final MortuaryRequestRepository requestRepo;
 	
 	public Optional<TransferOut> get(Integer id) {
 		return repo.findById(id);
@@ -35,7 +35,7 @@ public class TransferOutService {
 	@Transactional
 	public TransferOut save(final TransferOut entity) {
 		Integer requestId = entity.getTransferRequest().getId();
-		UndertakerRequest undertakerRequest = requestRepo.findById(requestId)
+		MortuaryRequest undertakerRequest = requestRepo.findById(requestId)
 				.orElseThrow(ExceptionSupplier.notFound("Transfer Out Request", requestId));
 		if (undertakerRequest instanceof TransferRequest) {
 			var transferRequest = (TransferRequest) undertakerRequest;

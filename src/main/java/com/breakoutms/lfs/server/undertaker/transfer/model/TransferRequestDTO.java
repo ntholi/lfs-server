@@ -2,7 +2,7 @@ package com.breakoutms.lfs.server.undertaker.transfer.model;
 
 import org.springframework.hateoas.server.core.Relation;
 
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequestDTO;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Relation(collectionRelation = "TransferRequests")
-public class TransferRequestDTO extends UndertakerRequestDTO<TransferRequestDTO>{
+public class TransferRequestDTO extends MortuaryRequestDTO<TransferRequestDTO>{
 	
 	private String transferTo;
 }

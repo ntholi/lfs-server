@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestRepository;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 import com.breakoutms.lfs.server.transport.Transport;
 import com.breakoutms.lfs.server.transport.TransportRepository;
 import com.breakoutms.lfs.server.transport.Vehicle;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestRepository;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class PostmortemService {
 
 	private final PostmortemRepository repo;
 	private final TransportRepository transportRepo;
-	private final UndertakerRequestRepository requestRepo;
+	private final MortuaryRequestRepository requestRepo;
 
 	public Optional<Postmortem> get(Integer id) {
 		return repo.findById(id);
@@ -39,7 +39,7 @@ public class PostmortemService {
 	@Transactional
 	public Postmortem save(final Postmortem entity) {
 		Integer requestId = entity.getPostmortemRequest().getId();
-		UndertakerRequest undertakerRequest = requestRepo.findById(requestId)
+		MortuaryRequest undertakerRequest = requestRepo.findById(requestId)
 				.orElseThrow(ExceptionSupplier.notFound("Transfer Out Request", requestId));
 		if (undertakerRequest instanceof PostmortemRequest) {
 			var transferRequest = (PostmortemRequest) undertakerRequest;

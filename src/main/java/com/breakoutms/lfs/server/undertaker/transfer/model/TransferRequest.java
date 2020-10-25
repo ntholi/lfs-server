@@ -14,7 +14,7 @@ import org.hibernate.envers.Audited;
 import com.breakoutms.lfs.common.enums.RequestType;
 import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.branch.model.Branch;
-import com.breakoutms.lfs.server.undertaker.model.UndertakerRequest;
+import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
 @DiscriminatorValue(RequestType.Const.TRANSFER)
-public class TransferRequest extends UndertakerRequest {
+public class TransferRequest extends MortuaryRequest {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)

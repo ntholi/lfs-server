@@ -27,7 +27,7 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestMapper;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequestDTO;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -61,7 +61,7 @@ public class PostmortemRequestController
 
 	@PostMapping
 	public ResponseEntity<PostmortemRequestDTO> save(@Valid @RequestBody PostmortemRequestDTO dto) {
-		PostmortemRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		PostmortemRequest entity = MortuaryRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
@@ -71,7 +71,7 @@ public class PostmortemRequestController
 	@PutMapping("/{id}")
 	public ResponseEntity<PostmortemRequestDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody PostmortemRequestDTO dto) {
-		PostmortemRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		PostmortemRequest entity = MortuaryRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
@@ -80,7 +80,7 @@ public class PostmortemRequestController
 	
 	@Override
 	public PostmortemRequestDTO toViewModel(PostmortemRequest entity) {
-		PostmortemRequestDTO dto = UndertakerRequestMapper.INSTANCE.map(entity);
+		PostmortemRequestDTO dto = MortuaryRequestMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();

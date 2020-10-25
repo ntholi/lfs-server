@@ -1,4 +1,4 @@
-package com.breakoutms.lfs.server.undertaker.model;
+package com.breakoutms.lfs.server.mortuary.request.model;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public class UndertakerRequestDTO<T extends UndertakerRequestDTO<T>>  extends RepresentationModel<T> {
+public class MortuaryRequestDTO<T extends MortuaryRequestDTO<T>>  extends RepresentationModel<T> {
 
 	private Long id;
 	@NotNull

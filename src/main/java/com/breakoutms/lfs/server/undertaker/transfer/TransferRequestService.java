@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.branch.BranchRepository;
 import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
+import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestMapper;
 import com.breakoutms.lfs.server.undertaker.transfer.model.TransferRequest;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class TransferRequestService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Transfer Request", id));
 		
-		UndertakerRequestMapper.INSTANCE.update(updatedEntity, entity);
+		MortuaryRequestMapper.INSTANCE.update(updatedEntity, entity);
 		syncBranch(entity);
 		return repo.save(entity);
 	}
