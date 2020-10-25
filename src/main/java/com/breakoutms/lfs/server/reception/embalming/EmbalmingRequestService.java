@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequest;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -41,7 +40,7 @@ public class EmbalmingRequestService {
 		var entity = repo.findById(id)
 				.orElseThrow(ExceptionSupplier.notFound("Embalming Request", id));
 		
-		UndertakerRequestMapper.INSTANCE.update(updatedEntity, entity);
+		EmbalmingRequestMapper.INSTANCE.update(updatedEntity, entity);
 		return repo.save(entity);
 	}
 

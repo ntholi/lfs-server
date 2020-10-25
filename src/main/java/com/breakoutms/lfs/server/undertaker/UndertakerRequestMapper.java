@@ -38,17 +38,4 @@ public abstract class UndertakerRequestMapper {
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
 	@Mapping(source = "transferTo.name", target = "transferTo")
 	public abstract TransferRequestDTO map(TransferRequest entity);
-	
-	
-	@Mapping(source = "tagNo", target = "corpse.tagNo")
-	public abstract EmbalmingRequest map(EmbalmingRequestDTO dto);
-	
-	@Mapping(source = "corpse.tagNo", target = "tagNo")
-	public abstract EmbalmingRequestDTO map(EmbalmingRequest entity);
-	
-	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
-	@Mapping(target = "branch", ignore = true)
-	public abstract void update(EmbalmingRequest updatedEntity, @MappingTarget EmbalmingRequest entity);
 }

@@ -29,7 +29,6 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequest;
 import com.breakoutms.lfs.server.reception.embalming.model.EmbalmingRequestDTO;
-import com.breakoutms.lfs.server.undertaker.UndertakerRequestMapper;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -61,7 +60,7 @@ public class EmbalmingRequestController
 
 	@PostMapping
 	public ResponseEntity<EmbalmingRequestDTO> save(@Valid @RequestBody EmbalmingRequestDTO dto) {
-		EmbalmingRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		EmbalmingRequest entity = EmbalmingRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity)), 
 				HttpStatus.CREATED
@@ -71,7 +70,7 @@ public class EmbalmingRequestController
 	@PutMapping("/{id}")
 	public ResponseEntity<EmbalmingRequestDTO> update(@PathVariable Integer id, 
 			@Valid @RequestBody EmbalmingRequestDTO dto) {
-		EmbalmingRequest entity = UndertakerRequestMapper.INSTANCE.map(dto);
+		EmbalmingRequest entity = EmbalmingRequestMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
@@ -80,7 +79,7 @@ public class EmbalmingRequestController
 	
 	@Override
 	public EmbalmingRequestDTO toViewModel(EmbalmingRequest entity) {
-		EmbalmingRequestDTO dto = UndertakerRequestMapper.INSTANCE.map(entity);
+		EmbalmingRequestDTO dto = EmbalmingRequestMapper.INSTANCE.map(entity);
 		val id = entity.getId();
 		dto.add(CommonLinks.addLinksWithBranch(getClass(), id, entity.getBranch()));
 		Corpse corpse = entity.getCorpse();
