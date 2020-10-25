@@ -26,4 +26,6 @@ public class EmbalmingDTO extends RepresentationModel<EmbalmingDTO>{
 	private String embalmer;
 	private EmbalmingType embalmingType;
 	private double formalin;
+	@NotNull
+	private Integer requestId;
 }

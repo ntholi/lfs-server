@@ -14,8 +14,11 @@ public abstract class EmbalmingMapper {
 	public static final EmbalmingMapper INSTANCE = Mappers.getMapper(EmbalmingMapper.class);
 
 	@Mapping(source = "tagNo", target = "corpse.tagNo")
+	@Mapping(source = "requestId", target = "embalmingRequest.id")
 	protected abstract Embalming map(EmbalmingDTO dto);
+	
 	@Mapping(source = "corpse.tagNo", target = "tagNo")
+	@Mapping(source = "embalmingRequest.id", target = "requestId")
 	protected abstract EmbalmingDTO map(Embalming embalmingCorpse);
 
 	@Mapping(target = "id", ignore = true)

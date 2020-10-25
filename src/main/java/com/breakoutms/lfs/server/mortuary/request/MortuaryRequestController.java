@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
+import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequestInquiry;
 import com.breakoutms.lfs.server.undertaker.postmortem.model.PostmortemRequest;
@@ -63,9 +64,10 @@ public class MortuaryRequestController {
 
 	private MortuaryRequestInquiry map(MortuaryRequest uRequest) {
 		MortuaryRequestInquiry inquiry = new MortuaryRequestInquiry();
+		Corpse corpse = uRequest.getCorpse();
 		inquiry.setId(uRequest.getId());
 		inquiry.setSeen(uRequest.isSeen());
-		inquiry.setTagNo(uRequest.getCorpse().getTagNo());
+		inquiry.setTagNo(corpse.getTagNo());
 		inquiry.setProcessed(uRequest.isProcessed());
 		inquiry.setDate(uRequest.getCreatedAt());
 		inquiry.setRequestType(uRequest.getRequestType());

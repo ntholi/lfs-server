@@ -66,7 +66,7 @@ public class Postmortem extends AuditableEntity<Integer> {
 	private Transport returnTransport;
 	
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private PostmortemRequest postmortemRequest;
 }

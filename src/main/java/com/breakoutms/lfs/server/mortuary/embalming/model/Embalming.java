@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -49,7 +50,7 @@ public class Embalming extends AuditableEntity<Integer> {
 	@GeneratedValue(generator = "embalming_id")
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	private EmbalmingRequest embalmingRequest;
 	
 	@NotNull
