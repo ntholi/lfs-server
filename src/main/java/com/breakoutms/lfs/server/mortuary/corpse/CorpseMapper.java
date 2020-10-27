@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLazyDTO;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
 
 @Mapper(componentModel="spring")
@@ -31,6 +32,7 @@ public abstract class CorpseMapper {
 	@Mapping(target = "driversName",  source = "transport.driver")
 	@Mapping(target = "vehicleOwner",  source = "transport.vehicle.owner")
 	@Mapping(target = "registrationNumber",  source = "transport.vehicle.registrationNumber")
+	@Mapping(target = "releasedCorpseId", source = "releasedCorpse.id")
 	protected abstract CorpseDTO map(Corpse entity);
 	
 	@Mapping(target = "transport.driver",  source = "driversName")
@@ -57,4 +59,7 @@ public abstract class CorpseMapper {
 	@Mapping(target = "createdBy", ignore = true)
 	@Mapping(target = "branch", ignore = true)
 	protected abstract void update(Corpse updateEntity, @MappingTarget Corpse saved);
+
+	@Mapping(target = "releasedCorpseId", source = "releasedCorpse.id")
+	protected abstract CorpseLazyDTO toLazyDTO(Corpse entity);
 }

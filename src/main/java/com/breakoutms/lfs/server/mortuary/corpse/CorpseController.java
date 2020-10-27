@@ -33,6 +33,7 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseDTO;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLazyDTO;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
@@ -51,7 +52,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseDTO> 
 	
 	private final CorpseService service;
 	private final CorpseReportService reportService;
-	private final PagedResourcesAssembler<CorpseDTO> pagedAssembler;
+	private final PagedResourcesAssembler<CorpseLazyDTO> pagedAssembler;
 
 
 	@GetMapping("/corpses/{id}")
@@ -62,11 +63,10 @@ public class CorpseController implements ViewModelController<Corpse, CorpseDTO> 
 	}
 
 	@GetMapping("/corpses") 
-	public ResponseEntity<PagedModel<EntityModel<CorpseDTO>>> all(
+	public ResponseEntity<PagedModel<EntityModel<CorpseLazyDTO>>> all(
 			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
-				service.search(specs, pageable));
+		return ResponseHelper.pagedGetResponse(CorpseMapper.INSTANCE::toLazyDTO, 
+				pagedAssembler, service.search(specs, pageable));
 	}
 
 	@PostMapping("/corpses")

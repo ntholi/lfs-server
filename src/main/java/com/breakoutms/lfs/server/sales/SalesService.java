@@ -167,7 +167,13 @@ public class SalesService {
 		}
 		
 		Quotation quot = corpse.getQuotation();
-		List<SalesProduct> salesProducts = quot.getSalesProducts();
+		List<SalesProduct> salesProducts;
+		if(quot != null) {
+			salesProducts = quot.getSalesProducts();
+		}
+		else {
+			salesProducts = new ArrayList<>();
+		}
 		if(salesProducts != null) {
 			salesProducts.addAll(getServices(corpse, salesProducts));
 		}
