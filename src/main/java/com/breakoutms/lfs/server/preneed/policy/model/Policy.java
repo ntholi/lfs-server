@@ -65,7 +65,7 @@ public class Policy extends AuditableEntity<String> {
 
 	@Id
 	@GeneratedValue(generator = "policy_id")
-	@Column(columnDefinition = "CHAR(10)")
+	@Column(length = 16)
 	private String policyNumber;
 
 	@NotBlank
