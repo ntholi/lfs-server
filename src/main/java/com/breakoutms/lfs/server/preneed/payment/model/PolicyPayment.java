@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Digits;
@@ -56,6 +57,7 @@ public class PolicyPayment extends AuditableEntity<Long> {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "policy_number")
 	private Policy policy;
 	
 	@NotNull

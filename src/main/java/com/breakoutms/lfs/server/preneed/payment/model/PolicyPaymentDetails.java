@@ -88,7 +88,7 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "CHAR(15)")
+	@Column(columnDefinition="ENUM('PREMIUM', 'PENALTY', 'REGISTRATION', 'UPGRADE_FEE')")
 	private PolicyPaymentType type;
 	
 	@NotNull
