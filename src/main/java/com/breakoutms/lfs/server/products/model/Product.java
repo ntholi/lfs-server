@@ -46,7 +46,6 @@ import lombok.NoArgsConstructor;
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
 @Table(indexes = {
-        @Index(columnList = "name", name = "unique_product_name", unique=true),
         @Index(columnList = "productType", name = "index_product_type")
 })
 @SQLDelete(sql = "UPDATE product SET deleted=true WHERE id=?")
