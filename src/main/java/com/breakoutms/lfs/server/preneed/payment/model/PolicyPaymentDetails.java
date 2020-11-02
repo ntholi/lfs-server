@@ -169,7 +169,7 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	}
 
 	public boolean hasSamePeriod(PolicyPaymentDetails info) {
-		if(info.getPeriod() != null && info.getPeriod() != null) {
+		if(info.getPeriod() != null) {
 			Period period = info.getPeriod();
 			return this.period.equals(period);
 		}
