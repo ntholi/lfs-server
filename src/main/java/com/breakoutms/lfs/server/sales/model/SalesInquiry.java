@@ -15,6 +15,7 @@ public class SalesInquiry {
 	private String policyNumber;	
 	private String tagNo;
 	private String name;
+	private String specialRequirements;
 	private String dependentId;
 	private BigDecimal payout;
 	private Integer quotationNo;

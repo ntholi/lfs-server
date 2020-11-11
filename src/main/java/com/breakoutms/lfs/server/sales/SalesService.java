@@ -165,6 +165,7 @@ public class SalesService {
 			response.setTagNo(corpse.getTagNo());
 			response.setName(corpse.getFullName());
 		}
+		response.setSpecialRequirements(corpse.getSpecialRequirements());
 		
 		Quotation quot = corpse.getQuotation();
 		List<SalesProduct> salesProducts;
