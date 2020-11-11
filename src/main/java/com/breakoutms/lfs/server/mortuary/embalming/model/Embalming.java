@@ -63,8 +63,9 @@ public class Embalming extends AuditableEntity<Integer> {
 	@Column(length = 50)
 	private String embalmer;
 	
-	@Column(length = 20)
+	@NotNull
 	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition="ENUM('LOCAL', 'RSA', 'RSA_TO_OTHER', 'INTERNATIONAL', 'OTHER')")
 	private EmbalmingType embalmingType;
 	
 	@Column(precision=10)

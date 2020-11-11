@@ -26,6 +26,6 @@ public class EmbalmingPrice extends Product{
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 30)
+	@Column(columnDefinition="ENUM('LOCAL', 'RSA', 'RSA_TO_OTHER', 'INTERNATIONAL', 'OTHER')")
 	private EmbalmingType embalmingType;
 }
