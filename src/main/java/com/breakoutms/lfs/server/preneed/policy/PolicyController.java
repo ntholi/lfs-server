@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -31,9 +32,11 @@ import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyLookupProjection;
 import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -42,7 +45,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 
 @RestController
-@RequestMapping("/"+Domain.Const.PRENEED+"/policies")
+@RequestMapping("/"+Domain.Const.PRENEED)
 @Import(ObjectMapperConfig.class)
 @AllArgsConstructor
 public class PolicyController implements ViewModelController<Policy, PolicyDTO> {
@@ -51,14 +54,14 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 	private final PolicyReportsService reportsService;
 	private final PagedResourcesAssembler<PolicyDTO> pagedAssembler;
 	
-	@GetMapping("/{id}")
+	@GetMapping("/policies/{id}")
 	public ResponseEntity<PolicyDTO> get(@PathVariable String id) {
 		return ResponseHelper.getResponse(this, 
 				service.get(id), 
 				ExceptionSupplier.notFound("Policy", id));
 	}
 	
-	@GetMapping
+	@GetMapping("/policies")
 	public ResponseEntity<PagedModel<EntityModel<PolicyDTO>>> all(
 			@SearchSpec Specification<Policy> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
@@ -66,7 +69,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 				service.search(specs, pageable));
 	}
 	
-	@PostMapping
+	@PostMapping("/policies")
 	public ResponseEntity<PolicyDTO> save(@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
 		return new ResponseEntity<>(
@@ -75,7 +78,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 		);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping("/policies/{id}")
 	public ResponseEntity<PolicyDTO> update(@PathVariable String id, 
 			@Valid @RequestBody PolicyDTO dto) {
 		val entity = PreneedMapper.INSTANCE.map(dto);
@@ -85,8 +88,24 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 		);
 	}
 
+	@GetMapping("/policies-lookup")
+	public ResponseEntity<CollectionModel<PolicyLookupProjection>> lookup(String names) {
+		if(StringUtils.isBlank(names)) {
+			return ResponseEntity.noContent()
+					.build();
+		}
+		//TODO: IT HAS TO BE PAGABLE
+//		return ResponseHelper.pagedGetResponse(this, 
+//				pagedAssembler,
+//				service.lookup(pageable));
+		
+		var list = service.lookup(names);
+		return list.isEmpty()? 
+				new ResponseEntity<>(HttpStatus.NO_CONTENT) : 
+					ResponseEntity.ok(CollectionModel.of(list));
+	}
 	
-	@GetMapping("/reports/policy-report")
+	@GetMapping("/policies/reports/policy-report")
 	public Map<String, Object> reports(int reportType, String from, String to, 
 			@RequestParam(required = false) Integer branch, 
 			@RequestParam(required = false) Integer user) {

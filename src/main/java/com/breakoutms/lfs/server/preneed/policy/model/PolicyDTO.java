@@ -26,6 +26,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Relation(collectionRelation = "policies")
 public class PolicyDTO extends RepresentationModel<PolicyDTO> {
+	
 	private String policyNumber;
 	
 	@NotBlank

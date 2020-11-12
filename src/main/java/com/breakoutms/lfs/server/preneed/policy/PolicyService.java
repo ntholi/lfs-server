@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.preneed.policy;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyLookupProjection;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
@@ -86,5 +88,9 @@ public class PolicyService {
 	
 	public void delete(String id) {
 		repo.deleteById(id);
+	}
+
+	public List<PolicyLookupProjection> lookup(String names) {
+		return repo.lookup(names);
 	}
 }
