@@ -1,5 +1,6 @@
 package com.breakoutms.lfs.server.branch;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,6 +26,10 @@ public class BranchService {
 	
 	public Page<Branch> all(Pageable pageable) {
 		return repo.findAll(pageable);
+	}
+	
+	public List<Branch> all() {
+		return repo.findAll();
 	}
 	
 	public Page<Branch> search(Specification<Branch> specs, Pageable pageable) {

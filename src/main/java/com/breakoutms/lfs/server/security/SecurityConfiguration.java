@@ -28,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/users/login").permitAll()
-                .antMatchers("/startup-data").permitAll();
+                .antMatchers("/startup-data/**").permitAll();
         for(Domain domain: Domain.values()) {
         	authorize(http, domain);
         }
