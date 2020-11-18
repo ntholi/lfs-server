@@ -8,7 +8,8 @@ import lombok.Data;
 public class LoginDTO {
     @NotNull
     private String username;
-
     @NotNull
     private String password;
+    @NotNull
+    private Integer branchId;
 }

@@ -52,7 +52,7 @@ public class UserService {
     }
 	
 	@Transactional(readOnly = true)
-	public LoginResponse login(String username, String password) {
+	public LoginResponse login(String username, String password, Integer branchId) {
 		log.info("Attempting to login user, with username: "+ username);
 		Optional<User> userOp = repo.findByUsername(username);
 		if(userOp.isEmpty()) {
@@ -64,8 +64,7 @@ public class UserService {
 		}
 		User user = userOp.get();
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		var syncNo = user.getBranch().getSyncNumber();
-		String token = jwtProvider.createToken(user, syncNo);
+		String token = jwtProvider.createToken(user, branchId);
 		var response = LoginResponse.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)

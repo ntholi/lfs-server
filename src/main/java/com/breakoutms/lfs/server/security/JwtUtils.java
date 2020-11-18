@@ -1,17 +1,23 @@
 package com.breakoutms.lfs.server.security;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.breakoutms.lfs.server.user.model.RoleClaim;
 import com.breakoutms.lfs.server.user.model.User;
@@ -27,8 +33,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtils {
 
+	public static final String AUTHORIZATION_HEADER = "Authorization";
+	public static final String TOKEN_SEPERATOR = " ";
 	private static final String NAMES = "names";
-	private static final String SYNC_NO = "sync_no";
+	private static final String BRANCH_ID = "branch_id";
 	public static final String ROLE_PREFIX = "ROLE_";
 	public static final String BEARER = "Bearer";
     private static final String ROLES_KEY = "roles";
@@ -51,10 +59,10 @@ public class JwtUtils {
      * @param roles
      * @return jwt string
      */
-    public String createToken(User user, Integer syncNo) {
+    public String createToken(User user, Integer branchId) {
         Claims claims = Jwts.claims().setSubject(user.getId().toString());
         claims.put(NAMES, user.getFullName());
-        claims.put(SYNC_NO, syncNo);
+        claims.put(BRANCH_ID, branchId);
         claims.put(ROLES_KEY, user.getRoles().stream()
         		.map(RoleClaim::new)
         		.collect(Collectors.toList())
@@ -67,6 +75,15 @@ public class JwtUtils {
                 .setExpiration(expiresAt)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+    
+    public static String getAccessToken(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            return Arrays.asList(request.getHeader(AUTHORIZATION_HEADER).split(TOKEN_SEPERATOR)).get(1);
+        }
+        return null;
     }
 
     /**
@@ -120,5 +137,12 @@ public class JwtUtils {
 			}
 		}
         return auths;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public Integer getBranchId(String token) {
+       Integer branch = Jwts.parser().setSigningKey(secretKey)
+    		   .parseClaimsJws(token).getBody().get(BRANCH_ID, Integer.class);
+        return branch;
     }
 }

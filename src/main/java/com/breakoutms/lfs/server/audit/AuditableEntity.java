@@ -58,7 +58,7 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	@PrePersist
 	void beforeSaving() {
 		if(createdBy != null && branch == null) {
-			branch = createdBy.getBranch();
+			branch = SessionHelper.getBranch();
 		}
 	}
 }

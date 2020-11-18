@@ -53,7 +53,9 @@ public class UserController implements ViewModelController<User, UserDTO>{
     
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Valid LoginDTO loginDto) {
-       return service.login(loginDto.getUsername(), loginDto.getPassword());
+       return service.login(loginDto.getUsername(), 
+    		   loginDto.getPassword(), 
+    		   loginDto.getBranchId());
     }
 
     @PostMapping

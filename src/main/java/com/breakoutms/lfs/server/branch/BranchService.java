@@ -3,6 +3,7 @@ package com.breakoutms.lfs.server.branch;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +21,8 @@ public class BranchService {
 	
 	private final BranchRepository repo;
 	
+	//TODO: MAKE SURE THAT CACHING WORKS AS INTENDED  - PLUS - add to update method once created
+	@Cacheable("branches")
 	public Optional<Branch> get(Integer id) {
 		return repo.findById(id);
 	}

@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.breakoutms.lfs.server.audit.SessionHelper;
 import com.breakoutms.lfs.server.user.UserService;
 import com.breakoutms.lfs.server.util.BeanUtil;
 import com.breakoutms.lfs.server.util.TypeUtils;
@@ -66,7 +67,7 @@ public class IdGenerator extends SequenceStyleGenerator {
 				if(StringUtils.isNumeric(userId)) {
 					var user = userService.get(Integer.valueOf(userId));
 					if(user.isPresent()) {
-						var syncNo = user.get().getBranch().getSyncNumber();
+						var syncNo = SessionHelper.getBranch().getSyncNumber();
 						return String.valueOf(syncNo);
 					}
 				}
