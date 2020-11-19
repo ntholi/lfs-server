@@ -1,6 +1,7 @@
 package com.breakoutms.lfs.server.user;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -108,5 +109,28 @@ public class UserService {
 		user.setRoles(updateUser.getRoles());
 		user.setUpdatableBeans(updateUser.getUpdatableBeans());
 		return repo.save(user);
+	}
+
+	public User changePassword(Integer id, String password) {
+		User user = repo.findById(id).orElseThrow(ExceptionSupplier.notFound("User", id));
+		user.setPassword(passwordEncoder.encode(password));
+		return repo.save(user);
+	}
+	
+	public String createOtp(Integer id) {
+		User user = repo.findById(id).orElseThrow(ExceptionSupplier.notFound("User", id));
+		String password = generatePassword();
+		user.setPassword(passwordEncoder.encode(password));
+		repo.save(user);
+		return password;
+	}
+	
+	public String generatePassword() {
+		String uuid = UUID.randomUUID().toString();
+		int hash = uuid.hashCode();
+		if(hash < 0) { // convert a negative number to positive
+			hash = hash - (hash * 2);
+		}
+		return String.valueOf(hash).substring(0, 4);
 	}
 }

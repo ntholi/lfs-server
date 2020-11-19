@@ -74,6 +74,19 @@ public class UserController implements ViewModelController<User, UserDTO>{
     			toViewModel(service.update(id, entity)), 
     			HttpStatus.CREATED);
     }
+    
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<UserDTO> changePassword(@PathVariable Integer id,
+    		@RequestBody @Valid LoginDTO loginDto){
+    	return new ResponseEntity<>(
+    			toViewModel(service.changePassword(id, loginDto.getPassword())), 
+    			HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}/password-reset")
+    public String resetPassword(@PathVariable Integer id) {
+    	return service.createOtp(id);
+    }
 
 	@Override
 	public UserDTO toViewModel(User entity) {
