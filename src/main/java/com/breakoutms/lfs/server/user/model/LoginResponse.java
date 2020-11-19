@@ -12,4 +12,5 @@ public class LoginResponse {
 	private String accessToken;
 	private String tokenType;
 	private List<String> updatableBeans;
+	private boolean resetPassword;
 }

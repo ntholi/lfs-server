@@ -22,6 +22,7 @@ import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.user.model.LoginDTO;
 import com.breakoutms.lfs.server.user.model.LoginResponse;
+import com.breakoutms.lfs.server.user.model.PasswordDTO;
 import com.breakoutms.lfs.server.user.model.User;
 import com.breakoutms.lfs.server.user.model.UserDTO;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -77,9 +78,9 @@ public class UserController implements ViewModelController<User, UserDTO>{
     
     @PutMapping("/{id}/change-password")
     public ResponseEntity<UserDTO> changePassword(@PathVariable Integer id,
-    		@RequestBody @Valid LoginDTO loginDto){
+    		@RequestBody @Valid PasswordDTO password){
     	return new ResponseEntity<>(
-    			toViewModel(service.changePassword(id, loginDto.getPassword())), 
+    			toViewModel(service.changePassword(id, password.getOldPassword(), password.getPassword())), 
     			HttpStatus.CREATED);
     }
     

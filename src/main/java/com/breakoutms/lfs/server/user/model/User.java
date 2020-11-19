@@ -66,7 +66,7 @@ public class User extends AuditableEntity<Integer>{
 			cascade=CascadeType.ALL, orphanRemoval = true)
     private List<UpdatableBean> updatableBeans;
 	
-	private boolean credentialsExpired;
+	private boolean resetPassword;
 	
 	public void setUpdatableBeans(List<UpdatableBean> updatableBeans) {
 		if(this.updatableBeans == null) {

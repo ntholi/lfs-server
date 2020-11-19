@@ -69,6 +69,7 @@ public class UserService {
 		var response = LoginResponse.builder()
 				.accessToken(token)
 				.tokenType(JwtUtils.BEARER)
+				.resetPassword(user.isResetPassword())
 				.build();
 		
 		if(user.getUpdatableBeans() != null) {
@@ -111,9 +112,11 @@ public class UserService {
 		return repo.save(user);
 	}
 
-	public User changePassword(Integer id, String password) {
+	public User changePassword(Integer id, String oldPassword, String password) {
 		User user = repo.findById(id).orElseThrow(ExceptionSupplier.notFound("User", id));
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), oldPassword));
 		user.setPassword(passwordEncoder.encode(password));
+		user.setResetPassword(false);
 		return repo.save(user);
 	}
 	
@@ -121,6 +124,7 @@ public class UserService {
 		User user = repo.findById(id).orElseThrow(ExceptionSupplier.notFound("User", id));
 		String password = generatePassword();
 		user.setPassword(passwordEncoder.encode(password));
+		user.setResetPassword(true);
 		repo.save(user);
 		return password;
 	}

@@ -27,8 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+        		.antMatchers("/startup-data/**").permitAll()
                 .antMatchers("/users/login").permitAll()
-                .antMatchers("/startup-data/**").permitAll();
+                .antMatchers("/users/*/change-password").authenticated();
         for(Domain domain: Domain.values()) {
         	authorize(http, domain);
         }

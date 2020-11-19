@@ -38,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             .authorities(getGrantedAuthority(user.getRoles()))
             .accountExpired(false)
             .accountLocked(false)
-            .credentialsExpired(user.isCredentialsExpired())
+            .credentialsExpired(false)
             .disabled(false)
             .build();
     }
