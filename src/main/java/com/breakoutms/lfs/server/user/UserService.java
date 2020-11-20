@@ -94,6 +94,7 @@ public class UserService {
 		user.setBranch(branch);
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
+		user.setResetPassword(true);
 		return repo.save(user);
 	}
 
