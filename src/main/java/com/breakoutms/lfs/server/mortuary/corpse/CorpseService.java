@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseLookupProjection;
 import com.breakoutms.lfs.server.mortuary.corpse.model.NextOfKin;
 import com.breakoutms.lfs.server.mortuary.corpse.model.OtherMortuary;
@@ -91,10 +92,10 @@ public class CorpseService {
 			quotation.setCorpse(corpse);
 		}
 	}
-    
-	public Page<Corpse> search(Specification<Corpse> specs, Pageable pageable) {
-        return repo.findAll(Specification.where(specs), pageable);
-    }
+	
+	public Page<CorpseProjection> searchLazy(Specification<Corpse> specs, Pageable pageable) {
+		return repo.findAll(Specification.where(specs), CorpseProjection.class, pageable);
+	}
     
 	public void delete(String id) {
 		repo.deleteById(id);

@@ -1,24 +1,18 @@
 package com.breakoutms.lfs.server;
 
-import java.util.List;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.breakoutms.lfs.common.enums.Domain;
-import com.breakoutms.lfs.common.enums.Privilege;
-import com.breakoutms.lfs.server.branch.BranchRepository;
-import com.breakoutms.lfs.server.branch.model.Branch;
-import com.breakoutms.lfs.server.user.UserService;
-import com.breakoutms.lfs.server.user.model.Role;
-import com.breakoutms.lfs.server.user.model.User;
+import th.co.geniustree.springdata.jpa.repository.support.JpaSpecificationExecutorWithProjectionImpl;
 
 @SpringBootApplication
 @EnableCaching
+@EnableJpaRepositories(repositoryBaseClass = JpaSpecificationExecutorWithProjectionImpl.class)
 //@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class })
 public class MainApplication implements CommandLineRunner{
 
