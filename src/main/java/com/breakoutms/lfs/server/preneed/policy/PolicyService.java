@@ -17,6 +17,7 @@ import com.breakoutms.lfs.server.exceptions.ObjectNotFoundException;
 import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyLookupProjection;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyProjection;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeRepository;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 import com.breakoutms.lfs.server.preneed.pricing.model.Premium;
@@ -82,9 +83,9 @@ public class PolicyService {
 						"Funeral Scheme with name '"+ funeralSchemeName +"' not found"));
 	}
 	
-	public Page<Policy> search(Specification<Policy> specs, Pageable pageable) {
-        return repo.findAll(Specification.where(specs), pageable);
-    }
+	public Page<PolicyProjection> search(Specification<Policy> specs, Pageable pageable) {
+		return repo.findAll(Specification.where(specs), PolicyProjection.class, pageable);
+	}
 	
 	public void delete(String id) {
 		repo.deleteById(id);

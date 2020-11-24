@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyLookupProjection;
 
-public interface PolicyRepository extends JpaRepository<Policy, String>, JpaSpecificationExecutor<Policy>{
+import th.co.geniustree.springdata.jpa.repository.JpaSpecificationExecutorWithProjection;
+
+public interface PolicyRepository extends JpaRepository<Policy, String>, JpaSpecificationExecutorWithProjection<Policy>{
 
 	@Query("SELECT new "
 			+ "com.breakoutms.lfs.server.preneed.policy.model.Policy(p.policyNumber, p.registrationDate, p.status) "

@@ -36,6 +36,7 @@ import com.breakoutms.lfs.server.preneed.PreneedMapper;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyDTO;
 import com.breakoutms.lfs.server.preneed.policy.model.PolicyLookupProjection;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyProjection;
 import com.breakoutms.lfs.server.preneed.policy.report.PolicyReportsService;
 import com.breakoutms.lfs.server.preneed.pricing.FuneralSchemeController;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -51,7 +52,7 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 
 	private final PolicyService service;
 	private final PolicyReportsService reportsService;
-	private final PagedResourcesAssembler<PolicyDTO> pagedAssembler;
+	private final PagedResourcesAssembler<PolicyProjection> pagedAssembler;
 	
 	@GetMapping("/policies/{id}")
 	public ResponseEntity<PolicyDTO> get(@PathVariable String id) {
@@ -61,11 +62,10 @@ public class PolicyController implements ViewModelController<Policy, PolicyDTO> 
 	}
 	
 	@GetMapping("/policies")
-	public ResponseEntity<PagedModel<EntityModel<PolicyDTO>>> all(
+	public ResponseEntity<PagedModel<EntityModel<PolicyProjection>>> all(
 			@SearchSpec Specification<Policy> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
-				service.search(specs, pageable));
+		var response = pagedAssembler.toModel(service.search(specs, pageable));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping("/policies")
