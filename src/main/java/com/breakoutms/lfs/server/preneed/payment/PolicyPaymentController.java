@@ -38,6 +38,7 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetailsDTO;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentProjection;
 import com.breakoutms.lfs.server.preneed.payment.report.PolicyPaymentReportService;
 import com.breakoutms.lfs.server.preneed.policy.PolicyController;
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -52,7 +53,7 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 
 	private final PolicyPaymentService service;
 	private final PolicyPaymentReportService reportsService;
-	private final PagedResourcesAssembler<PolicyPaymentDetailsDTO> pagedAssembler;
+	private final PagedResourcesAssembler<PolicyPaymentProjection> pagedAssembler;
 	
 
 	@GetMapping("{policyNumber}/payments/{id}")
@@ -63,19 +64,17 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	}
 	
 	@GetMapping("payments")
-	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentDetailsDTO>>> all(
+	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentProjection>>> all(
 			@SearchSpec Specification<PolicyPayment> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler, 
-				service.search(specs, pageable));
+		var response = pagedAssembler.toModel(service.search(specs, pageable));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping("{policyNumber}/payments")
 	public ResponseEntity<PagedModel<EntityModel<PolicyPaymentDetailsDTO>>> all(@PathVariable String policyNumber, 
 			Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler, 
-				service.all(pageable));
+		//TODO: implement this guy
+		return null;
 	}
 
 	@PostMapping("{policyNumber}/payments")

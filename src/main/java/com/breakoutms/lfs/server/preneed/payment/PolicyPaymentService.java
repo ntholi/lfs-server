@@ -28,9 +28,11 @@ import com.breakoutms.lfs.server.preneed.payment.model.PolicyPayment;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentDetails;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry;
 import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentInquiry.FuneralSchmeDetais;
+import com.breakoutms.lfs.server.preneed.payment.model.PolicyPaymentProjection;
 import com.breakoutms.lfs.server.preneed.payment.model.UnpaidPolicyPayment;
 import com.breakoutms.lfs.server.preneed.policy.PolicyRepository;
 import com.breakoutms.lfs.server.preneed.policy.model.Policy;
+import com.breakoutms.lfs.server.preneed.policy.model.PolicyProjection;
 import com.breakoutms.lfs.server.preneed.pricing.model.FuneralScheme;
 
 import lombok.AllArgsConstructor;
@@ -308,7 +310,7 @@ public class PolicyPaymentService {
 		return list;
 	}
 
-	public Page<PolicyPayment> search(Specification<PolicyPayment> specs, Pageable pageable) {
-        return repo.findAll(Specification.where(specs), pageable);
+	public Page<PolicyPaymentProjection> search(Specification<PolicyPayment> specs, Pageable pageable) {
+		return repo.findAll(Specification.where(specs), PolicyPaymentProjection.class, pageable);
     }
 }
