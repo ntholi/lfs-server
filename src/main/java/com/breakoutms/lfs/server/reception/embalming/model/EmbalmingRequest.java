@@ -1,20 +1,17 @@
 package com.breakoutms.lfs.server.reception.embalming.model;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.EvidenceOfDisease;
 import com.breakoutms.lfs.common.enums.RequestType;
-import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 import com.breakoutms.lfs.server.persistence.IdGenerator;
 
@@ -35,10 +32,7 @@ import lombok.NoArgsConstructor;
         parameters = {
 	            @Parameter(name = IdGenerator.ID_TYPE_PARAM, value = IdGenerator.ID_TYPE_INTEGER)
 })
-
-@SQLDelete(sql = "UPDATE embalming_request SET deleted=true WHERE id=?")
-@Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorValue(RequestType.Const.EMBALMING)
+@PrimaryKeyJoinColumn(name = "mortuary_request_id")
 public class EmbalmingRequest extends MortuaryRequest {
 
 	@Column(length = 50)

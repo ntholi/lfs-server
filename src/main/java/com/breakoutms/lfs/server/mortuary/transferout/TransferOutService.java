@@ -39,7 +39,6 @@ public class TransferOutService {
 				.orElseThrow(ExceptionSupplier.notFound("Transfer Out Request", requestId));
 		if (undertakerRequest instanceof TransferRequest) {
 			var transferRequest = (TransferRequest) undertakerRequest;
-			transferRequest.setSeen(true);
 			transferRequest.setProcessed(true);
 		}
 		else {

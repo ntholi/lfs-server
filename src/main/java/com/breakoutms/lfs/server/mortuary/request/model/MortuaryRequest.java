@@ -1,7 +1,5 @@
 package com.breakoutms.lfs.server.mortuary.request.model;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,23 +39,17 @@ import lombok.NoArgsConstructor;
 })
 @SQLDelete(sql = "UPDATE mortuary_request SET deleted=true WHERE id=?")
 @Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorColumn(
-	    discriminatorType = DiscriminatorType.STRING,
-	    name = "request_type"
-)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class MortuaryRequest extends AuditableEntity<Integer>{
+	
 	@Id
 	@GeneratedValue(generator = "mortuary_request_id")
 	private Integer id;
 
-	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private Corpse corpse;
-	
-	private boolean seen;
 	
 	private boolean processed;
 

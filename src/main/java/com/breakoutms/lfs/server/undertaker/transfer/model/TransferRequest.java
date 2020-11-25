@@ -1,18 +1,15 @@
 package com.breakoutms.lfs.server.undertaker.transfer.model;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.RequestType;
-import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.branch.model.Branch;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 
@@ -27,9 +24,7 @@ import lombok.NoArgsConstructor;
 @Data @Builder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-@SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
-@Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorValue(RequestType.Const.TRANSFER)
+@PrimaryKeyJoinColumn(name = "mortuary_request_id")
 public class TransferRequest extends MortuaryRequest {
 	
 	@NotNull

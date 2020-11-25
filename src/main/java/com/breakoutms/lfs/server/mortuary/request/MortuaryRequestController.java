@@ -66,7 +66,6 @@ public class MortuaryRequestController {
 		MortuaryRequestInquiry inquiry = new MortuaryRequestInquiry();
 		Corpse corpse = uRequest.getCorpse();
 		inquiry.setId(uRequest.getId());
-		inquiry.setSeen(uRequest.isSeen());
 		inquiry.setTagNo(corpse.getTagNo());
 		inquiry.setProcessed(uRequest.isProcessed());
 		inquiry.setDate(uRequest.getCreatedAt());

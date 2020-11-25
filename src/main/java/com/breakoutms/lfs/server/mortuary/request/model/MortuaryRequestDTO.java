@@ -19,6 +19,5 @@ public class MortuaryRequestDTO<T extends MortuaryRequestDTO<T>>  extends Repres
 	private Long id;
 	@NotNull
 	private String tagNo;
-	private boolean seen;
 	private boolean processed;
 }

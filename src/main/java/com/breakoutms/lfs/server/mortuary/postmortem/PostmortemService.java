@@ -44,7 +44,6 @@ public class PostmortemService {
 				.orElseThrow(ExceptionSupplier.notFound("Transfer Out Request", requestId));
 		if (undertakerRequest instanceof PostmortemRequest) {
 			var transferRequest = (PostmortemRequest) undertakerRequest;
-			transferRequest.setSeen(true);
 			transferRequest.setProcessed(true);
 		}
 		else {

@@ -1,36 +1,30 @@
 package com.breakoutms.lfs.server.undertaker.postmortem.model;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import com.breakoutms.lfs.common.enums.RequestPerson;
 import com.breakoutms.lfs.common.enums.RequestType;
-import com.breakoutms.lfs.server.audit.AuditableEntity;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Audited
-@Data @Builder
+@Data 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor @NoArgsConstructor
-@SQLDelete(sql = "UPDATE undertaker_request SET deleted=true WHERE id=?")
-@Where(clause = AuditableEntity.CLAUSE)
-@DiscriminatorValue(RequestType.Const.POSTMORTEM)
+@PrimaryKeyJoinColumn(name = "mortuary_request_id")
 public class PostmortemRequest extends MortuaryRequest {
 	
 	@Enumerated(EnumType.STRING)
