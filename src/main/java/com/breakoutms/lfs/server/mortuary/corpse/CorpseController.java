@@ -65,7 +65,7 @@ public class CorpseController implements ViewModelController<Corpse, CorpseDTO> 
 	@GetMapping("/corpses") 
 	public ResponseEntity<PagedModel<EntityModel<CorpseProjection>>> all(
 			@SearchSpec Specification<Corpse> specs, Pageable pageable) {
-		var response = pagedAssembler.toModel(service.searchLazy(specs, pageable));
+		var response = pagedAssembler.toModel(service.search(specs, pageable));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

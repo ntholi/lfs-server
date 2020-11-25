@@ -19,6 +19,7 @@ import com.breakoutms.lfs.common.enums.VehicleOwner;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseRepository;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
+import com.breakoutms.lfs.server.mortuary.corpse.model.CorpseProjection;
 import com.breakoutms.lfs.server.mortuary.embalming.EmbalmingRepository;
 import com.breakoutms.lfs.server.mortuary.postmortem.PostmortemRepository;
 import com.breakoutms.lfs.server.mortuary.released.ReleasedCorpseRepository;
@@ -33,6 +34,7 @@ import com.breakoutms.lfs.server.sales.model.Quotation;
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
+import com.breakoutms.lfs.server.sales.model.SalesProjection;
 
 import lombok.AllArgsConstructor;
 
@@ -57,8 +59,8 @@ public class SalesService {
 		return repo.findAll(pageable);
 	}
 	
-	public Page<Sales> search(Specification<Sales> specs, Pageable pageable) {
-        return repo.findAll(Specification.where(specs), pageable);
+	public Page<SalesProjection> search(Specification<Sales> specs, Pageable pageable) {
+		return repo.findAll(Specification.where(specs), SalesProjection.class, pageable);
     }
 
 	@Transactional

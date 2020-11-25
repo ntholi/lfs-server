@@ -5,15 +5,16 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.breakoutms.lfs.server.sales.model.Sales;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 
+import th.co.geniustree.springdata.jpa.repository.JpaSpecificationExecutorWithProjection;
+
 @Repository
-public interface SalesRepository extends JpaRepository<Sales, Integer>, JpaSpecificationExecutor<Sales>{
+public interface SalesRepository extends JpaRepository<Sales, Integer>, JpaSpecificationExecutorWithProjection<Sales>{
 
 	@Query("from SalesProduct where quotation.id = :quotationNo")
 	List<SalesProduct> getSalesProducts(int quotationNo);

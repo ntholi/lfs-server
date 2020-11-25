@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
 import com.breakoutms.lfs.server.core.CommonLinks;
-import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
 import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.sales.model.Quotation;
@@ -33,6 +32,7 @@ import com.breakoutms.lfs.server.sales.model.SalesDTO;
 import com.breakoutms.lfs.server.sales.model.SalesInquiry;
 import com.breakoutms.lfs.server.sales.model.SalesProduct;
 import com.breakoutms.lfs.server.sales.model.SalesProductDTO;
+import com.breakoutms.lfs.server.sales.model.SalesProjection;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +44,7 @@ import lombok.val;
 public class SalesController implements ViewModelController<Sales, SalesDTO> {
 
 	private final SalesService service;
-	private final PagedResourcesAssembler<SalesDTO> pagedAssembler;
+	private final PagedResourcesAssembler<SalesProjection> pagedAssembler;
 
 //	@GetMapping("/{id}")
 //	public ResponseEntity<SalesEagerResponse> get(@PathVariable Integer id) {
@@ -59,11 +59,10 @@ public class SalesController implements ViewModelController<Sales, SalesDTO> {
 //	}
 
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<SalesDTO>>> all(
+	public ResponseEntity<PagedModel<EntityModel<SalesProjection>>> all(
 			@SearchSpec Specification<Sales> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
-				service.search(specs, pageable));
+		var response = pagedAssembler.toModel(service.search(specs, pageable));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping

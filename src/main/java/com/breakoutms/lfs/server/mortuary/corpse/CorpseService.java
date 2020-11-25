@@ -93,7 +93,7 @@ public class CorpseService {
 		}
 	}
 	
-	public Page<CorpseProjection> searchLazy(Specification<Corpse> specs, Pageable pageable) {
+	public Page<CorpseProjection> search(Specification<Corpse> specs, Pageable pageable) {
 		return repo.findAll(Specification.where(specs), CorpseProjection.class, pageable);
 	}
     
