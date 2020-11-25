@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.breakoutms.lfs.server.exceptions.ExceptionSupplier;
 import com.breakoutms.lfs.server.exceptions.InvalidOperationException;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
+import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemProjection;
 import com.breakoutms.lfs.server.mortuary.request.MortuaryRequestRepository;
 import com.breakoutms.lfs.server.mortuary.request.model.MortuaryRequest;
 import com.breakoutms.lfs.server.transport.Transport;
@@ -78,7 +79,7 @@ public class PostmortemService {
 		}
 	}
 	
-	public Page<Postmortem> search(Specification<Postmortem> specs, Pageable pageable) {
-        return repo.findAll(Specification.where(specs), pageable);
+	public Page<PostmortemProjection> search(Specification<Postmortem> specs, Pageable pageable) {
+		return repo.findAll(Specification.where(specs), PostmortemProjection.class, pageable);
     }
 }

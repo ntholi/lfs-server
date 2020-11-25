@@ -21,7 +21,7 @@ public interface SalesProjection {
 	@Value("#{target.getBurialDetails().getBurialPlace()}")
 	String getBurialPlace();
 	
-	@Value("#{target.getBurialDetails().getBurialPlace()}")
+	@Value("#{target.getBurialDetails().getPhysicalAddress()}")
 	String getPhysicalAddress();
 	
 	BigDecimal getTotalCost();

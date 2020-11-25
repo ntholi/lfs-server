@@ -29,6 +29,7 @@ import com.breakoutms.lfs.server.mortuary.corpse.CorpseController;
 import com.breakoutms.lfs.server.mortuary.corpse.model.Corpse;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.Postmortem;
 import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemDTO;
+import com.breakoutms.lfs.server.mortuary.postmortem.model.PostmortemProjection;
 import com.sipios.springsearch.anotation.SearchSpec;
 
 import lombok.AllArgsConstructor;
@@ -41,7 +42,7 @@ public class PostmortemController
 		implements ViewModelController<Postmortem, PostmortemDTO> {
 
 	private final PostmortemService service;
-	private final PagedResourcesAssembler<PostmortemDTO> pagedAssembler;
+	private final PagedResourcesAssembler<PostmortemProjection> pagedAssembler;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<PostmortemDTO> get(@PathVariable Integer id) {
@@ -51,11 +52,10 @@ public class PostmortemController
 	}
 	
 	@GetMapping
-	public ResponseEntity<PagedModel<EntityModel<PostmortemDTO>>> all(
+	public ResponseEntity<PagedModel<EntityModel<PostmortemProjection>>> all(
 			@SearchSpec Specification<Postmortem> specs, Pageable pageable) {
-		return ResponseHelper.pagedGetResponse(this, 
-				pagedAssembler,
-				service.search(specs, pageable));
+		var response = pagedAssembler.toModel(service.search(specs, pageable));
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping
