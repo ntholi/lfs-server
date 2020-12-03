@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class PostmortemRequest extends MortuaryRequest {
 	
 	@Enumerated(EnumType.STRING)
-	@Column(length = 15)
+	@Column(columnDefinition="ENUM('POLICE', 'RELATIVES','OTHER')")
 	private RequestPerson requestedBy;
 	
 	@Column(length = 50)
