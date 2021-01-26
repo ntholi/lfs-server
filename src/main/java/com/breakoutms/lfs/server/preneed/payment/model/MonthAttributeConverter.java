@@ -19,7 +19,8 @@ public class MonthAttributeConverter implements AttributeConverter<Month, Intege
 	}
 
 	public static Month fromInt(Integer month) {
-		return Month.values()[month-1];
+		//month = month-1; //TODO: THE EFFECTS OF REMOVING THIS HAVE TO BE TESTED SOONLY 
+		return Month.values()[month];
 	}
 
 }
