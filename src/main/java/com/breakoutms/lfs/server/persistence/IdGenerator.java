@@ -58,21 +58,26 @@ public class IdGenerator extends SequenceStyleGenerator {
     }
 	
     private String getSyncNumber() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		if(context != null && context.getAuthentication() != null && context.getAuthentication().getPrincipal() != null) {
-			Object principal = context.getAuthentication().getPrincipal();
-			if (principal instanceof UserDetails) {
-				UserService userService = BeanUtil.getBean(UserService.class);
-				String userId = ((UserDetails)principal).getUsername();
-				if(StringUtils.isNumeric(userId)) {
-					var user = userService.get(Integer.valueOf(userId));
-					if(user.isPresent()) {
-						var syncNo = SessionHelper.getBranch().getSyncNumber();
-						return String.valueOf(syncNo);
-					}
-				}
-			}
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if(context != null && context.getAuthentication() != null && context.getAuthentication().getPrincipal() != null) {
+//			Object principal = context.getAuthentication().getPrincipal();
+//			if (principal instanceof UserDetails) {
+//				UserService userService = BeanUtil.getBean(UserService.class);
+//				String userId = ((UserDetails)principal).getUsername();
+//				if(StringUtils.isNumeric(userId)) {
+//					var user = userService.get(Integer.valueOf(userId));
+//					if(user.isPresent()) {
+//						var syncNo = SessionHelper.getBranch().getSyncNumber();
+//						return String.valueOf(syncNo);
+//					}
+//				}
+//			}
+//		}
+    	
+		Integer syncNo = SessionHelper.getBranch().getSyncNumber();
+		if(syncNo != null) {			
+			return String.valueOf(syncNo);
 		}
-		return null;
+		throw new IllegalStateException("Unable to generate Sync Number");
 	}
 }

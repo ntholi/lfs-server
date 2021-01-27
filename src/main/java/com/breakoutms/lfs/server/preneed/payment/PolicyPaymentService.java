@@ -160,7 +160,7 @@ public class PolicyPaymentService {
 				.plusMonths(policy.getFuneralScheme().getMonthsBeforeActive());
 		LocalDate today = LocalDate.now();
 		
-		// TODO: Add login for deactivating an account
+		// TODO: Add logic for deactivating an account
 		if(policy.getStatus() == PolicyStatus.DEACTIVATED) {
 			//TODO: Add logic for re-activating deactivated policy
 			Period period = getLastPayedPeriod(policy);

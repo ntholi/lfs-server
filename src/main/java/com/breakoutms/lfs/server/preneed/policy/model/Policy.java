@@ -87,23 +87,27 @@ public class Policy extends AuditableEntity<String> {
 	private LocalDate dateOfBirth;
 
 	@Nullable
-	@Size(min = 3, max = 50)
+//	@Size(min = 3, max = 50) //TODO This are disabled because when importing data I had not made empty values blank
+	@Size(max = 50)
 	@Column(length = 50)
 	private String phoneNumber;
 
 	@Nullable
-	@Size(min = 3, max = 50)
+//	@Size(min = 3, max = 50)
+	@Size(max = 50)
 	@Column(length = 50)
 	private String passportNumber;
 
 	@Nullable
-	@Size(min = 3, max = 40)
+//	@Size(min = 3, max = 40)
+	@Size(max = 40)
 	@Column(length = 40)
 	private String nationalIdNumber;
 
 	@Nullable
 	@Column(length = 150)
-	@Size(min = 2, max = 150)
+//	@Size(min = 2, max = 150)
+	@Size(max = 150)
 	private String residentialArea;
 
 	@Column(columnDefinition = "TINYINT UNSIGNED")
@@ -111,7 +115,8 @@ public class Policy extends AuditableEntity<String> {
 
 	@Nullable
 	@Column(length = 50)
-	@Size(min = 3, max = 50)
+//	@Size(min = 3, max = 50)
+	@Size(max = 50)
 	private String country;
 
 	private boolean deceased;
@@ -130,7 +135,7 @@ public class Policy extends AuditableEntity<String> {
 	private BigDecimal premiumAmount;
 
 	@NotNull
-	@Min(value = 0L, message = "{validation.number.negative}")
+//	@Min(value = 0L, message = "{validation.number.negative}") //TODO: DISABLED BECAUSE NOT IMPORTED YET
 	@Digits(integer = 8, fraction = 2)
 	@Column(nullable=false, precision = 10, scale = 2)
 	private BigDecimal coverAmount;
