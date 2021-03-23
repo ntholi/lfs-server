@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.breakoutms.lfs.common.enums.Domain;
+import com.breakoutms.lfs.common.enums.PolicyPaymentType;
 import com.breakoutms.lfs.server.core.CommonLinks;
 import com.breakoutms.lfs.server.core.ResponseHelper;
 import com.breakoutms.lfs.server.core.ViewModelController;
@@ -81,7 +82,7 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 	public ResponseEntity<PolicyPaymentDetailsDTO> save(@PathVariable String policyNumber,
 			@Valid @RequestBody PolicyPaymentDTO dto) {
 		PolicyPayment entity = PolicyPaymentMapper.INSTANCE.map(dto);
-		
+		validate(entity);
 		return new ResponseEntity<>(
 				toViewModel(service.save(entity, policyNumber)), 
 				HttpStatus.CREATED
@@ -93,6 +94,7 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 			@PathVariable Long id, 
 			@Valid @RequestBody PolicyPaymentDTO dto) {
 		PolicyPayment entity = PolicyPaymentMapper.INSTANCE.map(dto);
+		validate(entity);
 		return new ResponseEntity<>(
 				toViewModel(service.update(id, entity)), 
 				HttpStatus.OK
@@ -147,6 +149,16 @@ public class PolicyPaymentController implements ViewModelController<PolicyPaymen
 		return res;
 	}
 	
+	
+	private void validate(PolicyPayment entity) {
+		for(var details : entity.getPolicyPaymentDetails()) {
+			if(details.getType() == PolicyPaymentType.PREMIUM) {
+				if(details.getPeriod() == null) {
+					throw new NullPointerException("Period for premium cannot be null");
+				}
+			}
+		}
+	}
 	@Override
 	public PolicyPaymentDetailsDTO toViewModel(PolicyPayment entity) {
 		PolicyPaymentDetailsDTO dto = PolicyPaymentMapper.INSTANCE.map(entity);

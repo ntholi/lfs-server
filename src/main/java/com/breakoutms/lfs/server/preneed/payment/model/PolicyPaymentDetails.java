@@ -91,7 +91,6 @@ public class PolicyPaymentDetails extends AuditableEntity<Long> {
 	@Column(columnDefinition="ENUM('PREMIUM', 'PENALTY', 'REGISTRATION', 'UPGRADE_FEE')")
 	private PolicyPaymentType type;
 	
-	@NotNull
 	@Embedded
 	private Period period;
 	
