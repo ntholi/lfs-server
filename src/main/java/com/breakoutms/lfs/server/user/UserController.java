@@ -49,7 +49,7 @@ public class UserController implements ViewModelController<User, UserDTO>{
 			@SearchSpec Specification<User> specs, Pageable pageable) {
 		return ResponseHelper.pagedGetResponse(this, 
 				pagedAssembler,
-				service.all(pageable));
+				service.search(specs, pageable));
 	}
     
     @PostMapping("/login")

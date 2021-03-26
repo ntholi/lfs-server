@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.breakoutms.lfs.server</groupId>
 	<artifactId>lfs-server</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>lfs-server</name>
 	<description>LFS Mortuary Management Web Service</description>
 
