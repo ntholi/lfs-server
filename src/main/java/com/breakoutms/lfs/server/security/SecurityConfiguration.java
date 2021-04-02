@@ -33,11 +33,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         for(Domain domain: Domain.values()) {
         	authorize(http, domain);
         }
+        
         http.authorizeRequests()
-        	.antMatchers("/**")
-        	.hasRole(ADMIN.name())
-        	.anyRequest().authenticated();
-
+    		.antMatchers(HttpMethod.GET, Domain.PRODUCTS.antPattern())
+    		.access(Domain.SALES.canRead());
+        
+        http.authorizeRequests().antMatchers("/**")
+        	.hasRole(ADMIN.name()).anyRequest()
+        	.authenticated();
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
