@@ -51,7 +51,7 @@ public class NextOfKin extends AuditableEntity<Integer> {
 	@Column(length = 50)
     private String relationship;
 	
-	@Column(length = 20)
+	@Column(length = 50)
     private String phoneNumber;
 	
     private String phycialAddress;

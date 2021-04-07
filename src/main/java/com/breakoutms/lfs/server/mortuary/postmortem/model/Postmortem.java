@@ -67,5 +67,6 @@ public class Postmortem extends AuditableEntity<Integer> {
 	
 	@NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "postmortem_request_id")
 	private PostmortemRequest postmortemRequest;
 }
