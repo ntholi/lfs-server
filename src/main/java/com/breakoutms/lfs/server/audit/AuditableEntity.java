@@ -57,7 +57,10 @@ public abstract class AuditableEntity<ID> implements Entity<ID> {
 	
 	@PrePersist
 	void beforeSaving() {
-		if(createdBy != null && branch == null) {
+		if(createdBy == null) {
+			throw new NullPointerException("createdBy (user) cannot be null");
+		}
+		if(branch == null) {
 			branch = SessionHelper.getBranch();
 		}
 	}
